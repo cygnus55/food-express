@@ -23,12 +23,19 @@
           </button>
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav">
+              {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link btn btn-outline-info  my-md-0 ms-md-3" href="#">Logout</a>
+              </li>
+              
+              {% else %}
               <li class="nav-item ">
                 <a class="nav-link btn my-md-0 ms-md-3" href="#">Register</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link btn btn-outline-info  my-md-0 ms-md-3" href="#">Login</a>
               </li>
+              {% endif %}
             </ul>
           </div>
         </div>
