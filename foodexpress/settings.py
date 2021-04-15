@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'crispy_forms',
     'base.apps.BaseConfig',
-    'accounts.apps.AccountsConfig',
+   
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK="bootstrap4"
 LOGIN_REDIRECT_URL='base:home'
 LOGIN_URL='login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER =os.e
+# EMAIL_HOST_PASSWORD ='***************'
+# EMAIL_PORT = 587
+
