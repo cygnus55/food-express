@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'crispy_forms',
     'base.apps.BaseConfig',
-   
+    'restaurants.apps.RestaurantsConfig',
 ]
 
 MIDDLEWARE = [

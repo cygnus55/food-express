@@ -1,0 +1,41 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    {% if category %} {{ category.name }} -{% endif %}Restaurants
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-row text-dark">
+        <div class="p-3">
+            <h3 class="align-items-center">
+                Category
+            </h3>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="{% url "restaurants:restaurant_list" %}"
+                        class="nav-link {% if not category %}active{% else %}text-dark{% endif %}">All</a>
+                </li>
+                {% for c in categories %}
+                    <li class="nav-item">
+                        <a href="{{ c.get_absolute_url }}"
+                            class="nav-link {% if category.slug == c.slug %}active{% else %}text-dark{% endif %}">{{ c.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    <div class="p-3" style="width:fit-content">
+            <h3 class="align-items-center text-dark">
+                Restaurants {% if category %}- {{ category.name }} {% endif %}
+            </h3>
+            <hr>
+            {% for restaurant in restaurants %}
+                <h4 class="flex-column mb-auto">
+                    <a href="{{ restaurant.get_absolute_url }}" class="text-dark">{{ restaurant.name }}</a>
+                </h4>
+            {% endfor %}
+        </div>
+    </div>
+
+    
+{% endblock %}
