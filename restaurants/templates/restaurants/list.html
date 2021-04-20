@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-row text-dark">
-        <div class="p-3">
+    <div class="row">
+
+        <div class="col-md-3">
             <h3 class="align-items-center">
                 Category
             </h3>
@@ -24,16 +25,30 @@
                 {% endfor %}
             </ul>
         </div>
-    <div class="p-3" style="width:fit-content">
-            <h3 class="align-items-center text-dark">
-                Restaurants {% if category %}- {{ category.name }} {% endif %}
-            </h3>
-            <hr>
-            {% for restaurant in restaurants %}
-                <h4 class="flex-column mb-auto">
-                    <a href="{{ restaurant.get_absolute_url }}" class="text-dark">{{ restaurant.name }}</a>
-                </h4>
-            {% endfor %}
+
+        <div class="col-md-9">
+                <h3 class="align-items-center text-dark">
+                    Restaurants {% if category %}- {{ category.name }} {% endif %}
+                </h3>
+                <hr>
+                <div class="row">
+                    {% for restaurant in restaurants %}
+                    <div class="col-lg-4">
+                        <div class="card" style=" height:500px" >
+                            <img class="thumbnail" src="{{restaurant.logo.url}}" style=" height:200px">
+                            <hr>
+                            <div class="card-body ">
+                                <div class="card-title">{{restaurant.name}}</div> 
+                                <p>{{restaurant.category.name}}</p>
+                                <p>open time:{{restaurant.open_hour}}</p>
+                                <p>close time:{{restaurant.close_hour}}</p>
+                        
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                 </div>   
+                        
         </div>
     </div>
 
