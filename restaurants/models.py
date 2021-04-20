@@ -29,6 +29,7 @@ class Category(models.Model):
 
 
 class Restaurant(models.Model):
+    
     category = models.ForeignKey(Category, related_name='restaurants', on_delete=models.CASCADE)
     name = models.CharField(db_index=True, max_length=200)
     slug = models.SlugField(db_index=True, max_length=200)

@@ -32,3 +32,7 @@ def restaurant_detail(request, id, slug):
     return render(request,
                 'restaurants/detail.html',
                 {'restaurant': restaurant})
+
+
+def register_restaurant(request):
+    pass
