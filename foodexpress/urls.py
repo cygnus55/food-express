@@ -22,3 +22,5 @@ urlpatterns = [
     path('', include('accounts.urls', namespace='accounts')),
     path('restaurants/', include('restaurants.urls', namespace='restaurants')),
 ]
+
+handler404 = 'base.views.handler404'

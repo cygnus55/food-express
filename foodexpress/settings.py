@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
@@ -132,8 +132,11 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 CRISPY_TEMPLATE_PACK="bootstrap4"
-LOGIN_REDIRECT_URL='base:home'
+
+LOGIN_REDIRECT_URL='accounts:customer_homepage'
+
 LOGIN_URL='login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -143,4 +146,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST_USER =os.e
 # EMAIL_HOST_PASSWORD ='***************'
 # EMAIL_PORT = 587
+
+AUTH_USER_MODEL = 'accounts.User'
 
