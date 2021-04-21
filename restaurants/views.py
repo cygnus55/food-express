@@ -1,8 +1,11 @@
 # from datetime import datetime
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .decorators import restaurant_required
 from .models import Category, Restaurant
+from accounts.models import User
+from .forms import RestaurantRegistrationForm
 
 
 # Create your views here.
@@ -40,4 +43,30 @@ def restaurant_detail(request, id, slug):
 @login_required
 @restaurant_required
 def restaurant_dashboard(request, username):
-    return render (request, 'restaurants/dashboard.html')
+    restaurant = Restaurant.objects.get(user__username=username)
+    context={
+        'restaurant': restaurant,
+        'section': 'dashboard',
+    }
+    return render (request, 'restaurant/dashboard.html',context)
+
+
+@login_required
+@restaurant_required
+def update_restaurant_profile(request, username):
+    restaurant = Restaurant.objects.get(user__username=username)
+    if request.method == 'GET':
+        form = RestaurantRegistrationForm(instance=restaurant)
+    else:
+        form = RestaurantRegistrationForm(data=request.POST, instance=restaurant)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Profile Update Successful')
+            return redirect('restaurants:restaurant_dashboard', username=username)
+
+    context={
+        'form': form,
+        'restaurant': restaurant,
+        'section': 'profile',
+    }
+    return render (request, 'restaurant/profile_update.html',context)

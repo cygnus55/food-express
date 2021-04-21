@@ -35,7 +35,6 @@ class Restaurant(models.Model):
     name = models.CharField(db_index=True, max_length=200)
     slug = models.SlugField(db_index=True, max_length=200)
     address = models.CharField(db_index=True, max_length=250)
-    email = models.EmailField(max_length=254)
     logo = models.ImageField(upload_to='restaurants/logos', blank=True)
     description = models.TextField(blank=True)
     open_hour = models.TimeField(auto_now=False, auto_now_add=False)
@@ -50,6 +49,7 @@ class Restaurant(models.Model):
     
     def __str__(self):
         return f'{self.name} for user {self.user.username}'
+        
     
     def save(self, *args, **kwargs):
         if not self.slug:
