@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+from accounts.models import User
 
 # Create your models here.
 
@@ -29,7 +30,7 @@ class Category(models.Model):
 
 
 class Restaurant(models.Model):
-    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, related_name='restaurants', on_delete=models.CASCADE)
     name = models.CharField(db_index=True, max_length=200)
     slug = models.SlugField(db_index=True, max_length=200)
@@ -48,7 +49,7 @@ class Restaurant(models.Model):
         index_together = (('id', 'slug'),)
     
     def __str__(self):
-        return self.name
+        return f'{self.name} for user {self.user.username}'
     
     def save(self, *args, **kwargs):
         if not self.slug:
