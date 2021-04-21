@@ -1,7 +1,7 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, reverse
 from django.contrib import messages
 from .forms import Registrationform, LoginForm
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .decorators import customer_required
@@ -16,10 +16,12 @@ def user_login(request):
             user = authenticate(request, username=cd['username'], password=cd['password'])
             if user:
                 if user.is_active:
+                    login(request, user)
                     if user.is_customer:
                         return HttpResponse('Customer logged in')
                     elif user.is_restaurant:
-                        return HttpResponse('Restaurant Logged in')
+                        return HttpResponseRedirect(reverse('restaurants:restaurant_dashboard', args=(user.username,)))
+                        # return redirect(f"'restaurants:restaurant_dashboard' '{user.username}'")
                     else:
                         return HttpResponse('Chef Logged in')
                 else:

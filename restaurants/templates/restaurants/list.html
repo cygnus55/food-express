@@ -1,4 +1,6 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
 
 {% block title %}
     {% if category %} {{ category.name }} -{% endif %}Restaurants
@@ -7,7 +9,7 @@
 {% block content %}
     <div class="row">
 
-        <div class="col-md-3">
+        <div class="col-md-2" style='float:inline-start;'>
             <h3 class="align-items-center">
                 Category
             </h3>
@@ -26,24 +28,23 @@
             </ul>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-10">
                 <h3 class="align-items-center text-dark">
                     Restaurants {% if category %}- {{ category.name }} {% endif %}
                 </h3>
                 <hr>
                 <div class="row">
                     {% for restaurant in restaurants %}
-                    <div class="col-lg-4">
-                        <div class="card" style=" height:500px" >
-                            <img class="thumbnail" src="{{restaurant.logo.url}}" style=" height:200px">
-                            <hr>
-                            <div class="card-body ">
-                                <div class="card-title">{{restaurant.name}}</div> 
-                                <p>{{restaurant.category.name}}</p>
-                                <p>open time:{{restaurant.open_hour}}</p>
-                                <p>close time:{{restaurant.close_hour}}</p>
-                        
-                            </div>
+                    <div class="col-md-3">
+                        <div class="card" style=" height:300px; margin-bottom:10px;" >
+                            <img class="thumbnail" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'img/no_image.png' %}{% endif %}" style=" height:200px">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <a href="{{ restaurant.get_absolute_url }}" class="text-dark text-decoration-none">{{restaurant.name}}</a>
+                                    </div> 
+                                    <small class="text-muted">{{restaurant.category.name}}</small><br/>
+                                    <small class="text-muted">Opening hour:{{restaurant.open_hour}} - {{restaurant.close_hour}}</small>
+                                </div>
                         </div>
                     </div>
                     {% endfor %}

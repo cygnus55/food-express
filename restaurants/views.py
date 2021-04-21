@@ -1,5 +1,7 @@
-from datetime import datetime
+# from datetime import datetime
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .decorators import restaurant_required
 from .models import Category, Restaurant
 
 
@@ -9,7 +11,7 @@ from .models import Category, Restaurant
 def restaurant_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
-    currentTime = datetime.now().time()
+    # currentTime = datetime.now().time()
     restaurants = Restaurant.objects.all()
     # tmp_restaurant1 = tmp_restaurant.filter(Q(open_hour__lte=F('close_hour')), Q(open_hour__lte=currentTime), close_hour__gte=currentTime)
     # tmp_restaurant2 = tmp_restaurant.filter(available=True).filter(Q(open_hour__gt=F('close_hour')), Q(open_hour__lte=currentTime) | Q(close_hour__gte=currentTime))
@@ -34,5 +36,8 @@ def restaurant_detail(request, id, slug):
                 {'restaurant': restaurant})
 
 
-def register_restaurant(request):
-    pass
+
+@login_required
+@restaurant_required
+def restaurant_dashboard(request, username):
+    return render (request, 'restaurants/dashboard.html')
