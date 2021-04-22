@@ -9,3 +9,4 @@ class User(AbstractUser):
     is_restaurant = models.BooleanField(default=False)
     is_chef = models.BooleanField(default=False)
 
+
