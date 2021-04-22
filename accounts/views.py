@@ -1,12 +1,15 @@
 from django.shortcuts import render,redirect, reverse
 from django.contrib import messages
-from .forms import Registrationform, LoginForm
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .decorators import customer_required
-from .models import User
 
+from .models import User
+from .forms import Registrationform, LoginForm 
+from restaurants.forms import RestaurantProfileForm
+from customer.forms import CustomerProfileForm
+from restaurants.models import Restaurant
+from customer.models import Customer
 
 def user_login(request):
     if request.method == 'POST':
@@ -18,12 +21,10 @@ def user_login(request):
                 if user.is_active:
                     login(request, user)
                     if user.is_customer:
-                        return HttpResponse('Customer logged in')
+                        return redirect('customer:homepage')
                     elif user.is_restaurant:
-                        return HttpResponseRedirect(reverse('restaurants:restaurant_dashboard', args=(user.username,)))
-                        # return redirect(f"'restaurants:restaurant_dashboard' '{user.username}'")
-                    else:
-                        return HttpResponse('Chef Logged in')
+                        # return HttpResponseRedirect(reverse('restaurants:restaurant_dashboard', args=(user.username,)))
+                        return redirect('restaurants:restaurant_dashboard', username=user.username)
                 else:
                     return HttpResponse('Disabled Account')
             else:
@@ -35,25 +36,37 @@ def user_login(request):
 
 
 def register(request,role):
-    allowed_roles = ['customer', 'restaurant', 'chef']
+    allowed_roles = ['customer', 'restaurant']
     if role not in allowed_roles:
         raise Http404()
     if request.method=="POST":
         form=Registrationform(request.POST)
-        if form.is_valid():
+        if role == 'restaurant':
+            profile_form = RestaurantProfileForm(request.POST)
+        else:
+            profile_form = CustomerProfileForm(request.POST)
+        if form.is_valid() and profile_form.is_valid():
             new_user = form.save(commit=False)
             setattr(new_user, f'is_{role}', True)
             new_user.save()
+            user_profile = profile_form.save(commit=False)
+            user_profile.user = new_user
+            user_profile.save()
             username=form.cleaned_data.get('username')
             messages.success(request,f'Account was created for {username}!')
             return redirect ("accounts:login")
 
     else:
-        form=Registrationform()
-    return render(request,"accounts/register.html",{"form":form})
+        form = Registrationform()
+        if role == 'restaurant':
+            profile_form = RestaurantProfileForm()
+        else:
+            profile_form = CustomerProfileForm()
+    
+    context = {
+        'form': form,
+        'profile_form': profile_form,
+    }
+    return render(request,"accounts/register.html",context)
 
 
-@login_required
-@customer_required
-def customer_homepage(request):
-    return render(request, 'customer_homepage.html')

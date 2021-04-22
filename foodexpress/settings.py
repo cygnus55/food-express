@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap5',
     'crispy_forms',
+    'phonenumber_field',
     'base.apps.BaseConfig',
     'customer.apps.CustomerConfig',
     'restaurants.apps.RestaurantsConfig',
