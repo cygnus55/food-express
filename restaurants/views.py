@@ -49,29 +49,19 @@ def restaurant_dashboard(request, username):
         'restaurant': restaurant,
         'section': 'dashboard',
     }
-    return render (request, 'restaurant/dashboard.html',context)
+    return render (request, 'restaurants/dashboard.html',context)
 
 
 @login_required
 @restaurant_required
 def update_restaurant_profile(request, username):
+    restaurant = Restaurant.objects.get(user__username=username)
     if request.method == 'GET':
-        try:
-            restaurant = Restaurant.objects.get(user__username=username)
-        except Exception:
-            restaurant = None
         form = RestaurantProfileForm(instance=restaurant)
     else:
-        try:
-            restaurant = Restaurant.objects.get(user__username=username)
-        except Exception:
-            restaurant = None
-        form = RestaurantProfileForm(instance=restaurant)
         form = RestaurantProfileForm(data=request.POST, instance=restaurant)
         if form.is_valid():
-            new_restaurant=form.save(commit=False)
-
-
+            form.save()
             messages.success(request,'Profile Update Successful')
             return redirect('restaurants:restaurant_dashboard', username=username)
 
@@ -79,4 +69,4 @@ def update_restaurant_profile(request, username):
         'form': form,
         'section': 'profile',
     }
-    return render (request, 'restaurant/profile_update.html',context)
+    return render (request, 'restaurants/profile_update.html',context)

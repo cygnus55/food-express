@@ -1,17 +1,20 @@
-{% extends 'restaurant/dashboard.html' %}
+{% extends 'restaurants/dashboard.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
-        <h1 class='border-bottom'>Profile</h1>
+        <h1 class='border-bottom'>Restaurant Profile</h1>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Restaurant Profile</legend>
-                {{ form.as_p}}
+                {{ form.as_p }}
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Update</button>
             </div>
         </form>
-    </div>
+        <div>
+            <h2 class='border-bottom'>Account Settings</h2>
+            <a class="btn btn-success" href="{% url 'accounts:password_change' %}">Change Password</a>
+        </div>
+    </div> 
 {% endblock content %}

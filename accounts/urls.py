@@ -11,9 +11,9 @@ urlpatterns = [
     path('login/',views.user_login, name="login"),
     path('logout/',auth_views.LogoutView.as_view(template_name="accounts/logout.html"),name="logout"),
     path('register/<str:role>/',views.register,name='register'),
-    path('password_change/',
+    path('password-change/',
                 auth_views.PasswordChangeView.as_view(template_name="accounts/password_change_form.html",success_url=reverse_lazy('accounts:password_change_done')),name='password_change'),
-    path('password_change/done/',
+    path('password-change/done/',
                     auth_views.PasswordChangeDoneView.as_view(template_name="accounts/password_change_done.html"),name='password_change_done'),
     path('password-reset/',
          auth_views.PasswordResetView.as_view(
