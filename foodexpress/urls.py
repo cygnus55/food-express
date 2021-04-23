@@ -24,6 +24,11 @@ urlpatterns = [
     path('', include('accounts.urls', namespace='accounts')),
     path('restaurants/', include('restaurants.urls', namespace='restaurants')),
     path('customer/', include('customer.urls', namespace='custome'))
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+#debug mode only not suitable for production
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 handler404 = 'base.views.handler404'
