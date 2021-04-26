@@ -43,12 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap5',
+    'fontawesome_5',
     'crispy_forms',
     'phonenumber_field',
     'base.apps.BaseConfig',
     'customer.apps.CustomerConfig',
     'restaurants.apps.RestaurantsConfig',
-    'foods.apps.FoodsConfig',
+    'foods.apps.FoodsConfig',   
 ]
 
 MIDDLEWARE = [
