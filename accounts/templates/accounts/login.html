@@ -1,48 +1,43 @@
 {% load bootstrap5 %}
 {% load static %}
+
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title></title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-        <link rel="shortcut icon" type="image/x-icon" href="{% static 'base/favicon.ico' %}"/>
-        <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}"/>
-        {% bootstrap_css %}
-        {% bootstrap_javascript %}   
-    </head>
-    <body class="text-center">
-        <main class="form-signin">
-            <form method="POST">
-              <img class="mb-4" src="{% static 'base/logo.png' %}" alt="">
-              <h1 class="h3 mb-3">Please sign in</h1>
-              <div class="form-floating">
-                {{ form.username }}
-                {{form.username.label_tag}}
-              </div>
-              <div class="form-floating">
-                {{ form.password }}
-                {{ form.password.label_tag }}
-              </div>
-              {% csrf_token %}
-              <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-              <p class="mt-5 mb-3 text-muted">
-                Need An Account? <a class="ml-2" href="{% url 'accounts:register' 'customer' %}">Sign Up</a>
-              </p>
-              <p class="mt-5 mb-3 text-muted">
-                <a class="ml-2" href="{% url 'accounts:password_reset' %}">Forgot passwrord</a>
-              </p>
-            </form>
-          </main>          
-    </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Express - Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'base/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}"/>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}   
+</head>
 
-<!-- <div class="border-top pt-3">
-            <small class="text-muted">
-                Need An Account? <a class="ml-2" href="{% url 'accounts:register' 'customer' %}">Sign Up</a>
-            </small>
-            <small class="text-muted">
-             <a class="ml-2" href="{% url 'accounts:password_reset' %}">Forgot passwrord</a>
-            </small>
-        </div> -->
+<body class="text-center">
+    <main class="form-signin">
+        <form method="POST">
+          <a href="{% url 'base:home' %}">
+            <img class="mb-4 mx-auto" src="{% static 'base/logo.png' %}" alt="logo" />
+          </a>
+          <h1 class="h3 mb-3">Sign In</h1>
+          <div class="form-floating">
+            {{ form.username }}
+            {{form.username.label_tag}}
+          </div>
+          <div class="form-floating">
+            {{ form.password }}
+            {{ form.password.label_tag }}
+          </div>
+          {% csrf_token %}
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign In</button>
+          <p class="mt-5 mb-3 text-muted">
+            Need An Account? <a class="ml-2" href="{% url 'accounts:register' 'customer' %}">Sign Up</a>
+          </p>
+          <p class="mt-5 mb-3 text-muted">
+            <a class="ml-2" href="{% url 'accounts:password_reset' %}">Forgot Password</a>
+          </p>
+        </form>
+      </main>          
+</body>
+</html>
