@@ -1,11 +1,17 @@
 {% extends "base/base.html" %}
+
 {% block content %}
-    <div class="content-section">
-        <h2>You have been logout</h2>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-            <a >login </a>
-            </small>
+    <div class="container">
+        <div class="content-section">
+            <div class="alert alert-info">
+                You have been logged out of your account!
+            </div>
+            
+            <div class="pt-3">
+                <small class="text-muted">
+                    <a href="{% url 'accounts:login' %}">Login Again</a>
+                </small>
+            </div>
         </div>
     </div>
 {% endblock content %}
