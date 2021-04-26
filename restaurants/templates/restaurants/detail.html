@@ -1,12 +1,14 @@
 {% extends "base/base.html" %}
 
 {% block content %}
-    <div class="text-dark">
-        <h2 class="text-align-center">{{ restaurant.name }}</h2>
-        <h4 class="text-muted">{{ restaurant.address }}</h4>
-        <h4 class="text-muted">{{ restaurant.email }}</h4>
-        <hr>
-        <small class="text-muted">Opening Hours: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
-        <p>{{ restaurant.description }}</p>
+    <div class="container">
+        <div class="text-dark">
+            <h2 class="text-align-center">{{ restaurant.name }}</h2>
+            <h4 class="text-muted">{{ restaurant.address }}</h4>
+            <h4 class="text-muted">{{ restaurant.email }}</h4>
+            <hr>
+            <small class="text-muted">Opening Hours: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
+            <p>{{ restaurant.description }}</p>
+        </div>
     </div>
 {% endblock %}

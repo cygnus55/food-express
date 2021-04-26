@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if category %}{{ category.name }} - {% endif %}Foods
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2" style='float:inline-start;'>
+                <h3 class="align-items-center">
+                    Category
+                </h3>
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{% url 'foods:food_list' %}" 
+                            class="nav-link {% if not category %}active{% else %}text-dark{% endif %}">
+                            All
+                        </a>
+                    </li>
+                    {% for c in categories %}
+                        <li class="nav-item">
+                            <a href="{{ c.get_absolute_url }}" 
+                                class="nav-link {% if category.slug == c.slug %} \ 
+                                active{% else %}text-dark{% endif %}">
+                                {{ c.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+    
+            <div class="col-md-10">
+                <h3 class="align-items-center text-dark">
+                    Foods{% if category %} - {{ category.name }}{% endif %}
+                </h3>
+                <hr>
+                <div class="row">
+                    {% for food in foods %}
+                        <div class="col-md-3">
+                            <div class="card" style=" height:300px; margin-bottom:10px;" >
+                                <img class="thumbnail" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" style=" height:200px" />
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <a href="{{ food.get_absolute_url }}" class="text-dark text-decoration-none">{{ food.name }}</a>
+                                    </div> 
+                                    <small class="text-muted">{{ food.category.name }}</small>
+                                    <small class="text-muted">{{ food.price }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>                  
+            </div>
+        </div>
+    </div>    
+{% endblock content %}
