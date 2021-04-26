@@ -41,7 +41,7 @@
                     {% for restaurant in restaurants %}
                         <div class="col-md-3">
                             <div class="card" style=" height:300px; margin-bottom:10px;" >
-                                <img class="thumbnail" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'img/no_image.png' %}{% endif %}" style=" height:200px" />
+                                <img class="thumbnail" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
                                 <div class="card-body">
                                     <div class="card-title">
                                         <a href="{{ restaurant.get_absolute_url }}" class="text-dark text-decoration-none">{{ restaurant.name }}</a>

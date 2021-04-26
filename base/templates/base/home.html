@@ -2,11 +2,24 @@
 {% load static %}
 
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/footer.css' %}" />
     
     <div class="fluid-container" style="overflow: hidden;">
-        <div>
-            <img src="{% static 'base/home.jpg' %}" style="height:auto; width:100vw;" />
+        <div class="initial">
+            <img src="{% static 'base/img/home.jpg' %}" style="height:auto; width:100vw;" />
+            <div class="row searchbox-container">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <input class="form-control" type="text" placeholder="Search" />
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+        <div class="placeholder">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Unde ipsa voluptate itaque nobis officia? 
+            Velit, doloremque ut! Nemo exercitationem, laudantium dolorum corrupti 
+            labore adipisci soluta obcaecati, sapiente alias doloribus rerum.
         </div>
         <div class="about" >
             <div class="mt-20">
@@ -27,10 +40,8 @@
                         <div class="col-xl-2 col-md-4 col-sm-4 col-12">
                             <h6 class="mb-3 mb-lg-4 bold-text "><b>MENU</b></h6>
                             <ul class="list-unstyled">
-                                <li>Home</li>
-                                <li>About</li>
-                                <li>Blog</li>
-                                <li>Portfolio</li>
+                                <a href="#"><li>Home</li></a>
+                                <a href="{% url 'restaurants:restaurant_list' %}"><li>Restaurants</li></a>
                             </ul>
                         </div>
                         <div class="col-xl-2 col-md-4 col-sm-4 col-12">
