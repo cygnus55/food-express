@@ -66,7 +66,6 @@ def register(request,role):
     context = {
         'form': form,
         'profile_form': profile_form,
+        'title': 'Register'
     }
-    return render(request,"accounts/register.html",context)
-
-
+    return render(request, "accounts/register.html", context)

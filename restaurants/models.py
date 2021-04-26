@@ -1,11 +1,9 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
-
-from accounts.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 
-# Create your models here.
+from accounts.models import User
 
 
 class Category(models.Model):
@@ -26,17 +24,22 @@ class Category(models.Model):
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
-        return reverse('restaurants:restaurant_list_by_category',
-                        args=[self.slug])
+        return reverse(
+            'restaurants:restaurant_list_by_category',
+            args=[self.slug]
+        )
     
-
 
 class Restaurant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, related_name='restaurants', on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, 
+        related_name='restaurants', 
+        on_delete=models.CASCADE
+    )
     name = models.CharField(db_index=True, max_length=200)
     slug = models.SlugField(db_index=True, max_length=200)
-    phone_no = PhoneNumberField()
+    phone_no = PhoneNumberField(region='NE')
     website_link = models.URLField(max_length=200, blank=True)
     facebook_link = models.URLField(max_length=200, blank=True)
     logo = models.ImageField(upload_to='restaurants/logos', blank=True)
@@ -54,14 +57,13 @@ class Restaurant(models.Model):
     def __str__(self):
         return f'{self.name} for user {self.user.username}'
         
-    
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
-        return reverse('restaurants:restaurant_detail',
-                        args=[self.id,self.slug])
-    
-    
+        return reverse(
+            'restaurants:restaurant_detail',
+            args=[self.id,self.slug]
+        )

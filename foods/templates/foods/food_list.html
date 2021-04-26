@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    {% if category %}{{ category.name }} - {% endif %}Restaurants
+    {% if category %}{{ category.name }} - {% endif %}Foods
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="{% url 'restaurants:restaurant_list' %}" 
+                        <a href="{% url 'foods:food_list' %}" 
                             class="nav-link {% if not category %}active{% else %}text-dark{% endif %}">
                             All
                         </a>
@@ -34,20 +34,20 @@
     
             <div class="col-md-10">
                 <h3 class="align-items-center text-dark">
-                    Restaurants {% if category %}- {{ category.name }} {% endif %}
+                    Foods{% if category %} - {{ category.name }}{% endif %}
                 </h3>
                 <hr>
                 <div class="row">
-                    {% for restaurant in restaurants %}
+                    {% for food in foods %}
                         <div class="col-md-3">
                             <div class="card" style=" height:300px; margin-bottom:10px;" >
-                                <img class="thumbnail" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
+                                <img class="thumbnail" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" style=" height:200px" />
                                 <div class="card-body">
                                     <div class="card-title">
-                                        <a href="{{ restaurant.get_absolute_url }}" class="text-dark text-decoration-none">{{ restaurant.name }}</a>
+                                        <a href="{{ food.get_absolute_url }}" class="text-dark text-decoration-none">{{ food.name }}</a>
                                     </div> 
-                                    <small class="text-muted">{{ restaurant.category.name }}</small><br/>
-                                    <small class="text-muted">Opening hour: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
+                                    <small class="text-muted">{{ food.category.name }}</small>
+                                    <small class="text-muted">{{ food.price }}</small>
                                 </div>
                             </div>
                         </div>
