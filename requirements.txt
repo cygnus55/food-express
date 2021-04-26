@@ -3,6 +3,7 @@ beautifulsoup4==4.9.3
 Django==3.2
 django-bootstrap-v5==1.0.2
 django-crispy-forms==1.11.2
+django-fontawesome-5==1.0.18
 django-phonenumber-field==5.1.0
 importlib-metadata==2.1.1
 phonenumbers==8.12.21
