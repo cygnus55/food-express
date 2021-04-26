@@ -36,6 +36,9 @@
                 {% if user.is_authenticated %}
                   {% if not user.is_restaurant %}
                     <li class="nav-item">
+                      <a class="nav-link btn  my-md-0 ms-md-3" href="#">Surf Chef</a>
+                    </li>
+                    <li class="nav-item">
                       <a class="nav-link btn  my-md-0 ms-md-3" href="{% url 'restaurants:restaurant_list' %}">Surf Restaurants</a>
                     </li>
                   {% endif %}
@@ -44,6 +47,9 @@
                   </li>
                 
                 {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link btn  my-md-0 ms-md-3" href="#">Surf Chef</a>
+                  </li>
                   <li class="nav-item">
                     <a class="nav-link btn  my-md-0 ms-md-3" href="{% url 'restaurants:restaurant_list' %}">Surf Restaurants</a>
                   </li>
