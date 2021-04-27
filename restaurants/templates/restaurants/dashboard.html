@@ -35,6 +35,11 @@
                       </a>
                     </li>
                     <li class="nav-item">
+                      <a class="nav-link {% if section == 'foods' %} active {% else %} text-dark {% endif %}" href=#>
+                        Foods
+                      </a>
+                    </li>
+                    <li class="nav-item">
                       <a class="nav-link {% if section == 'profile' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:update_restaurant_profile' user.username %}">
                         Profile
                       </a>
