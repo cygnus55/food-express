@@ -154,6 +154,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+LOGOUT_REDIRECT_URL = 'accounts:login'
+
 LOGIN_URL = '/login/'
 
 LOGOUT_URL = '/logout/'
