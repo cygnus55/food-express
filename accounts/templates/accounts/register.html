@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container">
+    <div class="container" style="margin-top: 20px; margin-bottom: 20px">
         <div class="py-100">
             <form method="POST">
                 {% csrf_token %}
@@ -11,14 +11,20 @@
                     {{ form|crispy }}
                     {{ profile_form|crispy }}
                 </fieldset>
-                <div class="form-group">
+                <div class="form-group" style="margin-top: 10px;">
                     <button class="btn btn-outline-info" type="submit">Sign Up</button>
                 </div>
             </form>
-            <div class="border-top pt-3">
-                <small class="text-muted">
-                    Already Have An Account? <a class="ml-2" href="{% url 'accounts:login' %}">Sign In</a>
-                </small>
+            <hr>
+            <div class="row">
+                <div class="col-md">
+                    <a href="{% url 'accounts:register' 'restaurant' %}" class="btn btn-outline-success">Register As Restaurant</a>
+                </div>
+                <div class="col-md">
+                    <small class="text-muted mt-2">
+                        Already Have An Account? <a class="ml-2" href="{% url 'accounts:login' %}">Sign In</a>
+                    </small>
+                </div>                
             </div>
         </div>
     </div>

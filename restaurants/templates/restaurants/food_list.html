@@ -40,9 +40,14 @@
                 <div class="row">
                     {% for food in foods %}
                         <div class="col-md-3">
-                            <div class="card" style=" height:300px; margin-bottom:10px;" >
-                                <span style="float:left;">
-                                    <i class="far fa-trash-alt"></i>
+                            <div class="card" style=" height:300px auto; margin-bottom:10px;" >
+                                <span style="display: inline-block;">
+                                    <a href="{% url 'restaurants:update_food' food.id %}" style="text-decoration: none;">
+                                        <i class="far fa-edit text-info"></i>
+                                    </a>&nbsp;
+                                    <a href="{% url 'restaurants:delete_food' food.id %}" style="text-decoration: none;">
+                                        <i class="far fa-trash-alt text-danger"></i>
+                                    </a>
                                 </span>
                                 <img class="thumbnail" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
                                 <div class="card-body">
@@ -60,7 +65,7 @@
                         <a href="{% url 'restaurants:create_food' %}" title="Add New Food">
                             <div class="card border-primary justify-content-center" style=" height:300px; margin-bottom:10px;" >
                                 <span style="text-align: center;">
-                                    <i class="fab fa-plus fa-3x text-primary"></i>
+                                    <i class="fas fa-plus fa-3x text-primary"></i>
                                 </span>
                             </div>
                         </a>
