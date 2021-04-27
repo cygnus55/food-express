@@ -34,6 +34,8 @@
           <p class="mt-5 mb-3 text-muted">
             Need An Account? <a class="ml-2" href="{% url 'accounts:register' 'customer' %}">Sign Up</a>
           </p>
+          <hr>
+          <a href="{% url 'accounts:register' 'restaurant' %}" class="btn btn-success">Register As Restaurant</a>
           <p class="mt-5 mb-3 text-muted">
             <a class="ml-2" href="{% url 'accounts:password_reset' %}">Forgot Password</a>
           </p>
