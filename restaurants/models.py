@@ -39,7 +39,7 @@ class Restaurant(models.Model):
     )
     name = models.CharField(db_index=True, max_length=200)
     slug = models.SlugField(db_index=True, max_length=200)
-    phone_no = PhoneNumberField(region='NE')
+    phone_no = PhoneNumberField(region='NP')
     website_link = models.URLField(max_length=200, blank=True)
     facebook_link = models.URLField(max_length=200, blank=True)
     logo = models.ImageField(upload_to='restaurants/logos', blank=True)
