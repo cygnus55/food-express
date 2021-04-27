@@ -15,7 +15,7 @@ class Category(models.Model):
         verbose_name_plural = 'food_categories'
 
     def __str__(self):
-        return f'FoodCategory: {self.name}'
+        return self.name
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -46,7 +46,7 @@ class FoodTemplate(models.Model):
         ordering = ('name',)
     
     def __str__(self):
-        return f'FoodTemplate: {self.name}'
+        return self.name
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -69,7 +69,7 @@ class Food(models.Model):
         ordering = ('-created',)
     
     def __str__(self):
-        return f'Food: {self.name}'
+        return self.name
 
     def get_absolute_url(self):
         return reverse(
