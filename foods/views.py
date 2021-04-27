@@ -12,7 +12,10 @@ class FoodListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('category_slug')
         context['categories'] = Category.objects.all()
+        if slug:
+            context['category'] = get_object_or_404(Category, slug=slug)
         return context
 
     def get_queryset(self, **kwargs):
@@ -27,15 +30,3 @@ class FoodDetailView(DetailView):
     model = Food
     template = 'foods/food_detail.html'
     context_object_name = 'food'
-
-
-class FoodCreateView(CreateView):
-    model = Food
-    # ! Remove restaurant and obtain the current restaurant through authenticated user
-    fields = ['category', 'name', 'description', 'price', 'image', 'available', 'restaurant']
-
-
-class FoodUpdateView(UpdateView):
-    model = Food
-    # ! Remove restaurant and obtain the current restaurant through authenticated user
-    fields = ['category', 'name', 'description', 'price', 'image', 'available', 'restaurant']    
