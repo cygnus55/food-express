@@ -10,12 +10,8 @@ from .decorators import restaurant_required
 from .models import Category, Restaurant
 from accounts.models import User
 from .forms import RestaurantProfileForm
-from foods.models import Food, Category
+from foods.models import Food, Category as FoodCategory
 from foods.views import FoodListView, FoodDetailView
-
-
-# Create your views here.
-
 
 def restaurant_list(request, category_slug=None):
     category = None
@@ -28,12 +24,15 @@ def restaurant_list(request, category_slug=None):
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         restaurants = restaurants.filter(category=category)
-    return render(request,
-                'restaurants/list.html',
-                {'category': category,
-                'categories': categories,
-                'restaurants': restaurants})
-
+    return render(
+        request,
+        'restaurants/restaurant_list.html',
+        {
+            'category': category,
+            'categories': categories,
+            'restaurants': restaurants
+        }
+    )
 
 def restaurant_detail(request, id, slug):
     restaurant = get_object_or_404(Restaurant,
@@ -41,10 +40,8 @@ def restaurant_detail(request, id, slug):
                                 slug=slug)
     
     return render(request,
-                'restaurants/detail.html',
+                'restaurants/restaurant_detail.html',
                 {'restaurant': restaurant})
-
-
 
 @login_required
 @restaurant_required
@@ -55,7 +52,6 @@ def restaurant_dashboard(request, username):
         'section': 'dashboard',
     }
     return render (request, 'restaurants/dashboard.html',context)
-
 
 @login_required
 @restaurant_required
@@ -127,7 +123,7 @@ class RestaurantFoodListView(LoginRequiredMixin, UserPassesTestMixin, FoodListVi
         restaurant_foods = self.model.objects.filter(restaurant=self.request.user.restaurant)
         category_slug = self.kwargs.get('category_slug')
         if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
+            category = get_object_or_404(FoodCategory, slug=category_slug)
             return restaurant_foods.filter(category=category)
         return restaurant_foods.all()
     
@@ -138,7 +134,7 @@ class RestaurantFoodListView(LoginRequiredMixin, UserPassesTestMixin, FoodListVi
         categories = set(map(lambda x: x.category, restaurant_foods))
         context['categories'] = categories
         if slug:
-            context['category'] = get_object_or_404(Category, slug=slug)
+            context['category'] = get_object_or_404(FoodCategory, slug=slug)
         return context
 
 

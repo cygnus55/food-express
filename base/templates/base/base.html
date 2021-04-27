@@ -24,7 +24,7 @@
 
 <body>
    <header>
-    <nav class="navbar navbar-expand-lg navbar-light  top-navbar" data-toggle="sticky-onscroll">  
+    <nav class="navbar navbar-expand-lg navbar-dark top-navbar" data-toggle="sticky-onscroll">  
           <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'base:home' %}">
               <img src="{% static 'base/img/logo.png' %}" width=90 height=70 />
@@ -44,7 +44,7 @@
                     </li>
                   {% endif %}
                   <li class="nav-item">
-                    <a class="nav-link btn btn-outline-info  my-md-0 ms-md-3" href="{% url 'accounts:logout' %}">Logout</a>
+                    <a class="nav-link btn btn-outline-info my-md-0 ms-md-3" href="{% url 'accounts:logout' %}">Logout</a>
                   </li>
                 
                 {% else %}
@@ -58,7 +58,7 @@
                     <a class="nav-link btn my-md-0 ms-md-3" href="{% url 'accounts:register' 'customer' %}">Register</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link btn btn-info my-md-0 ms-md-3 login-btn" href="{% url 'accounts:login' %}">Login</a>
+                    <a class="nav-link btn btn-info my-md-0 ms-md-3 login-btn text-dark" href="{% url 'accounts:login' %}">Login</a>
                   </li>
                 {% endif %}
               </ul>

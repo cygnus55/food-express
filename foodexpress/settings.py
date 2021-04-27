@@ -159,3 +159,5 @@ LOGOUT_REDIRECT_URL = 'accounts:login'
 LOGIN_URL = '/login/'
 
 LOGOUT_URL = '/logout/'
+
+PHONE_NUMBER_REGION = 'NP'
