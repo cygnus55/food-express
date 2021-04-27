@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_list_or_404
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from foods.models import Food, Category
@@ -16,11 +16,10 @@ class FoodListView(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        category = self.kwargs.get('category_slug')
-        print(category)
-        if category:
-            # ! Get 404 if object not found
-            return self.model.objects.filter(category__slug=category)
+        category_slug = self.kwargs.get('category_slug')
+        if category_slug:
+            category = get_object_or_404(Category, slug=category_slug)
+            return self.model.objects.filter(category=category)
         return self.model.objects.all()
 
 
@@ -33,7 +32,7 @@ class FoodDetailView(DetailView):
 class FoodCreateView(CreateView):
     model = Food
     # ! Remove restaurant and obtain the current restaurant through authenticated user
-    fields = ['category','name', 'description', 'price', 'image', 'available', 'restaurant']
+    fields = ['category', 'name', 'description', 'price', 'image', 'available', 'restaurant']
 
 
 class FoodUpdateView(UpdateView):
