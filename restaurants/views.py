@@ -2,7 +2,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
@@ -95,6 +95,7 @@ class FoodUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Food
     fields = ['category', 'name', 'description', 'price', 'image', 'available']
     template_name = 'restaurants/food_form.html'
+    success_url = reverse_lazy('restaurants:food_list')
 
     def test_func(self):
         return self.request.user.is_active and self.request.user.is_restaurant \
@@ -103,6 +104,17 @@ class FoodUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         form.instance.restaurant = self.request.user.restaurant
         return super().form_valid(form)
+
+
+class FoodDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Food
+    success_url = reverse_lazy('restaurants:food_list')
+    context_object_name = 'form'
+    template_name = 'restaurants/food_delete.html'
+
+    def test_func(self):
+        return self.request.user.is_active and self.request.user.is_restaurant \
+            and self.get_object().restaurant == self.request.user.restaurant
 
 
 class RestaurantFoodListView(LoginRequiredMixin, UserPassesTestMixin, FoodListView):
