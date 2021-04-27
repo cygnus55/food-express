@@ -24,6 +24,13 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse(
+            'restaurants:foods_list_by_category',
+            args=[self.slug]
+        )
+
+    @property
+    def get_absolute_url_for_customer(self):
+        return reverse(
             'foods:foods_list_by_category',
             args=[self.slug]
         )
@@ -59,12 +66,19 @@ class Food(models.Model):
     restaurant = models.ForeignKey(Restaurant, related_name='restaurant', on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('-created',)
     
     def __str__(self):
         return f'Food: {self.name}'
 
     def get_absolute_url(self):
+        return reverse(
+            'restaurants:food_detail',
+            args=[self.id]
+        )
+    
+    @property
+    def get_absolute_url_for_customer(self):
         return reverse(
             'foods:food_detail',
             args=[self.id]

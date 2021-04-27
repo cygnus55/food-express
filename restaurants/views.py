@@ -2,11 +2,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.generic import CreateView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
 
 from .decorators import restaurant_required
 from .models import Category, Restaurant
 from accounts.models import User
 from .forms import RestaurantProfileForm
+from foods.models import Food, Category
+from foods.views import FoodListView, FoodDetailView
 
 
 # Create your views here.
@@ -70,3 +75,64 @@ def update_restaurant_profile(request, username):
         'section': 'profile',
     }
     return render (request, 'restaurants/profile_update.html',context)
+
+
+class FoodCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Food
+    fields = ['category', 'name', 'description', 'price', 'image', 'available']
+    template_name = 'restaurants/food_form.html'
+    success_url = reverse_lazy('restaurants:food_list')
+
+    def test_func(self):
+        return self.request.user.is_active and self.request.user.is_restaurant
+    
+    def form_valid(self, form):
+        form.instance.restaurant = self.request.user.restaurant
+        return super().form_valid(form)
+
+
+class FoodUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Food
+    fields = ['category', 'name', 'description', 'price', 'image', 'available']
+    template_name = 'restaurants/food_form.html'
+
+    def test_func(self):
+        return self.request.user.is_active and self.request.user.is_restaurant \
+            and self.get_object().restaurant == self.request.user.restaurant
+    
+    def form_valid(self, form):
+        form.instance.restaurant = self.request.user.restaurant
+        return super().form_valid(form)
+
+
+class RestaurantFoodListView(LoginRequiredMixin, UserPassesTestMixin, FoodListView):
+    template_name = 'restaurants/food_list.html'
+
+    def test_func(self):
+        return self.request.user.is_active and self.request.user.is_restaurant
+
+    def get_queryset(self, **kwargs):
+        restaurant_foods = self.model.objects.filter(restaurant=self.request.user.restaurant)
+        category_slug = self.kwargs.get('category_slug')
+        if category_slug:
+            category = get_object_or_404(Category, slug=category_slug)
+            return restaurant_foods.filter(category=category)
+        return restaurant_foods.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('category_slug')
+        restaurant_foods = self.model.objects.filter(restaurant=self.request.user.restaurant)
+        categories = set(map(lambda x: x.category, restaurant_foods))
+        context['categories'] = categories
+        if slug:
+            context['category'] = get_object_or_404(Category, slug=slug)
+        return context
+
+
+class RestaurantFoodDetailView(LoginRequiredMixin, UserPassesTestMixin, FoodDetailView):
+    template_name = 'restaurants/food_detail.html'
+
+    def test_func(self):
+        return self.request.user.is_active and self.request.user.is_restaurant \
+            and self.get_object().restaurant == self.request.user.restaurant
