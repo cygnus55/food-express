@@ -1,16 +1,19 @@
 {% load bootstrap5 %}
 {% load static %}
+{% load fontawesome_5 %}
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title></title>
+        <title>{% if title %} - {{ title }} {% endif %}</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
         <link rel="shortcut icon" type="image/x-icon" href="{% static 'base/favicon.ico' %}"/>
         <link rel="stylesheet" href="{% static 'css/dashboard.css' %}"/>
         {% bootstrap_css %}
-        {% bootstrap_javascript %}   
+        {% bootstrap_javascript %}
+        {% fontawesome_5_static %}
     </head>
     <body>
         <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
@@ -35,7 +38,7 @@
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link {% if section == 'foods' %} active {% else %} text-dark {% endif %}" href=#>
+                      <a class="nav-link {% if section == 'foods' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:food_list' %}">
                         Foods
                       </a>
                     </li>
@@ -65,7 +68,7 @@
           
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             {% block content %}
-              <h1>Dashboard</h1>
+              <h3>Dashboard</h3>
             {% endblock %}
           </div>
         </main>

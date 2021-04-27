@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %}
+{% extends 'restaurants/dashboard.html' %}
 {% load static %}
 
 {% block title %}
@@ -15,14 +15,14 @@
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="{% url 'foods:food_list' %}" 
+                        <a href="{% url 'restaurants:food_list' %}" 
                             class="nav-link {% if not category %}active{% else %}text-dark{% endif %}">
                             All
                         </a>
                     </li>
                     {% for c in categories %}
                         <li class="nav-item">
-                            <a href="{{ c.get_absolute_url_for_customer }}" 
+                            <a href="{{ c.get_absolute_url }}" 
                                 class="nav-link {% if category.slug == c.slug %} \ 
                                 active{% else %}text-dark{% endif %}">
                                 {{ c.name }}
@@ -41,21 +41,31 @@
                     {% for food in foods %}
                         <div class="col-md-3">
                             <div class="card" style=" height:300px; margin-bottom:10px;" >
+                                <span style="float:left;">
+                                    <i class="far fa-trash-alt"></i>
+                                </span>
                                 <img class="thumbnail" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
                                 <div class="card-body">
                                     <div class="card-title">
-                                        <a href="{{ food.get_absolute_url_for_customer }}" class="text-dark text-decoration-none">{{ food.name }}</a>
+                                        <a href="{{ food.get_absolute_url }}" class="text-dark text-decoration-none">{{ food.name }}</a>
                                     </div> 
                                     <small class="text-muted">{{ food.category.name }}</small>
                                     <br/>
-                                    <small class="text-muted">Rs. {{ food.price }}</small>
-                                    <br/>
-                                    <small class="text-muted">{{ food.restaurant.name }}</small>
+                                    <small class="text-muted"> Rs.{{ food.price }}</small>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
-                </div>                  
+                    <div class="col-md-3">
+                        <a href="{% url 'restaurants:create_food' %}" title="Add New Food">
+                            <div class="card border-primary justify-content-center" style=" height:300px; margin-bottom:10px;" >
+                                <span style="text-align: center;">
+                                    <i class="fab fa-plus fa-3x text-primary"></i>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>    
