@@ -6,7 +6,7 @@
     
     <div class="fluid-container" style="overflow: hidden; position: absolute; top: 0;">
         <div class="initial">
-            <img src="{% static 'base/img/home.jpg' %}" style="height: 120vh; width:100vw;" />
+            <img src="{% static 'base/img/home.jpg' %}" style="height: auto; width:100vw;" />
             <div class="row searchbox-container">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
@@ -16,12 +16,27 @@
             </div>
         </div>
 
-        <div class="placeholder">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Unde ipsa voluptate itaque nobis officia? 
-            Velit, doloremque ut! Nemo exercitationem, laudantium dolorum corrupti 
-            labore adipisci soluta obcaecati, sapiente alias doloribus rerum.
+       
+        <div class="container " style="margin-bottom: 20px ;">
+            <div class="row ">
+                <h2 ><i class="fas fa-utensils"></i> Hot picks </h2>
+            </div>
+            <div class="row">
+                <div class="scrollcards">
+                    {% for restaurant in restaurants %}
+                        <div class="card">
+                            <img class="thumbnail" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"  style=" height:200px" >
+                            <div class="card-block">
+                                <h4 class="card-title">{{ restaurant.name }}</h4>
+                                <p class="card-text">{{ restaurant.phone_no }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
+            
+    
 
         <div class="about" >
             <div class="mt-20">
