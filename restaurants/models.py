@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 from phonenumber_field.modelfields import PhoneNumberField
+from PIL import Image
 
 from accounts.models import User
 
@@ -61,7 +62,15 @@ class Restaurant(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
-    
+        
+        if self.logo:
+            img = Image.open(self.logo.path)
+
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.logo.path)
+        
     def get_absolute_url(self):
         return reverse(
             'restaurants:restaurant_detail',
