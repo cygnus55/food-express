@@ -54,7 +54,7 @@ div.scrollcards .card {
     padding: 14px;
     text-decoration: none;
     height: auto; 
-    width: 300px;
+    width: 300px auto;
 }
 .restaurant-logo{
     justify-content: center;

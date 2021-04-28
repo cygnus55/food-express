@@ -25,9 +25,13 @@
                 <div class="scrollcards">
                     {% for restaurant in restaurants %}
                         <div class="card">
-                            <img class="thumbnail" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"  style=" height:200px" >
+                            <img class="thumbnail" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"  style=" height:200px; width :200px" >
                             <div class="card-block">
-                                <h4 class="card-title">{{ restaurant.name }}</h4>
+                                <a href="{% url 'restaurants:restaurant_detail' restaurant.id restaurant.slug %}">
+                                    <h5 class="card-title text-wrap" style="width: 150px;" >
+                                        {{ restaurant.name }}
+                                    </h5>
+                                </a>
                                 <p class="card-text">{{ restaurant.phone_no }}</p>
                             </div>
                         </div>
