@@ -40,7 +40,7 @@
                 <div class="row">
                     {% for food in foods %}
                         <div class="col-md-3">
-                            <div class="card" style=" height:300px auto; margin-bottom:10px;" >
+                            <div class="card" style=" height: 100%; margin-bottom:10px;" >
                                 <span style="display: inline-block;">
                                     <a href="{% url 'restaurants:update_food' food.id %}" style="text-decoration: none;">
                                         <i class="far fa-edit text-info"></i>
@@ -63,7 +63,7 @@
                     {% endfor %}
                     <div class="col-md-3">
                         <a href="{% url 'restaurants:create_food' %}" title="Add New Food">
-                            <div class="card border-primary justify-content-center" style=" height:300px; margin-bottom:10px;" >
+                            <div class="card border-primary justify-content-center" style=" height: 100%; margin-bottom:10px; min-height: 300px;" >
                                 <span style="text-align: center;">
                                     <i class="fas fa-plus fa-3x text-primary"></i>
                                 </span>
