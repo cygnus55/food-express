@@ -34,6 +34,20 @@
         border-radius: 50%;
         font-size: 14px;
       }
+      .box-element{
+        box-shadow:hsl(0, 0%, 80%) 0 0 16px;
+        background-color: #fff;
+        border-radius: 4px;
+        padding: 10px;
+      }
+      .cart-row{
+        display: flex;
+          align-items: flex-stretch;
+          padding-bottom: 10px;
+          margin-bottom: 10px;
+          border-bottom: 1px solid #ececec;
+      
+      }
       {% block style %}
       {% endblock %}
     </style>
@@ -60,7 +74,7 @@
                     <a class="nav-link btn  my-md-0 ms-md-3" href="{% url 'restaurants:restaurant_list' %}">Surf Restaurants</a>
                   </li>
                   <li class="nav-item">
-                    <a href="#">
+                    <a href="{% url 'customer:cart' %}">
                       <img  id="cart-icon" src="{% static 'base/img/cart.jpg' %}">
                   </a>
                   <p id="cart-total">0</p>
