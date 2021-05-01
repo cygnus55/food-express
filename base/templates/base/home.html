@@ -15,12 +15,26 @@
                 <div class="col-md-4"></div>
             </div>
         </div>
-        <div class="placeholder">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Unde ipsa voluptate itaque nobis officia? 
-            Velit, doloremque ut! Nemo exercitationem, laudantium dolorum corrupti 
-            labore adipisci soluta obcaecati, sapiente alias doloribus rerum.
-        </div>
+            <div class="container-fluid" >
+                <h2 style="text-align: center;">OUR TOP RESTAURANTS</h2>
+                <div class="row">
+                    {% for restaurant in restaurants %}
+                        <div class="col-md-3">
+                            <div class="card" style=" height:300px; margin-bottom:10px;" >
+                                <img class="thumbnail" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <a href="{{ restaurant.get_absolute_url }}" class="text-dark text-decoration-none">{{ restaurant.name }}</a>
+                                    </div> 
+                                    <small class="text-muted">{{ restaurant.category.name }}</small><br/>
+                                    <small class="text-muted">Opening hour: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>   
+            </div>               
+        
         <div class="about" >
             <div class="mt-20">
                 <h3 style="text-align: center;">About Us</h3>
