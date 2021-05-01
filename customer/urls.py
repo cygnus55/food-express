@@ -5,4 +5,6 @@ app_name = 'customer'
 
 urlpatterns = [
     path('home/', views.customer_homepage, name='homepage'),
+    path('cart/', views.cart, name="cart")
+
 ]
