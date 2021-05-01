@@ -18,7 +18,24 @@
       body{
         font-family: Roboto;
       }
-      {% block style %}{% endblock %}
+      #cart-icon{
+        width:25px;
+        display: inline-block;
+        margin-left: 15px;
+      }
+      
+      #cart-total{
+        display: block;
+        text-align: center;
+        color:#fff;
+        background-color: red;
+        width: 20px;
+        height: 25px;
+        border-radius: 50%;
+        font-size: 14px;
+      }
+      {% block style %}
+      {% endblock %}
     </style>
 </head>
 
@@ -35,17 +52,35 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
               <ul class="navbar-nav">
                 {% if user.is_authenticated %}
-                  {% if not user.is_restaurant %}
-                    <li class="nav-item">
-                      <a class="nav-link btn  my-md-0 ms-md-3" href="#">Surf Chef</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link btn  my-md-0 ms-md-3" href="{% url 'restaurants:restaurant_list' %}">Surf Restaurants</a>
-                    </li>
-                  {% endif %}
+                  {% if user.is_customer %}
+                  <li class="nav-item">
+                    <a class="nav-link btn  my-md-0 ms-md-3" href="#">Surf Chef</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link btn  my-md-0 ms-md-3" href="{% url 'restaurants:restaurant_list' %}">Surf Restaurants</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#">
+                      <img  id="cart-icon" src="{% static 'base/img/cart.jpg' %}">
+                  </a>
+                  <p id="cart-total">0</p>
+                  </li>
                   <li class="nav-item">
                     <a class="nav-link btn btn-outline-info my-md-0 ms-md-3" href="{% url 'accounts:logout' %}">Logout</a>
                   </li>
+                  {% endif %}
+                  {% if  user.is_restaurant %}
+                  <li class="nav-item">
+                    <a class="nav-link btn btn-outline-info my-md-0 ms-md-3" href="{% url 'accounts:logout' %}">Logout</a>
+                  </li>
+                  {% endif %}
+                  {%if user.is_chef %}
+                  <li class="nav-item">
+                    <a class="nav-link btn btn-outline-info my-md-0 ms-md-3" href="{% url 'accounts:logout' %}">Logout</a>
+                  </li>
+                  {% endif%}
+                    
+                  
                 
                 {% else %}
                   <li class="nav-item">
