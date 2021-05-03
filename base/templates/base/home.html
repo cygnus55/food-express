@@ -11,32 +11,54 @@
             </div>
         </div>
 
-       
-        <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
-            <div class="row ">
-                <h2 ><i class="fas fa-utensils"></i> Hot picks </h2>
+
+        <div class="container" style="min-height: 100vh; padding: 30px 0; border-bottom: 1px solid #cccccc;" id="food">
+            <div class="row" style="margin-bottom: 10px;">
+                <h2 ><i class="fas fa-utensils"></i> Hot picks</h2>
             </div>
             <div class="row">
-                <div class="scrollcards">
-                    {% for restaurant in restaurants %}
-                        <div class="card">
-                            <img class="thumbnail" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"  style=" height:200px; width :200px" >
-                            <div class="card-block">
-                                <a href="{% url 'restaurants:restaurant_detail' restaurant.id restaurant.slug %}">
-                                    <h5 class="card-title text-wrap" style="width: 150px;" >
-                                        {{ restaurant.name }}
-                                    </h5>
-                                </a>
-                                <p class="card-text">{{ restaurant.phone_no }}</p>
+                {% for food in foods %}
+                    <div class="col-md-3">
+                        <div class="card" style="height: 300px auto; margin-bottom:10px;" >
+                            <img class="thumbnail" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <a href="{{ food.get_absolute_url_for_customer }}" class="text-dark text-decoration-none">{{ food.name }}</a>
+                                </div> 
+                                <small class="text-muted">{{ food.category.name }}</small>
+                                <br/>
+                                <small class="text-muted">Rs. {{ food.price }}</small>
+                                <br/>
+                                <small class="text-muted">{{ food.restaurant.name }}</small>
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
+            </div>   
+        </div>
+        
+        <div class="container" style="min-height: 100vh; padding: 30px 0;" id="restaurants">
+            <div class="row" style="margin-bottom: 10px;">
+                <h2 ><i class="fas fa-utensils"></i> Explore Restaurants</h2>
             </div>
+            <div class="row">
+                {% for restaurant in restaurants %}
+                    <div class="col-md-3">
+                        <div class="card" style="height: 300px auto; margin-bottom:10px;" >
+                            <img class="thumbnail restaurant-logo" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <a href="{{ restaurant.get_absolute_url }}" class="text-dark text-decoration-none">{{ restaurant.name }}</a>
+                                </div> 
+                                <small class="text-muted">{{ restaurant.category.name }}</small><br/>
+                                <small class="text-muted">Opening hour: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>     
         </div>
             
-    
-
         <div class="about" >
             <div class="mt-20">
                 <h3 style="text-align: center;">About Us</h3>
@@ -55,9 +77,9 @@
                             <div class="col-xl-2 col-md-4 col-sm-4 col-12">
                                 <h6 class="mb-3 mb-lg-4 bold-text "><b>MENU</b></h6>
                                 <ul class="list-unstyled">
-                                    <a style="text-decoration: none;" href="#"><li>Home</li></a>
-                                    <a style="text-decoration: none;" href="{% url 'restaurants:restaurant_list' %}"><li>Restaurants</li></a>
-                                    <a style="text-decoration: none;" href="{% url 'foods:food_list' %}"><li>Foods</li></a>
+                                    <a style="text-decoration: none;" href="{% url 'restaurants:restaurant_list' %}"><li>Surf Restaurants</li></a>
+                                    <a style="text-decoration: none;" href="{% url 'foods:food_list' %}"><li>Surf Foods</li></a>
+                                    <a style="text-decoration: none;" href="#"><li>Surf Chefs</li></a>
                                 </ul>
                             </div>
                             <div class="col-xl-2 col-md-4 col-sm-4 col-12">
