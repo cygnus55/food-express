@@ -38,10 +38,23 @@ def restaurant_detail(request, id, slug):
     restaurant = get_object_or_404(Restaurant,
                                 id=id,
                                 slug=slug)
+
+    foods_obj = Food.objects.filter(restaurant=restaurant)
+    food_categories = set(map(lambda x: x.category, foods_obj))
+
+    foods = {}
+
+    for category in food_categories:
+        foods[category.name] = []
     
+    for food in foods_obj:
+        foods[food.category.name].append(food)
+
     return render(request,
                 'restaurants/restaurant_detail.html',
-                {'restaurant': restaurant})
+                {'restaurant': restaurant,
+                'foods': foods,
+                })
 
 @login_required
 @restaurant_required

@@ -97,6 +97,46 @@
 
                 <div class="col-md-12"></div>
             </div>
+            <hr>
+            <div class="row">
+                <div class="col-2" style="position: sticky; height: ;">
+                    <div class="list-group list-group-flush" id="categories-group">
+                        {% for category in foods %}
+                            <div class="list-group-item">
+                                <a href="#{{ category }}" class="text-decoration-none text-dark">{{ category }}</a>
+                            </div>
+                        {% endfor %}
+                        </div>
+                </div>
+                <div class="col-lg-8">
+                    {% for category,foods_list in foods.items %}
+                        <div id="{{ category }}" >
+                            <legend>{{ category}}</legend>
+                            {% with total=foods_list|length%}
+                                <small class="text-muted">{{ total }} item{{ total|pluralize }}</small>
+                            {% endwith %}
+
+                            <div class="list-group list-group-flush">
+                                {% for food in foods_list %}
+                                    <div class="list-group-item list-group-item-action"style="margin-bottom:20px">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">
+                                                <a href="{% url 'foods:food_detail' food.pk %}" class="text-decoration-none text-dark">
+                                                    {{ food.name }}
+                                                </a>
+                                            </h6>
+                                            <a href="#" class="btn btn-sm btn-outline-success">Add | <i class="fas fa-cart-plus"></i></a>
+                                        </div>
+                                        <small class="text-muted">{{ food.category.name }}</small> <br/>
+                                        <small class="text-muted">Rs. {{ food.price }}</small>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
