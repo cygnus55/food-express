@@ -161,3 +161,8 @@ LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
 
 PHONE_NUMBER_REGION = 'NP'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'accounts.authentication.EmailAuthBackend',
+]
