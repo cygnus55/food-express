@@ -83,7 +83,7 @@
                           </a>
                         </li>
                         <a class="nav-link my-md-0 ms-md-3" href="{% url 'customer:homepage' %}">
-                          <img src="{{ user.customer.profile_pic.url }}" alt="{{ user.username }}'s image" class="avatar" style="width: 35px; height: 35px; border-radius: 50%; transform: translatey(-10%);">
+                          <img src="{% if user.customer.profile_pic %}{{ user.customer.profile_pic.url }}{% else %}{% static 'base/img/default-user.png' %}{% endif %}" alt="{{ user.username }}'s image" class="avatar" style="width: 35px; height: 35px; border-radius: 50%; transform: translatey(-10%);">
                         </a>
                     {% endif %}
                     <li class="nav-item">

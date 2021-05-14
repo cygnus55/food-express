@@ -20,7 +20,9 @@ def user_login(request):
             if user:
                 if user.is_active:
                     login(request, user)
-                    if user.is_customer:
+                    if user.is_superuser and user.is_staff:
+                        return redirect('admin:index')
+                    elif user.is_customer:
                         return redirect('customer:homepage')
                     elif user.is_restaurant:
                         # return HttpResponseRedirect(reverse('restaurants:restaurant_dashboard', args=(user.username,)))

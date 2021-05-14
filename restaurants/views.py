@@ -10,7 +10,7 @@ from .decorators import restaurant_required
 from .models import Category, Restaurant
 from accounts.models import User
 from .forms import RestaurantProfileForm
-from foods.models import Food, Category as FoodCategory
+from foods.models import Food, FoodTemplate, Category as FoodCategory
 from foods.views import FoodListView, FoodDetailView
 
 def restaurant_list(request, category_slug=None):
@@ -98,6 +98,13 @@ class FoodCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def form_valid(self, form):
         form.instance.restaurant = self.request.user.restaurant
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        template_slug = self.kwargs.get('slug')
+        context =  super().get_context_data(**kwargs)
+        context['templates'] = FoodTemplate.objects.all()
+        context['template_slug'] = template_slug 
+        return context
 
 
 class FoodUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
