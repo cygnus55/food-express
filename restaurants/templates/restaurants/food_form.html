@@ -22,27 +22,30 @@
                     </a>
                 </form> 
             </div>
-            <div class="col-md-3">
-                <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-10" style="margin-bottom:20px;">
-                        <h4>Templates</h4>
-                        {% for template in templates %}
-                            <div class="card" style="margin-bottom: 20px;">
-                                <img class="thumbnail" src="{% if template.image %}{{ template.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style="height:200px" />
-                                <div class="card-body">
-                                    <div class="card-title">
-                                        <a href="{{ template.get_absolute_url }}" class="text-dark text-decoration-none">{{ template.name }}</a>
-                                    </div> 
-                                    <small class="text-muted">{{ template.category.name }}</small>
-                                    <br/>
-                                    <small class="text-muted"> Rs.{{ template.price }}</small>
+
+            {% if templates %}
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10" style="margin-bottom:20px;">
+                            <h4>Templates</h4>
+                            {% for template in templates %}
+                                <div class="card" style="margin-bottom: 20px;">
+                                    <img class="thumbnail" src="{% if template.image %}{{ template.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style="height:200px" />
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <a href="{{ template.get_absolute_url }}" class="text-dark text-decoration-none">{{ template.name }}</a>
+                                        </div> 
+                                        <small class="text-muted">{{ template.category.name }}</small>
+                                        <br/>
+                                        <small class="text-muted"> Rs.{{ template.price }}</small>
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock content %}

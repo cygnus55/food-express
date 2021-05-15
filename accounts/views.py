@@ -11,6 +11,7 @@ from customer.forms import CustomerProfileForm
 from restaurants.models import Restaurant
 from customer.models import Customer
 
+
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
