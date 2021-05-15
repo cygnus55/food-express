@@ -1,4 +1,5 @@
 # from datetime import datetime
+from django import forms
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -106,6 +107,21 @@ class FoodCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context['template_slug'] = template_slug 
         return context
 
+    def get_initial(self):
+        template_slug = self.kwargs.get('slug')
+        data = super().get_initial()
+
+        if template_slug:
+            template_instance = get_object_or_404(FoodTemplate, slug=template_slug)
+            data['category'] = template_instance.category
+            data['name'] = template_instance.name
+            data['description'] = template_instance.description
+            data['image'] = template_instance.image
+            data['price'] = template_instance.price
+            data['available'] = template_instance.available
+
+        return data
+
 
 class FoodUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Food
@@ -120,7 +136,7 @@ class FoodUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         form.instance.restaurant = self.request.user.restaurant
         return super().form_valid(form)
-
+    
 
 class FoodDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Food
