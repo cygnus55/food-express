@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'fontawesome_5',
     'crispy_forms',
+    'star_ratings',
     'phonenumber_field',
     'base.apps.BaseConfig',
     'customer.apps.CustomerConfig',
@@ -166,3 +167,5 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'accounts.authentication.EmailAuthBackend',
 ]
+
+STAR_RATINGS_STAR_HEIGHT = 20
