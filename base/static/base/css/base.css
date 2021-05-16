@@ -28,7 +28,6 @@
 }
 
 .card {
-    border: 2px solid red;
     margin: 10px 4px;
     transition: .6s ease;
 }
