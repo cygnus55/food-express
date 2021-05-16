@@ -19,3 +19,4 @@
 
     * Added Templates for food
     * Fixed some UI elements
+    * Added star rating model for foods and restaurants

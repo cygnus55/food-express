@@ -46,6 +46,21 @@
                     Already Have An Account? <a class="ml-2" href="{% url 'accounts:login' %}">Sign In</a>
                 </small>
             </div>
+            <div style="padding: 10px 0;">
+                {% with request.path as path %}
+                    {% if path == '/register/restaurant/' %}
+                        <a class="btn btn-success" 
+                        href="{% url 'accounts:register' 'customer' %}">
+                            Join As Customer
+                        </a>
+                    {% else %}
+                         <a class="btn btn-success" 
+                        href="{% url 'accounts:register' 'restaurant' %}">
+                            Join As Restaurant
+                        </a>
+                    {% endif %}
+                {% endwith %}
+            </div>
         </div>
     </div>
 {% endblock content %}
