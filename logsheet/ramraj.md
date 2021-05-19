@@ -17,3 +17,8 @@
 - Modified registration to collect additional data of users
 - Changed login page template
 - Integrate food with restaurant (Add, update, view functionality) 
+
+
+### Week 4/5:
+
+-Create cart app

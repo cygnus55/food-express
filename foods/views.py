@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from foods.models import Food, Category
-
+from cart.forms import CartAddFoodForm
 
 class FoodListView(ListView):
     model = Food
@@ -30,3 +30,9 @@ class FoodDetailView(DetailView):
     model = Food
     template = 'foods/food_detail.html'
     context_object_name = 'food'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cart_food_form'] = CartAddFoodForm() 
+        return context
+    
