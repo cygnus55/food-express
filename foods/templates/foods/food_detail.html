@@ -84,5 +84,15 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-5">
+                <form action="{% url 'cart:cart_add' food.id %}" method="post">
+                    {{ cart_food_form }}
+                    {% csrf_token %}
+                    <input type="submit" value="Add to Cart" class="btn btn-info">
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock content %}

@@ -1,0 +1,68 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
+        <div class="row">
+            <div class="col-lg-12">
+                <a class="btn btn-outline-dark" href="{% url 'foods:food_list' %}">&#x2190; Continue Ordering</a>
+                <br>
+                <br>
+                <table class="table">
+                    <tr>
+                        <th><h5>Items: {{ cart|length }}</h5></th>
+                        <th><h5>Total: {{ cart.get_total_price }}</h5></th>
+                        <th>
+                            <a  style="float:right; margin:5px;" class="btn btn-success" href="#">Checkout</a>
+                        </th>
+                    </tr>
+                </table>
+                <br>
+                
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Food</th>
+                            <th>Quantity</th>
+                            <th>Remove</th>
+                            <th>Unit Price</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart.get_all_items %}
+                            {% with food=item.food %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ food.get_absolute_url }}">
+                                            <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=75 height=75 style="border-radius: 50%;" />
+                                        </a>
+                                    </td>
+                                    <td>{{ food.name }}</td>
+                                    <td>
+                                        <form action="{% url 'cart:cart_add' food.id %}" method="post">
+                                            {{ quantity_update_form.quantity}}
+                                            {{ quantity_update_form.override}}
+                                            <input type="submit" value="Update">
+                                            {% csrf_token %}
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'cart:cart_remove' food.id %}" method="post">
+                                            <input type="submit" value="Remove">
+                                            {% csrf_token %}
+                                        </form>
+                                    </td>
+                                    <td>Rs. {{ item.price }}</td>
+                                    <td>Rs. {{ item.get_total_price }}</td>
+                                </tr>
+                            {% endwith %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
