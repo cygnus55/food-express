@@ -13,8 +13,3 @@ from .forms import CustomerProfileForm
 @customer_required
 def customer_homepage(request):
     return render(request, 'customer/home.html')
-
-@login_required
-@customer_required
-def cart(request):
-    return render(request, 'customer/cart.html')
