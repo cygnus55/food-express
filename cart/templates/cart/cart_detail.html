@@ -33,6 +33,7 @@
                     <tbody>
                         {% for item in cart.get_all_items %}
                             {% with food=item.food %}
+                            {% with quantity=item.quantity %}
                                 <tr>
                                     <td>
                                         <a href="{{ food.get_absolute_url }}">
@@ -42,8 +43,29 @@
                                     <td>{{ food.name }}</td>
                                     <td>
                                         <form action="{% url 'cart:cart_add' food.id %}" method="post">
-                                            {{ quantity_update_form.quantity}}
-                                            {{ quantity_update_form.override}}
+                                            <select name="quantity" id="id_quantity">
+                                                <option value="1" {% if  quantity == 1 %}selected{% endif %}>1</option>
+                                              
+                                                <option value="2" {% if  quantity == 2 %}selected{% endif %}>2</option>
+                                              
+                                                <option value="3" {% if  quantity == 3 %}selected{% endif %}>3</option>
+                                              
+                                                <option value="4" {% if  quantity == 4 %}selected{% endif %}>4</option>
+                                              
+                                                <option value="5"{% if  quantity == 5 %}selected{% endif %}>5</option>
+                                              
+                                                <option value="6" {% if  quantity == 6 %}selected{% endif %}>6</option>
+                                              
+                                                <option value="7"{% if  quantity == 7 %}selected{% endif %}>7</option>
+                                              
+                                                <option value="8" {% if  quantity == 8 %}selected{% endif %}>8</option>
+                                              
+                                                <option value="9" {% if  quantity == 9 %}selected{% endif %}>9</option>
+                                              
+                                                <option value="10" {% if  quantity == 10 %}selected{% endif %}>10</option>
+                                              
+                                              </select>
+                                              <input type="hidden" name="override" value="True" id="id_override">
                                             <input type="submit" value="Update">
                                             {% csrf_token %}
                                         </form>
@@ -57,6 +79,7 @@
                                     <td>Rs. {{ item.price }}</td>
                                     <td>Rs. {{ item.get_total_price }}</td>
                                 </tr>
+                            {% endwith %}
                             {% endwith %}
                     {% endfor %}
                     </tbody>
