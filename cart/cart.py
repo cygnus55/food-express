@@ -6,12 +6,17 @@ from .models import Cart as cart_model, CartItem
 class Cart(object):
 
     def __init__(self,request):
-        self.customer = request.user.customer
         try:
-            cart = self.customer.cart
+            if request.user.is_customer:
+                self.customer = request.user.customer
+            try:
+                cart = self.customer.cart
+            except Exception:
+                cart = cart_model.objects.create(customer=self.customer)
+            self.cart = cart
         except Exception:
-            cart = cart_model.objects.create(customer=self.customer)
-        self.cart = cart
+            self.cart = None
+
     
     def add(self, food, quantity=1, override_quantity=False):
         try:
