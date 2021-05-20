@@ -90,14 +90,17 @@
                 
                 {% if user.is_authenticated %}
                     {% if user.is_customer %}
+                      {% with total_foods=cart|length %}
                         <li class="nav-item">
-                          <a class="nav-link btn my-md-0 ms-md-3" href="{% url 'customer:cart' %}">
-                            <i id="cart-icon" class="fas fa-shopping-cart" value=0></i>
+                          <a class="nav-link btn my-md-0 ms-md-3" href="{% url 'cart:cart_detail' %}" title="{% if total_foods > 0 %}{{ total_foods }} food{{total_foods|pluralize}}, Rs. {{ cart.get_total_price }}
+                          {% else %} Your cart is empty{% endif %}">
+                            <i id="cart-icon" class="fas fa-shopping-cart" value={{ total_foods }}></i>
                           </a>
                         </li>
-                        <a class="nav-link my-md-0 ms-md-3" href="{% url 'customer:homepage' %}">
-                          <img src="{% if user.customer.profile_pic %}{{ user.customer.profile_pic.url }}{% else %}{% static 'base/img/default-user.png' %}{% endif %}" alt="{{ user.username }}'s image" class="avatar" style="width: 35px; height: 35px; border-radius: 50%; transform: translatey(-10%);">
-                        </a>
+                      {% endwith %}
+                      <a class="nav-link my-md-0 ms-md-3" href="{% url 'customer:homepage' %}">
+                        <img src="{% if user.customer.profile_pic %}{{ user.customer.profile_pic.url }}{% else %}{% static 'base/img/default-user.png' %}{% endif %}" alt="{{ user.username }}'s image" class="avatar" style="width: 35px; height: 35px; border-radius: 50%; transform: translatey(-10%);">
+                      </a>
                     {% endif %}
                     <li class="nav-item">
                       <a class="nav-link btn btn-outline-info my-md-0 ms-md-3" href="{% url 'accounts:logout' %}">Logout</a>
