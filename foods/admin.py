@@ -19,3 +19,4 @@ class FoodAdmin(admin.ModelAdmin):
 class FoodTemplateAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'price', 'available']
     list_editable = ['available', 'category']
+    prepopulated_fields = {'slug': ('name',)}
