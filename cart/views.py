@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import CartAddFoodForm
 from .cart import Cart
-from .models import Cart as cart_model, CartItem
 from foods.models import Food
 from customer.decorators import customer_required
 

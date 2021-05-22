@@ -5,7 +5,7 @@
     <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
         <div class="row">
             <div class="col-lg-12">
-                <a class="btn btn-outline-dark" href="{% url 'foods:food_list' %}">&#x2190; Continue Ordering</a>
+                <a class="btn btn-outline-dark" href="{% url 'foods:food_list' %}">&#x2190; Continue Shopping</a>
                 <br>
                 <br>
                 <table class="table">
@@ -13,7 +13,7 @@
                         <th><h5>Items: {{ cart|length }}</h5></th>
                         <th><h5>Total: {{ cart.get_total_price }}</h5></th>
                         <th>
-                            <a  style="float:right; margin:5px;" class="btn btn-success" href="#">Checkout</a>
+                            <a  style="float:right; margin:5px;" class="btn btn-success" href="{% url 'orders:order_create' %}">Checkout</a>
                         </th>
                     </tr>
                 </table>
