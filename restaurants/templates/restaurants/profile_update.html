@@ -1,18 +1,28 @@
 {% extends 'restaurants/dashboard.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
     <div class="content-section">
-        <h3 class='border-bottom'>Restaurant Profile</h3>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                {{ form.as_p }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Update</button>
+        <h3 class="border-bottom">Restaurant Profile</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        {{ form.as_p }}
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-info" type="submit">Update</button>
+                    </div>
+                </form>
             </div>
-        </form>
+            <div class="col-md-6">
+                <img src="{% if user.restaurant.logo %}{{ user.restaurant.logo.url }} {% else %} {% static 'base/img/no_image.png' %}{% endif %}" 
+                style="width: 200px; height: 200px; border-radius: 50%; margin-bottom: 5px;" />
+            </div>
+        </div>
+
         <div class="mt-10">
             <h2 class='border-bottom'>Account Settings</h2>
             <a class="btn btn-success" href="{% url 'accounts:password_change' %}">Change Password</a>

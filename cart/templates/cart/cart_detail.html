@@ -36,7 +36,7 @@
                             {% with quantity=item.quantity %}
                                 <tr>
                                     <td>
-                                        <a href="{{ food.get_absolute_url }}">
+                                        <a href="{{ food.get_absolute_url_for_customer }}">
                                             <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=75 height=75 style="border-radius: 50%;" />
                                         </a>
                                     </td>
