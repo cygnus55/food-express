@@ -14,6 +14,7 @@ from .forms import RestaurantProfileForm
 from foods.models import Food, FoodTemplate, Category as FoodCategory
 from foods.views import FoodListView, FoodDetailView
 
+
 def restaurant_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
@@ -35,10 +36,11 @@ def restaurant_list(request, category_slug=None):
         }
     )
 
+
 def restaurant_detail(request, id, slug):
     restaurant = get_object_or_404(Restaurant,
-                                id=id,
-                                slug=slug)
+                                   id=id,
+                                   slug=slug)
 
     foods_obj = Food.objects.filter(restaurant=restaurant)
     food_categories = set(map(lambda x: x.category, foods_obj))
@@ -47,25 +49,27 @@ def restaurant_detail(request, id, slug):
 
     for category in food_categories:
         foods[category.name] = []
-    
+
     for food in foods_obj:
         foods[food.category.name].append(food)
 
     return render(request,
-                'restaurants/restaurant_detail.html',
-                {'restaurant': restaurant,
-                'foods': foods,
-                })
+                  'restaurants/restaurant_detail.html',
+                  {'restaurant': restaurant,
+                   'foods': foods,
+                   })
+
 
 @login_required
 @restaurant_required
 def restaurant_dashboard(request, username):
     restaurant = User.objects.get(username=username)
-    context={
+    context = {
         'restaurant': restaurant,
         'section': 'dashboard',
     }
-    return render (request, 'restaurants/dashboard.html',context)
+    return render(request, 'restaurants/dashboard.html', context)
+
 
 @login_required
 @restaurant_required
@@ -74,17 +78,21 @@ def update_restaurant_profile(request, username):
     if request.method == 'GET':
         form = RestaurantProfileForm(instance=restaurant)
     else:
-        form = RestaurantProfileForm(data=request.POST, instance=restaurant)
+        form = RestaurantProfileForm(
+            data=request.POST,
+            files=request.FILES,
+            instance=restaurant
+        )
         if form.is_valid():
             form.save()
-            messages.success(request,'Profile Update Successful')
+            messages.success(request, 'Profile Update Successful')
             return redirect('restaurants:restaurant_dashboard', username=username)
 
-    context={
+    context = {
         'form': form,
         'section': 'profile',
     }
-    return render (request, 'restaurants/profile_update.html',context)
+    return render(request, 'restaurants/profile_update.html', context)
 
 
 class FoodCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -95,16 +103,16 @@ class FoodCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def test_func(self):
         return self.request.user.is_active and self.request.user.is_restaurant
-    
+
     def form_valid(self, form):
         form.instance.restaurant = self.request.user.restaurant
         return super().form_valid(form)
-    
+
     def get_context_data(self, **kwargs):
         template_slug = self.kwargs.get('slug')
-        context =  super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['templates'] = FoodTemplate.objects.all()
-        context['template_slug'] = template_slug 
+        context['template_slug'] = template_slug
         return context
 
     def get_initial(self):
@@ -112,7 +120,8 @@ class FoodCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         data = super().get_initial()
 
         if template_slug:
-            template_instance = get_object_or_404(FoodTemplate, slug=template_slug)
+            template_instance = get_object_or_404(
+                FoodTemplate, slug=template_slug)
             data['category'] = template_instance.category
             data['name'] = template_instance.name
             data['description'] = template_instance.description
@@ -132,11 +141,11 @@ class FoodUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         return self.request.user.is_active and self.request.user.is_restaurant \
             and self.get_object().restaurant == self.request.user.restaurant
-    
+
     def form_valid(self, form):
         form.instance.restaurant = self.request.user.restaurant
         return super().form_valid(form)
-    
+
 
 class FoodDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Food
@@ -156,17 +165,19 @@ class RestaurantFoodListView(LoginRequiredMixin, UserPassesTestMixin, FoodListVi
         return self.request.user.is_active and self.request.user.is_restaurant
 
     def get_queryset(self, **kwargs):
-        restaurant_foods = self.model.objects.filter(restaurant=self.request.user.restaurant)
+        restaurant_foods = self.model.objects.filter(
+            restaurant=self.request.user.restaurant)
         category_slug = self.kwargs.get('category_slug')
         if category_slug:
             category = get_object_or_404(FoodCategory, slug=category_slug)
             return restaurant_foods.filter(category=category)
         return restaurant_foods.all()
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         slug = self.kwargs.get('category_slug')
-        restaurant_foods = self.model.objects.filter(restaurant=self.request.user.restaurant)
+        restaurant_foods = self.model.objects.filter(
+            restaurant=self.request.user.restaurant)
         categories = set(map(lambda x: x.category, restaurant_foods))
         context['categories'] = categories
         if slug:
@@ -180,3 +191,4 @@ class RestaurantFoodDetailView(LoginRequiredMixin, UserPassesTestMixin, FoodDeta
     def test_func(self):
         return self.request.user.is_active and self.request.user.is_restaurant \
             and self.get_object().restaurant == self.request.user.restaurant
+
