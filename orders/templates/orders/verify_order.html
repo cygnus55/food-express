@@ -1,0 +1,22 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static 'orders/css/verify_order.css' %}"/>
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">Food Express</a></h1>
+{% endblock %}
+
+{% block content %}
+    <h1>Verify Orders</h1>
+    <div class="order-list">
+        {% for order in orders %}
+            <div class="order-list-item">
+                <h3>Order {{ order.id }} by {{ order.customer.user.username }} </h3>
+                <a href="#">Verify</a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
