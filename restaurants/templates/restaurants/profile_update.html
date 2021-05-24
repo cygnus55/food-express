@@ -5,6 +5,19 @@
 {% block content %}
     <div class="content-section">
         <h3 class="border-bottom">Restaurant Profile</h3>
+
+        <div class="row">
+            <div class="col-md-8">
+                  {% if messages %}
+                    {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+              </div>
+        </div>
+
         <div class="row">
             <div class="col-md-6">
                 <form action="" method="POST" enctype="multipart/form-data">

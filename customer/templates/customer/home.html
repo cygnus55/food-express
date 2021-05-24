@@ -1,7 +1,42 @@
-{% extends 'base/home.html' %}
+{% extends 'customer/base.html' %}
+{% load static %}
+{% load ratings %}
 
-{% block content %}
-    <div class="container" style="padding: 30px 0;">
-        <h1>{{ user.username }} Home Page</h1>
+{% block container %}
+<div class="container" style="padding: 30px 0;">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Welcome, {{ user.customer.full_name }}</h1>
+        </div>
     </div>
+   
+    <!--This is temporary placeholder for foods-->
+    <div class="container" style="min-height: 100vh; padding: 30px 0; border-bottom: 1px solid #cccccc;" id="food">
+        <div class="row" style="margin-bottom: 10px;">
+            <h2 ><i class="fas fa-utensils"></i> Hot picks</h2>
+        </div>
+        <div class="row">
+            {% for food in foods %}
+                <div class="col-md-3">
+                    <div class="card" style="height: 300px auto; margin-bottom:10px;" >
+                        <img class="thumbnail" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
+                        <div class="card-body">
+                            <div class="card-title">
+                                <a href="{{ food.get_absolute_url_for_customer }}" class="text-dark text-decoration-none">{{ food.name }}</a>
+                            </div> 
+                            <small class="text-muted">{{ food.category.name }}</small>
+                            <br/>
+                            <small class="text-muted">Rs. {{ food.price }}</small>
+                            <br/>
+                            <small class="text-muted">{{ food.restaurant.name }}</small>
+                            <br/>
+                            {% ratings food %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>   
+    </div>
+
+</div>
 {% endblock %}
