@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load ratings %}
 
 {% block title %}
     {% if category %}{{ category.name }} - {% endif %}Foods
@@ -51,6 +52,8 @@
                                     <small class="text-muted">Rs. {{ food.price }}</small>
                                     <br/>
                                     <small class="text-muted">{{ food.restaurant.name }}</small>
+                                    <br/>
+                                    {% ratings food %}
                                 </div>
                             </div>
                         </div>

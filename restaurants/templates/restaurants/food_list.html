@@ -1,5 +1,6 @@
 {% extends 'restaurants/dashboard.html' %}
 {% load static %}
+{% load ratings %}
 
 {% block title %}
     {% if category %}{{ category.name }} - {% endif %}Foods
@@ -57,6 +58,8 @@
                                     <small class="text-muted">{{ food.category.name }}</small>
                                     <br/>
                                     <small class="text-muted"> Rs.{{ food.price }}</small>
+                                    <br/>
+                                    {% ratings food read_only=True %}
                                 </div>
                             </div>
                         </div>
