@@ -60,7 +60,7 @@
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link {% if section == 'profile' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:update_restaurant_profile' user.username %}">
+                      <a class="nav-link {% if section == 'profile' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:update_profile' user.username %}">
                         Profile
                       </a>
                     </li>

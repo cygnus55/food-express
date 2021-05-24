@@ -85,8 +85,8 @@ def update_restaurant_profile(request, username):
         )
         if form.is_valid():
             form.save()
-            messages.success(request, 'Profile Update Successful')
-            return redirect('restaurants:restaurant_dashboard', username=username)
+            messages.success(request, 'Profile sucessfully updated!')
+            return redirect('restaurants:update_profile', username=username)
 
     context = {
         'form': form,
@@ -191,4 +191,3 @@ class RestaurantFoodDetailView(LoginRequiredMixin, UserPassesTestMixin, FoodDeta
     def test_func(self):
         return self.request.user.is_active and self.request.user.is_restaurant \
             and self.get_object().restaurant == self.request.user.restaurant
-
