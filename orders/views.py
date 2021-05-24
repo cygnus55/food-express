@@ -9,7 +9,7 @@ from customer.decorators import customer_required
 
 @login_required
 @customer_required
-def order_create(request):
+def order_create(request, payment:str='pay-by-cash'):
     cart = Cart(request)
     if len(cart) == 0:
         success = False
@@ -17,7 +17,11 @@ def order_create(request):
                 'orders/created.html',
                 {'success': success})
     else:
-        order = Order.objects.create(customer=request.user.customer)
+        if payment == 'pay-by-cash':
+            payment_by_cash = True
+        elif payment == 'pay-by-khalti':
+            payment_by_cash = False
+        order = Order.objects.create(customer=request.user.customer, payment_by_cash=payment_by_cash)
         for item in cart.get_all_items():
             OrderItem.objects.create(order=order,
                                 food=item.food,
