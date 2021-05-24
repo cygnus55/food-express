@@ -13,7 +13,7 @@
                         <th><h5>Items: {{ cart|length }}</h5></th>
                         <th><h5>Total: {{ cart.get_total_price }}</h5></th>
                         <th>
-                            <a  style="float:right; margin:5px;" class="btn btn-success" href="{% url 'orders:order_create' %}">Checkout</a>
+                            <button type="button" style="float:right; margin:5px;" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paymentModal">Checkout</button>
                         </th>
                     </tr>
                 </table>
@@ -88,4 +88,22 @@
         </div>
     </div>
 
+    <!-- paymentModal -->
+    <div class="modal fade" id="paymentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="paymentModalLabel">Create Order</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <a class="btn btn-outline-info" href="{% url 'orders:order_create' 'pay-by-cash' %}">Pay by cash on delivery</a>
+                <a class="btn btn-outline-info" href=#>Pay by Khalti</a>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
 {% endblock %}

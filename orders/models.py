@@ -6,6 +6,8 @@ from foods.models import Food
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, related_name='order', on_delete=models.CASCADE)
+    payment_by_cash = models.BooleanField(default=False)
+    verified = models.BooleanField(default=False)
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
