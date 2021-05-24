@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load ratings %}
 
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'base/css/footer.css' %}" />
@@ -28,6 +29,8 @@
                                 <small class="text-muted">Rs. {{ food.price }}</small>
                                 <br/>
                                 <small class="text-muted">{{ food.restaurant.name }}</small>
+                                <br/>
+                                {% ratings food %}
                             </div>
                         </div>
                     </div>
@@ -50,6 +53,8 @@
                                 </div> 
                                 <small class="text-muted">{{ restaurant.category.name }}</small><br/>
                                 <small class="text-muted">Opening hour: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
+                                <br/>
+                                {% ratings restaurant %}
                             </div>
                         </div>
                     </div>
