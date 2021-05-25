@@ -27,7 +27,7 @@ def user_login(request):
                         return redirect('customer:homepage')
                     elif user.is_restaurant:
                         # return HttpResponseRedirect(reverse('restaurants:restaurant_dashboard', args=(user.username,)))
-                        return redirect('restaurants:restaurant_dashboard', username=user.username)
+                        return redirect('restaurants:restaurant_dashboard')
                 else:
                     return HttpResponse('Disabled Account')
             else:

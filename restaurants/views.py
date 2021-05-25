@@ -62,10 +62,9 @@ def restaurant_detail(request, id, slug):
 
 @login_required
 @restaurant_required
-def restaurant_dashboard(request, username):
-    restaurant = User.objects.get(username=username)
+def restaurant_dashboard(request):
     context = {
-        'restaurant': restaurant,
+        'restaurant': request.user.restaurant,
         'section': 'dashboard',
     }
     return render(request, 'restaurants/dashboard.html', context)
@@ -73,20 +72,19 @@ def restaurant_dashboard(request, username):
 
 @login_required
 @restaurant_required
-def update_restaurant_profile(request, username):
-    restaurant = Restaurant.objects.get(user__username=username)
+def update_restaurant_profile(request):
     if request.method == 'GET':
-        form = RestaurantProfileForm(instance=restaurant)
+        form = RestaurantProfileForm(instance=request.user.restaurant)
     else:
         form = RestaurantProfileForm(
             data=request.POST,
             files=request.FILES,
-            instance=restaurant
+            instance=request.user.restaurant
         )
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile sucessfully updated!')
-            return redirect('restaurants:update_profile', username=username)
+            return redirect('restaurants:update_profile')
 
     context = {
         'form': form,

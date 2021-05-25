@@ -110,16 +110,15 @@
                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                           <li><a class="dropdown-item" href="{% url 'customer:homepage' %}">Home</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'customer:profile_update' user.username %}">Update Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customer:profile_update' %}">Update Profile</a></li>
                         <li><a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a></li>
                       </ul>
-                    </li> 
-
+                    </li>
                       
                     {% endif %}
-                    {% if user.is_superuser %}
+                    {% if user.is_superuser or user.is_restaurant %}
                     <li class="nav-item">
                       <a class="nav-link btn btn-outline-info my-md-0 ms-md-3" href="{% url 'accounts:logout' %}">Logout</a>
                     </li>

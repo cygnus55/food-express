@@ -50,7 +50,7 @@
                 <div class="position-sticky pt-3">
                   <ul class="nav flex-column">
                     <li class="nav-item">
-                      <a class="nav-link {% if section == 'dashboard' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:restaurant_dashboard' user.username %}">
+                      <a class="nav-link {% if section == 'dashboard' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:restaurant_dashboard' %}">
                         Dashboard
                       </a>
                     </li>
@@ -60,7 +60,7 @@
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link {% if section == 'profile' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:update_profile' user.username %}">
+                      <a class="nav-link {% if section == 'profile' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:update_profile' %}">
                         Profile
                       </a>
                     </li>
