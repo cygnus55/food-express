@@ -6,7 +6,7 @@ app_name = 'customer'
 urlpatterns = [
     path('home/', views.customer_homepage, name='homepage'),
     path(
-        'profile/<str:username>',
+        'profile/',
         views.customer_profile_update,
         name='profile_update'
     ),

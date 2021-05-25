@@ -18,20 +18,19 @@ def customer_homepage(request):
 
 @login_required
 @customer_required
-def customer_profile_update(request, username):
-    customer = Customer.objects.get(user__username=username)
+def customer_profile_update(request):
     if request.method == 'GET':
-        form = CustomerProfileForm(instance=customer)
+        form = CustomerProfileForm(instance=request.user.customer)
     else:
         form = CustomerProfileForm(
             data=request.POST,
             files=request.FILES,
-            instance=customer
+            instance=request.user.customer
         )
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile successfully updated!')
-            return redirect('customer:profile_update', username=username)
+            return redirect('customer:profile_update')
     context = {
         'form': form,
     }
