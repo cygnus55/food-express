@@ -11,9 +11,9 @@ urlpatterns = [
     path('<int:id>/<slug:slug>/', views.restaurant_detail,
          name='restaurant_detail'),
     # urls for restaurant user to view his/her restaurant
-    path('dashboard/<str:username>/', views.restaurant_dashboard,
+    path('dashboard/', views.restaurant_dashboard,
          name='restaurant_dashboard'),
-    path('profile/<str:username>/',
+    path('profile/',
          views.update_restaurant_profile, name='update_profile'),
     path('food/create/', views.FoodCreateView.as_view(), name='create_food'),
     path('food/create/<slug:slug>', views.FoodCreateView.as_view(),
