@@ -1,4 +1,4 @@
-{% extends 'admin/base.html' %}
+{% extends 'admin/base_site.html' %}
 {% load static %}
 
 {% block extrastyle %}
@@ -10,13 +10,25 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Verify Orders</h1>
-    <div class="order-list">
-        {% for order in orders %}
-            <div class="order-list-item">
-                <h3>Order {{ order.id }} by {{ order.customer.user.username }} </h3>
-                <a href="#">Verify</a>
-            </div>
-        {% endfor %}
+    <div class="module">
+        <h2> Orders Unverified </h2>
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th> Order </th>
+                    <th> Customer </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr class="row{% cycle '1' '2' %}">
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.customer.user.username }}</td>
+                        <td><a href="{% url 'orders:order_detail' order.id %}"> View detail</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

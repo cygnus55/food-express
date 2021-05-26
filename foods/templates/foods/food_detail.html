@@ -88,9 +88,12 @@
         <div class="row">
             <div class="col-lg-4 col-md-5">
                 <form action="{% url 'cart:cart_add' food.id %}" method="post">
-                    {{ cart_food_form }}
-                    {% csrf_token %}
-                    <input type="submit" value="Add to Cart" class="btn btn-info">
+                    <span>
+                        {{ cart_food_form.quantity }}
+                        {{ cart_food_form.override }}
+                        {% csrf_token %}
+                        <input type="submit" value="Add to Cart" class="btn btn-info">
+                    </span>
                 </form>
             </div>
         </div>

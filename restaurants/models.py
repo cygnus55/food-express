@@ -3,6 +3,8 @@ from django.utils.text import slugify
 from django.urls import reverse
 from phonenumber_field.modelfields import PhoneNumberField
 from PIL import Image
+from django.contrib.contenttypes.fields import GenericRelation
+from star_ratings.models import Rating
 
 from accounts.models import User
 
@@ -50,9 +52,10 @@ class Restaurant(models.Model):
     available = models.BooleanField(default=True)
     created = models.TimeField(auto_now_add=True)
     updated = models.TimeField(auto_now=True)
+    ratings = GenericRelation(Rating, related_query_name='restaurants')
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('-ratings__average','name')
         index_together = (('id', 'slug'),)
     
     def __str__(self):

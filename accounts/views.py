@@ -4,13 +4,9 @@ from django.http import Http404, HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
-from .models import User
 from .forms import Registrationform, LoginForm 
 from restaurants.forms import RestaurantProfileForm
 from customer.forms import CustomerProfileForm
-from restaurants.models import Restaurant
-from customer.models import Customer
-
 
 def user_login(request):
     if request.method == 'POST':
@@ -43,11 +39,11 @@ def register(request,role):
     if role not in allowed_roles:
         raise Http404()
     if request.method=="POST":
-        form=Registrationform(request.POST)
+        form=Registrationform(data=request.POST)
         if role == 'restaurant':
-            profile_form = RestaurantProfileForm(request.POST)
+            profile_form = RestaurantProfileForm(data=request.POST, files=request.FILES)
         else:
-            profile_form = CustomerProfileForm(request.POST)
+            profile_form = CustomerProfileForm(data=request.POST, files=request.FILES)
         if form.is_valid() and profile_form.is_valid():
             new_user = form.save(commit=False)
             setattr(new_user, f'is_{role}', True)

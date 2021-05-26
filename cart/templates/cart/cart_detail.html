@@ -11,7 +11,7 @@
                 <table class="table">
                     <tr>
                         <th><h5>Items: {{ cart|length }}</h5></th>
-                        <th><h5>Total: {{ cart.get_total_price }}</h5></th>
+                        <th><h5>Total: Rs. {{ cart.get_total_price }}</h5></th>
                         <th>
                             <button type="button" style="float:right; margin:5px;" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paymentModal">Checkout</button>
                         </th>
@@ -43,29 +43,8 @@
                                     <td>{{ food.name }}</td>
                                     <td>
                                         <form action="{% url 'cart:cart_add' food.id %}" method="post">
-                                            <select name="quantity" id="id_quantity">
-                                                <option value="1" {% if  quantity == 1 %}selected{% endif %}>1</option>
-                                              
-                                                <option value="2" {% if  quantity == 2 %}selected{% endif %}>2</option>
-                                              
-                                                <option value="3" {% if  quantity == 3 %}selected{% endif %}>3</option>
-                                              
-                                                <option value="4" {% if  quantity == 4 %}selected{% endif %}>4</option>
-                                              
-                                                <option value="5"{% if  quantity == 5 %}selected{% endif %}>5</option>
-                                              
-                                                <option value="6" {% if  quantity == 6 %}selected{% endif %}>6</option>
-                                              
-                                                <option value="7"{% if  quantity == 7 %}selected{% endif %}>7</option>
-                                              
-                                                <option value="8" {% if  quantity == 8 %}selected{% endif %}>8</option>
-                                              
-                                                <option value="9" {% if  quantity == 9 %}selected{% endif %}>9</option>
-                                              
-                                                <option value="10" {% if  quantity == 10 %}selected{% endif %}>10</option>
-                                              
-                                              </select>
-                                              <input type="hidden" name="override" value="True" id="id_override">
+                                                <input type="number" name="quantity" min="1" value="{{ quantity }}" required id="id_quantity">
+                                                <input type="hidden" name="override" value="True" id="id_override">
                                             <input type="submit" value="Update">
                                             {% csrf_token %}
                                         </form>

@@ -1,0 +1,82 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static 'orders/css/verify_order.css' %}"/>
+    <style>
+        @media print{
+            .object-tools, .breadcrumbs{
+                display: none;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">Food Express</a></h1>
+{% endblock %}
+
+
+{% block content %}
+    <h1> Order {{ order.id }} </h1>
+    <ul class="object-tools">
+        <li>
+            <a href="#" onclick="window.print();">Print order</a>
+        </li>
+    </ul>
+    <hr/>
+    <table>
+        <tr>
+            <th>Created</th>
+            <td>{{ order.created }}</td>
+        </tr>
+        <tr>
+            <th>Customer</th>
+            <td>{{ order.customer.full_name }}</td>
+        </tr>
+        <tr>
+            <th>E-mail</th>
+            <td><a href="mailto:{{ order.customer.user.email }}">{{ order.customer.user.email }}</a></td>
+        </tr>
+        <tr>
+            <th>Phone No.</th>
+            <td>{{ order.customer.phone_no }}</td>
+        </tr>
+        <tr>
+            <th>Total Amount</th>
+            <td>Rs. {{ order.get_total_cost }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>{% if order.complete %}Completed{% else %}Incomplete{% endif %}</td>
+        </tr>
+    </table>
+    <br/>
+    <div class="module">
+        <h2>Foods Ordered</h2>
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Food</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                    <tr class="row{% cycle '1' '2' %}">
+                        <td> {{ item.food.name }} </td>
+                        <td> Rs. {{ item.price }} </td>
+                        <td> {{ item.quantity }} </td>
+                        <td> Rs. {{ item.get_cost }} </td>
+                    </tr>
+                {% endfor %}
+                <tr class="total">
+                    <td colspan="3">Total</td>
+                    <td class="num">Rs. {{ order.get_total_cost }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+from django.contrib.contenttypes.fields import GenericRelation
+from star_ratings.models import Rating
 
 from restaurants.models import Restaurant
 
@@ -85,9 +87,10 @@ class Food(models.Model):
         related_name='restaurant',
         on_delete=models.CASCADE
     )
+    ratings = GenericRelation(Rating, related_query_name='foods')
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('-ratings__average','-created')
 
     def __str__(self):
         return f"Food: {self.name}"

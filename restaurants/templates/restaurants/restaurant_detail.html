@@ -119,7 +119,12 @@
                                                     {{ food.name }}
                                                 </a>
                                             </h6>
-                                            <a href="#" class="btn btn-sm btn-outline-success">Add | <i class="fas fa-cart-plus"></i></a>
+                                            <form action="{% url 'cart:cart_add' food.id %}" method="post">
+                                                {{ cart_add_form.quantity }}
+                                                {{ cart_add_form.override }}
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn text-success"><i class="fas fa-cart-plus"></i></button>
+                                            </form>
                                         </div>
                                         <small class="text-muted">{{ food.category.name }}</small> <br/>
                                         <small class="text-muted">Rs. {{ food.price }}</small>
