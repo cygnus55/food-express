@@ -31,10 +31,6 @@
     transition: .6s ease;
 }
 
-.card:hover {
-    transform: scale(1.05);
-}
-
 .card-block {
     padding: 10px;
 }
