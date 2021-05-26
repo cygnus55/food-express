@@ -12,16 +12,16 @@
                     <p class="card-text">Your order has been sucessfully completed. Your order number is <strong>{{ order.id }}.</strong></p>
                 </div>
             </div>
-            <div class="card">
+            <div class="card text-center">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Your Orders</h4>
+                    <h4 class="card-title">Your Orders</h4>
                     <p class="card-text">
                             {% for item in order_items %}
-                                <strong>{{ item.quantity }}x {{ item.food.name }}</strong>................<strong>Rs. {{ item.get_cost}}</strong><br/>
+                                {{ item.quantity }}x {{ item.food.name }}................Rs. {{ item.get_cost}}<br/>
                             {% endfor %}
                     </p>
                 </div>
-                <div class="card-footer text-muted text-center">
+                <div class="card-footer text-muted">
                     <b>Total: Rs. {{ order.get_total_cost }}</b>
                 </div>
             </div>
