@@ -20,3 +20,8 @@
     * Added Templates for food
     * Fixed some UI elements
     * Added star rating model for foods and restaurants
+
+### Week 6:
+
+    * Customer profile update and home page implemented and integrated all of them to the navbar links
+    * Fixed homepage UI elements, footers and removed initial div from home page

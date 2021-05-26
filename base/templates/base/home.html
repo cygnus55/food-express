@@ -2,16 +2,10 @@
 {% load static %}
 {% load ratings %}
 
-{% block content %}
-    <link rel="stylesheet" type="text/css" href="{% static 'base/css/footer.css' %}" />
-    
-    <div class="fluid-container" style="overflow: hidden; position: absolute; top: 0;">
-        <div class="initial">
-            
-        </div>
+{% block content %}    
+    <div class="container" style="overflow: hidden;">
 
-
-        <div class="container" style="min-height: 100vh; padding: 30px 0; border-bottom: 1px solid #cccccc;" id="food">
+        <div class="container" style="padding: 30px 0;" id="food">
             <div class="row" style="margin-bottom: 10px;">
                 <h2 ><i class="fas fa-utensils"></i> Hot picks</h2>
             </div>
@@ -38,7 +32,7 @@
             </div>   
         </div>
 
-        <div class="container" style="min-height: 100vh; padding: 30px 0; border-bottom: 1px solid #cccccc;"" id="restaurants">
+        <div class="container" style="padding: 30px 0;" id="restaurants">
             <div class="row" style="margin-bottom: 10px;">
                 <h2 ><i class="fas fa-utensils"></i> Explore Restaurants</h2>
             </div>
@@ -68,63 +62,47 @@
                     <img src="{% static 'base/img/food-vector.png' %}" style="max-width: 80vw;" />
                 </div>
                 <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center justify-content-center">
-                    <h4>Order and enjoy your favourite meal</h4>
+                    <h4 class="align-items-center">Order and enjoy your favourite meal</h4>
                     <h5 class="text-secondary">And have a good day ahead!</h5>
                     <a href="#" class="btn btn-outline-primary">How to order?</a>
                 </div>
             </div>
         </div>
-            
-        <div class="about" >
-            <div class="mt-20">
+    </div>
+{% endblock content %}
+
+{% block extra %}
+    <div class="fluid-container">
+        <div class="about">
+            <div>
                 <h3 style="text-align: center;">About Us</h3>
                 <p style="width: 70%; height: max-content;" class="mx-auto my-auto">Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero tempora quos ipsa deleniti, dolore eligendi ipsam consequatur. Quia qui veniam totam maxime, dolores ad, placeat rem magnam impedit voluptates sint.</p>
             </div>
         </div>
 
-        <div class="footer pb-0 mb-0 justify-content-center text-light ">
-            <footer>
-                <div class="row my-5 justify-content-center py-5">
-                    <div class="col-11">
-                        <div class="row ">
-                            <div class="col-xl-8 col-md-4 col-sm-4 col-12 my-auto mx-auto a">
-                                <h3 class="text-muted mb-md-0 mb-5 bold-text">Food Express</h3>
-                            </div>
-                            <div class="col-xl-2 col-md-4 col-sm-4 col-12">
-                                <h6 class="mb-3 mb-lg-4 bold-text "><b>MENU</b></h6>
-                                <ul class="list-unstyled">
-                                    <a style="text-decoration: none;" href="{% url 'restaurants:restaurant_list' %}"><li>Surf Restaurants</li></a>
-                                    <a style="text-decoration: none;" href="{% url 'foods:food_list' %}"><li>Surf Foods</li></a>
-                                    <a style="text-decoration: none;" href="#"><li>Surf Chefs</li></a>
-                                </ul>
-                            </div>
-                            <div class="col-xl-2 col-md-4 col-sm-4 col-12">
-                                <h6 class="mb-3 mb-lg-4 text-muted bold-text mt-sm-0 mt-5"><b>ADDRESS</b></h6>
-                                <p class="mb-1">Dhulikhel, Kavre</p>
-                                <p>Nepal</p>
-                            </div>
-                        </div>
-                        <div class="row ">
-                            <div class="col-xl-8 col-md-4 col-sm-4 col-auto my-md-0 mt-5 order-sm-1 order-3 align-self-end">
-                                <p class="social text-muted mb-0 pb-0 bold-text flex-items"> 
-                                    <span class="mx-2"><i class="fab fa-facebook" aria-hidden="true"></i></span> 
-                                    <span class="mx-2"><i class="fab fa-twitter" aria-hidden="true"></i></span>
-                                    <span class="mx-2"><i class="fab fa-instagram" aria-hidden="true"></i></span> 
-                                </p>
-                                <small class="rights">
-                                    <span>&#174;</span> Food Express All Rights Reserved.
-                                </small>
-                            </div>
-                            <div class="col-xl-2 col-md-4 col-sm-4 col-auto order-1 align-self-end ">
-                                
-                            </div>
-                            <div class="col-lg-2 col-md-4 col-sm-6 col-auto order-2 align-self-end mt-3 ">
-                                <small><span><i class="fa fa-envelope" aria-hidden="true"></i></span> foodexpressnepal@gmail.com</small>
-                            </div>
-                        </div>
+        <div class="justify-content-between bg-dark text-light" style="padding: 10vh 10vw;">
+            <div class="row">
+                <div class="d-flex flex-column col-md-8 col-sm-12 text-nowrap justify-content-center">
+                    <h4>Food Express</h4><br />
+                    <p class="text-muted"><small>&copy; All rights reserved</small></p>
+                </div>
+                <div class="col-md-2 col-sm-12 align-items-center">
+                    <div class="d-flex flex-column justify-content-between">
+                        <h5>Menu</h5>
+                        <a href="#" class="text-decoration-none">Restaurants</a>
+                        <a href="#" class="text-decoration-none">Foods</a>
                     </div>
                 </div>
-            </footer>
+                <div class="col-md-2 col-sm-12 align-items-center">
+                    <div class="d-flex flex-column">
+                        <h5>Address</h5> 
+                        <p class="text-secondary text-nowrap">
+                            Dhulikhel, Kavre<br />
+                            <i class="fa fa-envelope"></i> foodexpressnepal@gmail.com
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-{% endblock content %}
+{% endblock extra %}
