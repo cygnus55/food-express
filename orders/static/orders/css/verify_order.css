@@ -1,7 +1,11 @@
-.order-list{
-    
+.heading > h1{
+    display: inline;
 }
 
+.heading > button{
+    display: inline;
+    float: right;
+}
 .order-list-item{
     padding: 15px 15px;
     background-color: grey;

@@ -1,12 +1,11 @@
 from django import forms
 from django.utils.translation import override
 
-FOOD_QUANTITY_CHOICES = [(i, str(i)) for i in range (1,11)]
-
 class CartAddFoodForm(forms.Form):
-    quantity = forms.TypedChoiceField(
-            choices=FOOD_QUANTITY_CHOICES,
-            coerce=int,
+    quantity = forms.IntegerField(
+            min_value=1,
+            max_value=10,
+            initial=1,
         )
     override = forms.BooleanField(required=False, initial=False,
             widget=forms.HiddenInput)

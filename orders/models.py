@@ -13,7 +13,7 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ('-created',)
+        ordering = ('created',)
 
     def __str__(self):
         return f'Order {self.id} by customer {self.customer.user.username}'

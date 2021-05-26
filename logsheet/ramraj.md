@@ -7,7 +7,7 @@
 
 ### Week 2:
 
-- Create restaurant app (models, views, forms)
+- Create restaurant app (models, forms)
 - Create basic dashboard for restaurant
 - Associate customer to view registered restaurants 
 
@@ -21,4 +21,6 @@
 
 ### Week 4/5:
 
--Create cart app
+- Created cart for customer 
+- Create order app
+- Designed Logo

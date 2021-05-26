@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Order, OrderItem
-from django.urls import path
+from django.urls import path, reverse
+from django.utils.safestring import mark_safe
 from django.db import models
 from django.shortcuts import render
 
-from django.http import HttpResponse
+from .models import Order, OrderItem
 
 # Register your models here.
 
@@ -13,10 +13,18 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ['food']
 
+def order_detail(obj):
+    url = reverse('orders:order_detail', args=[obj.id])
+    return mark_safe(f'<a href="{url}">View detail</a>')
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'customer', 'created', 'updated', 'complete', 'payment_by_cash', 'verified', order_detail]
+    list_filter = ['created', 'updated', 'verified', 'payment_by_cash', 'complete']
     inlines = [OrderItemInline]
+
+
+# order to verify link added to admin page
 
 
 class OrderVerify(models.Model):

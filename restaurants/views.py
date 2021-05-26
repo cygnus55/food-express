@@ -1,5 +1,4 @@
 # from datetime import datetime
-from django import forms
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -9,7 +8,6 @@ from django.urls import reverse_lazy
 
 from .decorators import restaurant_required
 from .models import Category, Restaurant
-from accounts.models import User
 from .forms import RestaurantProfileForm
 from foods.models import Food, FoodTemplate, Category as FoodCategory
 from foods.views import FoodListView, FoodDetailView
@@ -148,7 +146,7 @@ class FoodUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class FoodDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Food
     success_url = reverse_lazy('restaurants:food_list')
-    context_object_name = 'form'
+    context_object_name = 'food'
     template_name = 'restaurants/food_delete.html'
 
     def test_func(self):
