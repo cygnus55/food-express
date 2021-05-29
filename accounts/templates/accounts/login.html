@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Express - Login</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'base/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'base/img/favicon.ico' %}"/>
     <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}"/>
     {% bootstrap_css %}
     {% bootstrap_javascript %}   
@@ -18,7 +18,7 @@
     <main class="form-signin">
         <form method="POST">
           <a href="{% url 'base:home' %}">
-            <img class="mb-4 mx-auto" src="{% static 'base/img/logo.png' %}" alt="logo" width="100"/>
+            <img class="mb-4 mx-auto" src="{% static 'base/img/logo.png' %}" alt="logo" width="80"/>
           </a>
           <h1 class="h3 mb-3">Sign In</h1>
           <div class="form-floating">
