@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core import serializers
@@ -51,3 +51,12 @@ def order_list(request):
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     return render(request, 'orders/order_detail.html', {'order': order})
+
+
+@login_required
+@staff_member_required
+def verify_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    order.verified = True
+    order.save()
+    return redirect('orders:order_detail', order_id=order_id)
