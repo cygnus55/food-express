@@ -34,3 +34,6 @@ class SearchView(TemplateView):
 
 def handler404(request, *args, **argv):
     return render(request, 'base/404.html')
+
+class HowToOrder(TemplateView):
+    template_name = 'base/howtoorder.html'
