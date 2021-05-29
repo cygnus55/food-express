@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load ratings %}
+{% load base_tags %}
+
+{% block content %}
+<div class="container" style="margin-top: 20px; margin-bottom: 20px;">
+    <h4>{% add foods.count restaurants.count %} matches found!</h4>
+    <div class="container" style="padding: 30px 0;" id="food">
+        <div class="row" style="margin-bottom: 10px;">
+            <h5>Foods ({{ foods.count }})</h5>
+        </div>
+        <div class="row">
+            {% for food in foods %}
+                <div class="col-md-3">
+                    <div class="card" style="height: 300px auto; margin-bottom:10px;" >
+                        <img class="thumbnail" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
+                        <div class="card-body">
+                            <div class="card-title">
+                                <a href="{{ food.get_absolute_url_for_customer }}" class="text-dark text-decoration-none">{{ food.name|highlight:keyword }}</a>
+                            </div> 
+                            <small class="text-muted">{{ food.category.name }}</small>
+                            <br/>
+                            <small class="text-muted">Rs. {{ food.price }}</small>
+                            <br/>
+                            <small class="text-muted">{{ food.restaurant.name }}</small>
+                            <br/>
+                            {% ratings food %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted">
+                    Sorry, no match for food!
+                </p>
+            {% endfor %}
+        </div>   
+    </div>
+    
+    <div class="container" style="padding: 30px 0;" id="restaurants">
+        <div class="row" style="margin-bottom: 10px;">
+            <h5>Restaurants ({{ restaurants.count }})</h5>
+        </div>
+        <div class="row">
+            {% for restaurant in restaurants %}
+                <div class="col-md-3">
+                    <div class="card" style="height: 300px auto; margin-bottom:10px;" >
+                        <img class="thumbnail restaurant-logo" src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
+                        <div class="card-body">
+                            <div class="card-title">
+                                <a href="{{ restaurant.get_absolute_url }}" class="text-dark text-decoration-none">{{ restaurant.name|highlight:keyword }}</a>
+                            </div> 
+                            <small class="text-primary">{% matching_food restaurant keyword %} matching foods</small><br/>                            
+                            <small class="text-muted">{{ restaurant.category.name }}</small><br/>
+                            <small class="text-muted">Opening hour: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small><br/>
+                            {% ratings restaurant %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted">
+                    Sorry, no match for restaurant!
+                </p>
+            {% endfor %}
+        </div>     
+    </div>    
+</div>
+{% endblock content %}

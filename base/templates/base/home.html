@@ -7,7 +7,14 @@
 
         <div class="container" style="padding: 30px 0;" id="food">
             <div class="row" style="margin-bottom: 10px;">
-                <h2 ><i class="fas fa-utensils"></i> Hot picks</h2>
+                <div class="col-md-6">
+                    <h4 class="display-inline"><i class="fas fa-cookie-bite"></i> Hot picks</h4>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'foods:food_list' %}" class="float-end display-inline text-decoration-none">
+                        View All <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
             <div class="row">
                 {% for food in foods %}
@@ -28,13 +35,22 @@
                             </div>
                         </div>
                     </div>
+                {% empty %}
+                    Sorry, no food found!
                 {% endfor %}
             </div>   
         </div>
 
         <div class="container" style="padding: 30px 0;" id="restaurants">
             <div class="row" style="margin-bottom: 10px;">
-                <h2 ><i class="fas fa-utensils"></i> Explore Restaurants</h2>
+                <div class="col-md-6">                    
+                    <h4 class="display-inline-block"><i class="fas fa-hotel"></i> Explore Restaurants</h4>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'restaurants:restaurant_list' %}" class="float-end display-inline-block text-decoration-none">
+                        View All <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
             <div class="row">
                 {% for restaurant in restaurants %}
@@ -52,6 +68,8 @@
                             </div>
                         </div>
                     </div>
+                {% empty %}
+                    Sorry, no restaurant found!
                 {% endfor %}
             </div>     
         </div>
@@ -82,23 +100,26 @@
 
         <div class="justify-content-between bg-dark text-light" style="padding: 10vh 10vw;">
             <div class="row">
-                <div class="d-flex flex-column col-md-8 col-sm-12 text-nowrap justify-content-center">
-                    <h4>Food Express</h4><br />
+                <div class="d-flex flex-column col-md-6 col-sm-12 text-nowrap justify-content-center">
+                    <h4>Food Express</h4><br/>
                     <p class="text-muted"><small>&copy; All rights reserved</small></p>
+                    <a class="text-decoration-none text-secondary text-nowrap" 
+                        href="mailto:foodexpressnepal@gmail.com">
+                        <i class="fa fa-envelope"></i> foodexpressnepal@gmail.com
+                    </a>
                 </div>
-                <div class="col-md-2 col-sm-12 align-items-center">
+                <div class="col-md-4 col-sm-12 align-items-center">
                     <div class="d-flex flex-column justify-content-between">
                         <h5>Menu</h5>
-                        <a href="#" class="text-decoration-none">Restaurants</a>
-                        <a href="#" class="text-decoration-none">Foods</a>
+                        <a href="{% url 'restaurants:restaurant_list' %}" class="text-decoration-none text-secondary">Restaurants</a>
+                        <a href="{% url 'foods:food_list' %}" class="text-decoration-none text-secondary">Foods</a>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-12 align-items-center">
                     <div class="d-flex flex-column">
                         <h5>Address</h5> 
                         <p class="text-secondary text-nowrap">
-                            Dhulikhel, Kavre<br />
-                            <i class="fa fa-envelope"></i> foodexpressnepal@gmail.com
+                            Dhulikhel, Kavre<br/>
                         </p>
                     </div>
                 </div>
