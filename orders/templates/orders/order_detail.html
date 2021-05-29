@@ -1,21 +1,30 @@
 {% extends "admin/base_site.html" %}
 {% load static %}
+{% load fontawesome_5 %}
 
 {% block extrastyle %}
     <link rel="stylesheet" type="text/css" href="{% static 'orders/css/verify_order.css' %}"/>
     <style>
         @media print{
-            .object-tools, .breadcrumbs{
+            .object-tools, .breadcrumbs, .verification{
                 display: none;
             }
         }
     </style>
+    {% fontawesome_5_static %}
 {% endblock %}
 
 {% block branding %}
     <h1 id="site-name"><a href="{% url 'admin:index' %}">Food Express</a></h1>
 {% endblock %}
 
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a>&rsaquo; 
+    <a href="/admin/orders">Orders</a>&rsaquo;
+    <a href="/admin/orders/order">Orders</a>&rsaquo;Order {{ order.id }} by {{ order.customer.user.username }}
+    </div>
+{% endblock %}
 
 {% block content %}
     <h1> Order {{ order.id }} </h1>
@@ -48,7 +57,24 @@
         </tr>
         <tr>
             <th>Status</th>
-            <td>{% if order.complete %}Completed{% else %}Incomplete{% endif %}</td>
+            <td>
+                {% if order.complete %}
+                    <i class="far fa-check-circle" style='color: green;'></i> Completed
+                {% else %}
+                    <i class="fas fa-times-circle" style='color: red;'></i> Incomplete
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Verification Status</th>
+            <td>
+                {% if not order.verified %}
+                        <i class="far fa-times-circle" style='color: red;'></i> Not Verified
+                        <small class="verification"><a href="{% url 'orders:verify_order' order.id %}" style='color:gray;'>Click <b>here</b> to verify.</a></small>
+                {% else %}
+                    <i class="fas fa-check-circle" style='color: green;'></i> Verified
+                {% endif %}
+            </td>
         </tr>
     </table>
     <br/>

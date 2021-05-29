@@ -6,4 +6,5 @@ app_name = 'base'
 
 urlpatterns = [
     path('', views.HomePageView.as_view(), name='home'),
+    path("howtoorder/", views.HowToOrder.as_view(), name="howtoorder"),
 ]
