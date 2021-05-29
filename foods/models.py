@@ -84,7 +84,7 @@ class Food(models.Model):
     image = models.ImageField(upload_to='food/images', blank=True)
     restaurant = models.ForeignKey(
         Restaurant,
-        related_name='restaurant',
+        related_name='foods',
         on_delete=models.CASCADE
     )
     ratings = GenericRelation(Rating, related_query_name='foods')
