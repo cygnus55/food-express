@@ -30,7 +30,7 @@
 
 <body>
    <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark top-navbar" data-toggle="sticky-onscroll">  
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark top-navbar" data-toggle="sticky-onscroll" style="padding: 0px 20px;">  
           <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'base:home' %}" >
               <img src="{% static 'base/img/logo.png' %}" width=65 /> Food Express
@@ -40,12 +40,15 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
               <ul class="navbar-nav">
-                <li class="nav-item">
+                <form class="d-flex" action="{% url 'base:search' %}">
+                  <input class="form-control me-2" name="q" type="search" placeholder="Search Food/Restaurant" aria-label="Search">
+                </form>
+                <!-- <li class="nav-item">
                   <a class="nav-link btn  my-md-0 ms-md-3" href="{% url 'restaurants:restaurant_list' %}">Restaurants</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link btn my-md-0 ms-md-3" href="{% url 'foods:food_list' %}">Foods</a>
-                </li>
+                </li> -->
                 
                 {% if user.is_authenticated %}
                     {% if user.is_customer %}
