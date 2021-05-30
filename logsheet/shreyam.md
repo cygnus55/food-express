@@ -25,3 +25,4 @@
 
     * Customer profile update and home page implemented and integrated all of them to the navbar links
     * Fixed homepage UI elements, footers and removed initial div from home page
+    * Implemented search functionality, made emails unique and fixed minor problems

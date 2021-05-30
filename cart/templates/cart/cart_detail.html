@@ -35,13 +35,13 @@
                             {% with food=item.food %}
                             {% with quantity=item.quantity %}
                                 <tr>
-                                    <td>
+                                    <td class="align-middle">
                                         <a href="{{ food.get_absolute_url_for_customer }}">
                                             <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=75 height=75 style="border-radius: 50%;" />
                                         </a>
                                     </td>
-                                    <td>{{ food.name }}</td>
-                                    <td>
+                                    <td class="align-middle">{{ food.name }}</td>
+                                    <td class="align-middle">
                                         <form action="{% url 'cart:cart_add' food.id %}" method="post">
                                                 <input type="number" name="quantity" min="1" max="10" value="{{ quantity }}" required id="id_quantity">
                                                 <input type="hidden" name="override" value="True" id="id_override">
@@ -49,14 +49,14 @@
                                             {% csrf_token %}
                                         </form>
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         <form action="{% url 'cart:cart_remove' food.id %}" method="post">
                                             <input type="submit" value="Remove">
                                             {% csrf_token %}
                                         </form>
                                     </td>
-                                    <td>Rs. {{ item.price }}</td>
-                                    <td>Rs. {{ item.get_total_price }}</td>
+                                    <td class="align-middle">Rs. {{ item.price }}</td>
+                                    <td class="align-middle">Rs. {{ item.get_total_price }}</td>
                                 </tr>
                             {% endwith %}
                             {% endwith %}
