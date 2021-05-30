@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import override
 
+
 class CartAddFoodForm(forms.Form):
     quantity = forms.IntegerField(
             min_value=1,
