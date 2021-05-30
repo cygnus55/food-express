@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericRelation
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 from star_ratings.models import Rating
 
 from restaurants.models import Restaurant
@@ -82,6 +84,13 @@ class Food(models.Model):
     created = models.TimeField(auto_now_add=True)
     updated = models.TimeField(auto_now=True)
     image = models.ImageField(upload_to='food/images', blank=True)
+    discount_percent = models.IntegerField(
+        default=0,
+        validators=[
+                MaxValueValidator(100),
+                MinValueValidator(0)
+            ]
+    )
     restaurant = models.ForeignKey(
         Restaurant,
         related_name='foods',
@@ -90,7 +99,7 @@ class Food(models.Model):
     ratings = GenericRelation(Rating, related_query_name='foods')
 
     class Meta:
-        ordering = ('-ratings__average','-created')
+        ordering = ('-ratings__average', '-discount_percent', '-created')
 
     def __str__(self):
         return f"Food: {self.name}"
@@ -100,6 +109,10 @@ class Food(models.Model):
             'restaurants:food_detail',
             args=[self.id]
         )
+
+    @property
+    def get_selling_price(self):
+        return self.price - (self.price * self.discount_percent/100)
 
     @property
     def get_absolute_url_for_customer(self):
