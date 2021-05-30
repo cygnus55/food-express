@@ -62,8 +62,8 @@
                       {% endwith %}
 
                     <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{% if user.customer.profile_pic %}{{ user.customer.profile_pic.url }}{% else %}{% static 'base/img/default-user.png' %}{% endif %}" alt="{{ user.username }}'s image" class="avatar" style="width: 35px; height: 35px; border-radius: 50%; transform: translatey(-10%);" />
+                      <a class="nav-link dropdown-toggle btn my-md-0 ms-md-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{% if user.customer.profile_pic %}{{ user.customer.profile_pic.url }}{% else %}{% static 'base/img/default-user.png' %}{% endif %}" alt="{{ user.username }}'s image" class="avatar" style="width: 25px; height: 25px; border-radius: 50%; transform: translatey(-10%);" />
                       </a>
                       <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDropdown">
                           <li>
@@ -105,7 +105,6 @@
                       <a class="nav-link btn btn-outline-info my-md-0 ms-md-3" href="{% url 'accounts:login' %}">Login</a>
                     </li>
                 {% endif %}
-
               </ul>
             </div>
           </div>
@@ -113,9 +112,8 @@
     </header> 
     
     <main>
-      <div class="container">{% block content %}{% endblock content %}</div>
+      <div class="container" style="padding: 20px 0;">{% block content %}{% endblock content %}</div>
       {% block extra %}{% endblock extra %}
     </main>
-    
 </body>
 </html>

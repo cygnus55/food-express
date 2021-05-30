@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
+    email = models.EmailField(unique=True)
     is_customer = models.BooleanField(default=False)
     is_restaurant = models.BooleanField(default=False)
     is_chef = models.BooleanField(default=False)
