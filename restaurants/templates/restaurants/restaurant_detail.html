@@ -117,6 +117,10 @@
                                             <h6 class="mb-1">
                                                 <a href="{% url 'foods:food_detail' food.pk %}" class="text-decoration-none text-dark">
                                                     {{ food.name }}
+                                                    {% if food.discount_percent > 0 %}
+                                                        (<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
+                                                        {{ food.discount_percent }}% off)
+                                                    {% endif %}
                                                 </a>
                                             </h6>
                                             <form action="{% url 'cart:cart_add' food.id %}" method="post">
@@ -127,7 +131,13 @@
                                             </form>
                                         </div>
                                         <small class="text-muted">{{ food.category.name }}</small> <br/>
-                                        <small class="text-muted">Rs. {{ food.price }}</small>
+                                        <small class="text-muted">
+                                            {% if food.discount_percent > 0 %}
+                                                <del class="text-danger"> Rs. {{ food.price }}</del> Rs. {{ food.get_selling_price }}
+                                            {% else %}
+                                                Rs. {{ food.price }}
+                                            {% endif %}
+                                        </small>
                                     </div>
                                 {% endfor %}
                             </div>

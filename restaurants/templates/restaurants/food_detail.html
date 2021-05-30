@@ -18,7 +18,13 @@
                     <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=300 height=300 style="border-radius: 50%;" />
                 </div>
                 <div class="row" style="margin-top: 20px; text-align: center;">
-                    <h4>{{ food.name }}</h4>
+                    <h4>
+                        {{ food.name }}
+                        {% if food.discount_percent > 0 %}
+                            (<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
+                            {{ food.discount_percent }}% off)
+                        {% endif %}
+                    </h4>
                     <p>{{ food.category.name }}</p>
                 </div>
                 <div class="row">
@@ -51,7 +57,13 @@
                             <strong>Price:</strong>
                         </div>
                         <div class="col-md-7 col-7">
-                            <p>Rs. {{ food.price }}</p>
+                            <p>
+                                {% if food.discount_percent > 0 %}
+                                    <del class="text-danger"> Rs. {{ food.price }}</del> Rs. {{ food.get_selling_price }}
+                                {% else %}
+                                    Rs. {{ food.price }}
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
 

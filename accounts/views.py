@@ -10,6 +10,7 @@ from customer.forms import CustomerProfileForm
 
 def user_login(request):
     if request.method == 'POST':
+        next_url = request.GET.get('next')
         form = LoginForm(data=request.POST)
         if form.is_valid():
             cd = form.cleaned_data
@@ -17,6 +18,8 @@ def user_login(request):
             if user:
                 if user.is_active:
                     login(request, user)
+                    if next_url:
+                        return redirect(next_url)
                     if user.is_superuser and user.is_staff:
                         return redirect('admin:index')
                     elif user.is_customer:

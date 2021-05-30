@@ -53,11 +53,23 @@
                                 <img class="thumbnail" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
                                 <div class="card-body">
                                     <div class="card-title">
-                                        <a href="{{ food.get_absolute_url }}" class="text-dark text-decoration-none">{{ food.name }}</a>
+                                        <a href="{{ food.get_absolute_url }}" class="text-dark text-decoration-none">
+                                            {{ food.name }}
+                                        </a>
+                                        {% if food.discount_percent > 0 %}
+                                            (<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
+                                            {{ food.discount_percent }}% off)
+                                        {% endif %}
                                     </div> 
                                     <small class="text-muted">{{ food.category.name }}</small>
                                     <br/>
-                                    <small class="text-muted"> Rs.{{ food.price }}</small>
+                                    <small class="text-muted">
+                                        {% if food.discount_percent > 0 %}
+                                            <del class="text-danger"> Rs. {{ food.price }}</del> Rs. {{ food.get_selling_price }}
+                                        {% else %}
+                                            Rs. {{ food.price }}
+                                        {% endif %}
+                                    </small>
                                     <br/>
                                     {% ratings food read_only=True %}
                                 </div>

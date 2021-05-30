@@ -93,7 +93,7 @@ def update_restaurant_profile(request):
 
 class FoodCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Food
-    fields = ['category', 'name', 'description', 'price', 'image', 'available']
+    fields = ['category', 'name', 'description', 'price', 'image', 'discount_percent','available']
     template_name = 'restaurants/food_form.html'
     success_url = reverse_lazy('restaurants:food_list')
 
@@ -130,7 +130,7 @@ class FoodCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 class FoodUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Food
-    fields = ['category', 'name', 'description', 'price', 'image', 'available']
+    fields = ['category', 'name', 'description', 'price', 'image', 'discount_percent', 'available']
     template_name = 'restaurants/food_form.html'
     success_url = reverse_lazy('restaurants:food_list')
 
