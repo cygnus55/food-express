@@ -3,7 +3,7 @@
 {% load ratings %}
 
 {% block content %}
-    <div class="container" style="margin-top: 20px; margin-bottom: 20px">
+    <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{% url 'foods:food_list' %}">Foods</a></li>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="row" style="margin-top: 20px; text-align: center;">
                     <h4>{{ food.name }}</h4>
-                    <p>{{ food.category }}</p>
+                    <p>{{ food.category.name }}</p>
                 </div>
             </div>
 
