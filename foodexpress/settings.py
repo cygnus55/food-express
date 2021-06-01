@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'chef.apps.ChefConfig',  
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
+    'location.apps.LocationConfig',
 ]
 
 MIDDLEWARE = [
@@ -172,3 +173,5 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 STAR_RATINGS_STAR_HEIGHT = 20
+
+GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')

@@ -23,7 +23,7 @@ class Cart(object):
             cart_item = CartItem.objects.get(cart=self.cart, food=food)
         except:
             cart_item = CartItem.objects.create(cart=self.cart, food=food,
-                                    quantity=0, price=food.price)
+                                    quantity=0, price=food.get_selling_price)
         
         if override_quantity:
             cart_item.quantity = quantity
