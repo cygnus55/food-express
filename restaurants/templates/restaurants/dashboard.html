@@ -26,6 +26,7 @@
          <!--Django Star Ratings-->
         <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
         <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
+        {% block extraheadelements %}{% endblock %}
         <style>
           .star-ratings-rating-average, .star-ratings-rating-count, .star-ratings-rating-user {
             display: none;
@@ -51,17 +52,22 @@
                   <ul class="nav flex-column">
                     <li class="nav-item">
                       <a class="nav-link {% if section == 'dashboard' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:restaurant_dashboard' %}">
-                        Dashboard
+                        <i class="fas fa-chart-line"></i> Dashboard
                       </a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link {% if section == 'foods' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:food_list' %}">
-                        Foods
+                        <i class="fas fa-cookie-bite"></i> Foods
                       </a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link {% if section == 'profile' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:update_profile' %}">
-                        Profile
+                        <i class="fas fa-user-alt"></i> Profile
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link {% if section == 'location' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:add_location' %}">
+                        <i class="fas fa-map-marker-alt"></i> Location
                       </a>
                     </li>
                   </ul>
@@ -91,4 +97,5 @@
         </main>
         <footer></footer>
     </body>
+    {% block doc_script %}{% endblock %}
 </html>

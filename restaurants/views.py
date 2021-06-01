@@ -109,6 +109,7 @@ class FoodCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['templates'] = FoodTemplate.objects.all()
         context['template_slug'] = template_slug
+        context['section'] = 'foods'
         return context
 
     def get_initial(self):
@@ -178,6 +179,7 @@ class RestaurantFoodListView(LoginRequiredMixin, UserPassesTestMixin, FoodListVi
         context['categories'] = categories
         if slug:
             context['category'] = get_object_or_404(FoodCategory, slug=slug)
+        context['section'] = 'foods'
         return context
 
 
