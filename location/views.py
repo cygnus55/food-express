@@ -3,11 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.urls.base import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.http import JsonResponse
 
 from restaurants.decorators import restaurant_required
-from .models import RestaurantLocation
 from .forms import AddRestaurantLocationForm
-from .utils import get_geolocation, get_your_ip
 
 # geolocation imports
 from geopy.geocoders import Nominatim
@@ -47,3 +46,15 @@ def add_restaurant_location(request):
                 'form': form,
                 'section': 'location',
             })
+
+
+def get_coords_place(request):
+    latitude = request.GET.get('latitude', None)
+    longitude = request.GET.get('longitude', None)
+    geolocator = Nominatim(user_agent='location')
+    coords = str(latitude) + ', ' + str(longitude)
+    place = geolocator.reverse(coords)
+    data = {
+        'address': place.address,
+    }
+    return JsonResponse(data)
