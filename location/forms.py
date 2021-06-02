@@ -7,7 +7,7 @@ from .models import RestaurantLocation
 class AddRestaurantLocationForm(forms.ModelForm):
     class Meta:
         model = RestaurantLocation
-        fields = ['latitude', 'longitude']
+        fields = ['latitude', 'longitude', 'address']
 
     # def __init__(self, *args, **kwargs):
     #     super(AddRestaurantLocationForm, self).__init__(*args, **kwargs)

@@ -8,7 +8,7 @@ from restaurants.models import Restaurant
 class RestaurantLocation(models.Model):
     longitude = models.FloatField()
     latitude = models.FloatField()
-    place = models.CharField(max_length=250)
+    address = models.CharField(max_length=250)
     restaurant = models.OneToOneField(
         Restaurant,
         related_name='location',
