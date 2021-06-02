@@ -3,12 +3,10 @@
 {% load static %}
 
 {% block extraheadelements %}
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-   crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -28,19 +26,16 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6">
-                <form action="" method="POST" enctype="multipart/form-data">
+            <div class="col-md-8">
+                <form action="" method="POST">
                     {% csrf_token %}
-                    <fieldset class="form-group">
-                        {{ form.as_p }}
-                    </fieldset>
-                    <div class="form-group">
-                        <button class="btn btn-outline-info" type="submit">Add</button>
-                    </div>
+                    {{ form.as_p }}
+                    <br/>
+                    <button class="btn btn-outline-info" type="submit">Add</button>
                 </form>
             </div>
-            </div>
         </div>
+    </div>
     </div>
     <div class="content-section">
         <div id="restaurant-map" style="height:400px; width:100%"></div>
@@ -51,6 +46,7 @@
     <script>
         var lat_field = document.getElementById('id_latitude')
         var lng_field = document.getElementById('id_longitude')
+        var address_field = document.getElementById('id_address')
         var mymap = L.map('restaurant-map')
         var marker = L.marker()
 
@@ -70,8 +66,6 @@
                 });
             }
         }
-
-        
 
         function show_map(lat_lng){
             mymap.setView(lat_lng, 17);
@@ -98,12 +92,28 @@
 
         
         function onMapClick(e){
-            show_marker(mymap, e.latlng)
-            lat_field.value = e.latlng.lat
-            lng_field.value = e.latlng.lng
-            console.log(e.latlng)
+            show_marker(mymap, e.latlng);
+            lat_field.value = e.latlng.lat;
+            lng_field.value = e.latlng.lng;
+            ajax_get_coords(lat_field.value, lng_field.value);
         }
 
         mymap.on('click', onMapClick);
+
+        function ajax_get_coords(latitude,longitude){
+            
+            $.ajax({
+                url: "{% url "location:get_coords_place" %}",
+                data: {
+                    'latitude': latitude,
+                    'longitude': longitude,
+                },
+                dataType: 'json',
+                success: function(data){
+                    address_field.value = data.address
+                }
+            });
+        }
+
     </script>
 {% endblock %}
