@@ -26,10 +26,6 @@ def add_restaurant_location(request):
             form = AddRestaurantLocationForm(data=request.POST)
         if form.is_valid():
             form_ = form.save(commit=False)
-            cd = form.cleaned_data
-            location_ = str(cd['latitude']) + ', ' + str(cd['longitude'])
-            location = geolocator.reverse(location_)
-            form_.place = location.address
             form_.restaurant = request.user.restaurant
             form_.save()
             messages.success(request, 'Location sucessfully updated!')
