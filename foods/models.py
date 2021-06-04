@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.validators import MaxValueValidator, MinValueValidator
+from decimal import Decimal
 
 from star_ratings.models import Rating
 
@@ -79,7 +80,7 @@ class Food(models.Model):
     )
     name = models.CharField(db_index=True, max_length=200)
     description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     available = models.BooleanField(default=True)
     created = models.TimeField(auto_now_add=True)
     updated = models.TimeField(auto_now=True)
