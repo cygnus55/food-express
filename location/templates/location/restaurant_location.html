@@ -58,11 +58,13 @@
         else{
             var lat_lng = [27.619916, 85.538903]
             show_map(lat_lng);
+            ajax_get_coords(27.619916, 85.538903);
 
             if (navigator.geolocation){
                 navigator.geolocation.getCurrentPosition(function(e){
                     var lat_lng = [e.coords.latitude, e.coords.longitude];
                     show_map(lat_lng);
+                    ajax_get_coords(e.coords.latitude, e.coords.longitude);
                 });
             }
         }
