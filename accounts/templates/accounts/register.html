@@ -3,64 +3,42 @@
 
 {% block content %}
     <div class="container">
-        <div class="py-100">
-            <form method="POST" enctype="multipart/form-data" action="">
-                {% csrf_token %}
-                <fieldset class="form-group">
-                    <legend class="mb-4"><span class="border-bottom" style="padding: 10px 0;">Join Today</span></legend>
-                    <div class="row">
-                    {% for field in form %}
-                        <div class="col-md-6">
-                            <div class="form-group" style="margin-top: 10px;">
-                                <div class="text-danger">{{ field.errors }}</div>
-                                <div>
-                                    {{ field.label_tag }} 
-                                </div>
-                                <div>
-                                    {{ field }}
-                                </div>
-                            </div>    
-                        </div>
-                    {% endfor %}
-                    {% for field in profile_form %}
-                        <div class="col-md-6">
-                            <div class="form-group" style="margin-top: 10px;">
-                                <div class="text-danger">{{ field.errors }}</div>
-                                <div>
-                                    {{ field.label_tag }} 
-                                </div>
-                                <div>
-                                    {{ field }}
-                                </div>
-                            </div>   
-                        </div> 
-                    {% endfor %}
+        <form method="POST" enctype="multipart/form-data" action="">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="mb-4"><span class="border-bottom" style="padding: 10px 0;">Join Today As {{ role }}</span></legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form|crispy }}
+                        {{ profile_form|crispy }}
+                    </div>
                 </div>
-                </fieldset>
-                <div class="form-group" style="margin: 10px 0;">
-                    <button class="btn btn-outline-info" type="submit">Sign Up</button>
-                </div>
-            </form>
-            <div style="padding: 10px 0;">
-                <small class="text-muted">
-                    Already Have An Account? <a class="ml-2" href="{% url 'accounts:login' %}">Sign In</a>
-                </small>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Sign Up</button>
             </div>
-            <div style="padding: 10px 0;">
-                {% with request.path as path %}
-                    {% if path == '/register/restaurant/' %}
+        </form>
+
+        <div style="padding: 10px 0;">
+            <small class="text-muted">
+                Already Have An Account? <a class="ml-2" href="{% url 'accounts:login' %}">Sign In</a>
+            </small>
+        </div>
+        
+        <div style="padding: 10px 0;">
+            {% with request.path as path %}
+                {% if path == '/register/restaurant/' %}
+                    <a class="btn btn-success" 
+                    href="{% url 'accounts:register' 'customer' %}">
+                        Join As Customer
+                    </a>
+                {% else %}
                         <a class="btn btn-success" 
-                        href="{% url 'accounts:register' 'customer' %}">
-                            Join As Customer
-                        </a>
-                    {% else %}
-                         <a class="btn btn-success" 
-                        href="{% url 'accounts:register' 'restaurant' %}">
-                            Join As Restaurant
-                        </a>
-                    {% endif %}
-                {% endwith %}
-            </div>
+                    href="{% url 'accounts:register' 'restaurant' %}">
+                        Join As Restaurant
+                    </a>
+                {% endif %}
+            {% endwith %}
         </div>
     </div>
 {% endblock content %}

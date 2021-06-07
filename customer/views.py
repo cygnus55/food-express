@@ -12,7 +12,7 @@ from foods.models import Food
 @login_required
 @customer_required
 def customer_homepage(request):
-    foods = Food.objects.all()
+    foods = Food.objects.filter(restaurant__available=True).filter(available=True)
     return render(request, 'customer/home.html', {'foods': foods})
 
 

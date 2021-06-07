@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from foods.models import Food, Category
 from cart.forms import CartAddFoodForm
 
+
 class FoodListView(ListView):
     model = Food
     ordering = '-created'
@@ -35,4 +36,3 @@ class FoodDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['cart_food_form'] = CartAddFoodForm() 
         return context
-    

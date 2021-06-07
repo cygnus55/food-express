@@ -11,8 +11,8 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['restaurants']= Restaurant.objects.all()[:8]
-        context['foods'] = Food.objects.all()[:8]
+        context['restaurants']= Restaurant.objects.filter(available=True)[:8]
+        context['foods'] = Food.objects.filter(restaurant__available=True).filter(available=True)[:8]
         return context
 
 
@@ -36,4 +36,4 @@ def handler404(request, *args, **argv):
     return render(request, 'base/404.html')
 
 class HowToOrder(TemplateView):
-    template_name = 'base/howtoorder.html'
+    template_name = 'base/how-to-order.html'

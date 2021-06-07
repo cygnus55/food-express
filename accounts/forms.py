@@ -12,7 +12,23 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 
-class Registrationform(UserCreationForm):
-    class Meta:
+class RegistrationForm(UserCreationForm):
+    password1 = forms.CharField(
+        label='Password',
+        strip=False,
+        widget=forms.PasswordInput,
+    )
+    password2 = forms.CharField(
+        label='Confirm Password',
+        widget=forms.PasswordInput,
+        strip=False,
+    )
+
+    class Meta(UserCreationForm.Meta):
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email']
+        help_texts = {
+            'username': '',
+            'password1': '',
+            'password2': ''
+        }
