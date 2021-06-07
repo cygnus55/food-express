@@ -1,7 +1,6 @@
 from django import forms
-from django.forms.widgets import TextInput
 
-from .models import RestaurantLocation
+from .models import RestaurantLocation, DeliveryLocation
 
 
 class AddRestaurantLocationForm(forms.ModelForm):
@@ -9,7 +8,8 @@ class AddRestaurantLocationForm(forms.ModelForm):
         model = RestaurantLocation
         fields = ['latitude', 'longitude', 'address']
 
-    # def __init__(self, *args, **kwargs):
-    #     super(AddRestaurantLocationForm, self).__init__(*args, **kwargs)
-    #     self.fields['latitude'].widget.attrs['disabled'] = True
-    #     self.fields['longitude'].widget.attrs['disabled'] = True
+
+class AddDeliveryLocationForm(forms.ModelForm):
+    class Meta:
+        model = DeliveryLocation
+        fields = ['title', 'latitude', 'longitude', 'address']

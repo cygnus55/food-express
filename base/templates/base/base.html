@@ -26,6 +26,8 @@
 
     <!--Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{% static 'base/css/base.css' %}"/>
+
+    {% block extraheadelements %}{% endblock %}
 </head>
 
 <body>
@@ -81,6 +83,25 @@
                           <a class="dropdown-item" href="{% url 'accounts:password_change' %}">
                             <i class="fas fa-key"></i> Change Password
                           </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#">
+                            <i class="fas fa-map-marker-alt"></i> Delivery Location &raquo;
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-dark dropdown-submenu dropdown-submenu-left">
+                            {% for location in delivery_locations %}
+                              <li>
+                                <a class="dropdown-item" href="{% url 'customer:update_delivery_location' location.id %}">
+                                  <i class="fas fa-edit"></i> {{ location.title }}
+                                </a>
+                              </li>
+                            {% endfor %}
+                            <li>
+                              <a class="dropdown-item" href="{% url 'customer:add_delivery_location' %}">
+                                <i class="fas fa-plus"></i> Add New
+                              </a>
+                            </li>
+                          </ul>
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>

@@ -44,6 +44,10 @@
             <td>{{ order.customer.full_name }}</td>
         </tr>
         <tr>
+            <th>Delivery Location</th>
+            <td>{{ order.delivery_location.address }}</td>
+        </tr>
+        <tr>
             <th>E-mail</th>
             <td><a href="mailto:{{ order.customer.user.email }}">{{ order.customer.user.email }}</a></td>
         </tr>
@@ -59,7 +63,7 @@
             <th>Status</th>
             <td>
                 {% if order.complete %}
-                    <i class="far fa-check-circle" style='color: green;'></i> Completed
+                    <i class="fas fa-check-circle" style='color: green;'></i> Completed
                 {% else %}
                     <i class="fas fa-times-circle" style='color: red;'></i> Incomplete
                 {% endif %}
@@ -69,7 +73,7 @@
             <th>Verification Status</th>
             <td>
                 {% if not order.verified %}
-                        <i class="far fa-times-circle" style='color: red;'></i> Not Verified
+                        <i class="fas fa-times-circle" style='color: red;'></i> Not Verified
                         <small class="verification"><a href="{% url 'orders:verify_order' order.id %}" style='color:gray;'>Click <b>here</b> to verify.</a></small>
                 {% else %}
                     <i class="fas fa-check-circle" style='color: green;'></i> Verified

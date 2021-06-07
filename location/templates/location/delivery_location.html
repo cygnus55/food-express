@@ -1,0 +1,109 @@
+{% extends 'base/base.html' %} 
+{% load crispy_forms_tags %} 
+{% load static %}
+
+{% block extraheadelements %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row" style="margin-bottom: 20px;">
+            <h4><i class="fas fa-map-marker-alt"></i> Add Delivery Location</h4>
+        </div>
+    
+        <div class="row">
+            <div class="col-md-8">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <br/>
+                    <button class="btn btn-outline-info" type="submit">Add</button>
+                </form>
+            </div>
+        </div>
+        <hr/>
+        <div class="content-section">
+            <div id="customer-map" style="height:400px; width:100%"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra %}
+    <script>
+        var lat_field = document.getElementById('id_latitude')
+        var lng_field = document.getElementById('id_longitude')
+        var address_field = document.getElementById('id_address')
+        var mymap = L.map('customer-map')
+        var marker = L.marker()
+
+        if (lat_field.value && lng_field.value){
+            var lat_lng = [lat_field.value, lng_field.value];
+            show_map(lat_lng);
+        }
+
+        else{
+            var lat_lng = [27.619916, 85.538903]
+            show_map(lat_lng);
+            ajax_get_coords(27.619916, 85.538903);
+
+            if (navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(function(e){
+                    var lat_lng = [e.coords.latitude, e.coords.longitude];
+                    show_map(lat_lng);
+                    ajax_get_coords(e.coords.latitude, e.coords.longitude);
+                });
+            }
+        }
+
+        function show_map(lat_lng){
+            mymap.setView(lat_lng, 17);
+        
+            L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmFtcmFqY2giLCJhIjoiY2twZGY4aGhxMWdqNTJ4cW00MnRsd2s0MiJ9.A6W2KCwKqfStvf2q4CGqLA', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 30,
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoicmFtcmFqY2giLCJhIjoiY2twZGY4aGhxMWdqNTJ4cW00MnRsd2s0MiJ9.A6W2KCwKqfStvf2q4CGqLA'
+            }).addTo(mymap);
+
+            show_marker(mymap, lat_lng)
+            lat_field.value = lat_lng[0]
+            lng_field.value = lat_lng[1]
+        }
+
+        function show_marker(mymap, lat_lng){
+            marker.setLatLng(lat_lng);
+            marker.addTo(mymap);
+            marker.bindPopup("I am here.");
+        }
+
+        function onMapClick(e){
+            show_marker(mymap, e.latlng);
+            lat_field.value = e.latlng.lat;
+            lng_field.value = e.latlng.lng;
+            ajax_get_coords(lat_field.value, lng_field.value);
+        }
+
+        mymap.on('click', onMapClick);
+
+        function ajax_get_coords(latitude,longitude){
+            
+            $.ajax({
+                url: "{% url "location:get_coords_place" %}",
+                data: {
+                    'latitude': latitude,
+                    'longitude': longitude,
+                },
+                dataType: 'json',
+                success: function(data){
+                    address_field.value = data.address
+                }
+            });
+        }
+    </script>
+{% endblock %}

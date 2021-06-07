@@ -6,7 +6,9 @@ from django.contrib import messages
 from django.http import JsonResponse
 
 from restaurants.decorators import restaurant_required
-from .forms import AddRestaurantLocationForm
+from customer.decorators import customer_required
+from .forms import AddRestaurantLocationForm, AddDeliveryLocationForm
+from .models import DeliveryLocation
 
 # geolocation imports
 from geopy.geocoders import Nominatim
@@ -18,7 +20,6 @@ from geopy.geocoders import Nominatim
 @login_required
 @restaurant_required
 def add_restaurant_location(request):
-    geolocator = Nominatim(user_agent='location')
     if request.method == 'POST':
         try:
             form = AddRestaurantLocationForm(data=request.POST, instance=request.user.restaurant.location)
@@ -54,3 +55,46 @@ def get_coords_place(request):
         'address': place.address,
     }
     return JsonResponse(data)
+
+@login_required
+@customer_required
+def add_delivery_location(request):
+    if request.method == 'POST':
+        form = AddDeliveryLocationForm(request.POST)
+        if form.is_valid():
+            form_ = form.save(commit=False)
+            form_.customer = request.user.customer
+            form_.save()
+            messages.success(request, 'Location sucessfully updated!')
+            return redirect('customer:update_delivery_location', location_id=form_.id)
+    else:
+        form = AddDeliveryLocationForm()
+    
+    return render(request,
+                'location/delivery_location.html',
+                {
+                    'form': form,
+                })
+    
+
+@login_required
+@customer_required
+def update_delivery_location(request, location_id):
+    location = get_object_or_404(DeliveryLocation, id=location_id, customer=request.user.customer)
+    if request.method == 'POST':
+        form = AddDeliveryLocationForm(request.POST, instance=location)
+        if form.is_valid():
+            form_ = form.save(commit=False)
+            form_.customer = request.user.customer
+            form_.save()
+            messages.success(request, 'Location sucessfully updated!')
+            return redirect('customer:update_delivery_location', location_id=location_id)
+        
+    else:
+        form = AddDeliveryLocationForm(instance=location)
+        
+    return render(request,
+            'location/delivery_location.html',
+            {
+                'form': form,
+            })
