@@ -1,11 +1,13 @@
 from django.db import models
 from customer.models import Customer
 from foods.models import Food
+from location.models import DeliveryLocation
 
 # Create your models here.
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, related_name='order', on_delete=models.CASCADE)
+    delivery_location = models.ForeignKey(DeliveryLocation, related_name='delivery_location', on_delete=models.CASCADE)
     payment_by_cash = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
     complete = models.BooleanField(default=False)

@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
@@ -86,11 +87,25 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <a class="btn btn-outline-info" href="{% url 'orders:order_create' 'pay-by-cash' %}">Pay by cash on delivery</a>
-                <a class="btn btn-outline-info" href=#>Pay by Khalti</a>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form action="{% url 'orders:order_create' %}" method="post">
+                    <div class="form-group mb-3">
+                        {{ create_order_form.delivery_location.label }}:
+                        {{ create_order_form.delivery_location }}
+                        <a class="text-muted text-decoration-none " href="{% url 'customer:add_delivery_location' %}">
+                            <i class="fas fa-plus"></i> Add New
+                        </a>
+                    </div>
+                    <div class="form-group mb-3">
+                        {{ create_order_form.payment_method.label }}:
+                        {{ create_order_form.payment_method }}
+                        {% csrf_token %}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" type="submit">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+                <br/>
             </div>
         </div>
         </div>

@@ -6,6 +6,7 @@ from .forms import CartAddFoodForm
 from .cart import Cart
 from foods.models import Food
 from customer.decorators import customer_required
+from orders.forms import CreateOrderForm
 
 # Create your views here.
 
@@ -37,4 +38,5 @@ def cart_remove(request, food_id):
 @customer_required
 def cart_detail(request):
     cart = Cart(request)
-    return render(request, 'cart/cart_detail.html', {'cart': cart})
+    create_order_form = CreateOrderForm(request)
+    return render(request, 'cart/cart_detail.html', {'cart': cart, 'create_order_form': create_order_form})
