@@ -25,8 +25,8 @@
                                 <div class="card-title">
                                     <a href="{{ food.get_absolute_url_for_customer }}" class="text-dark text-decoration-none">{{ food.name }}</a>
                                     {% if food.discount_percent > 0 %}
-                                        (<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
-                                        {{ food.discount_percent }}% off)
+                                        <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
+                                        {{ food.discount_percent }}% off)</small>
                                     {% endif %}
                                 </div> 
                                 <small class="text-muted">{{ food.category.name }}</small>
@@ -104,7 +104,11 @@
         <div class="about">
             <div>
                 <h3 style="text-align: center;">About Us</h3>
-                <p style="width: 70%; height: max-content;" class="mx-auto my-auto">Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero tempora quos ipsa deleniti, dolore eligendi ipsam consequatur. Quia qui veniam totam maxime, dolores ad, placeat rem magnam impedit voluptates sint.</p>
+                <p style="width: 70%; height: max-content;" class="mx-auto my-auto text-center">
+                    Food Express connects users and restaurants and helps fulfill the objective of both the parties. 
+                    It opens up a plethora of choices in foods and restaurants for users in their area. There is no 
+                    age barrier and provides varieties of foods for all.
+                </p>
             </div>
         </div>
 
