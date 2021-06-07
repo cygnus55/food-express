@@ -4,7 +4,7 @@ from django.http import Http404, HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
-from .forms import Registrationform, LoginForm 
+from .forms import RegistrationForm, LoginForm 
 from restaurants.forms import RestaurantProfileForm
 from customer.forms import CustomerProfileForm
 
@@ -39,10 +39,12 @@ def user_login(request):
 
 def register(request,role):
     allowed_roles = ['customer', 'restaurant']
+
     if role not in allowed_roles:
         raise Http404()
-    if request.method=="POST":
-        form=Registrationform(data=request.POST)
+
+    if request.method == 'POST':
+        form = RegistrationForm(data=request.POST)
         if role == 'restaurant':
             profile_form = RestaurantProfileForm(data=request.POST, files=request.FILES)
         else:
@@ -54,12 +56,11 @@ def register(request,role):
             user_profile = profile_form.save(commit=False)
             user_profile.user = new_user
             user_profile.save()
-            username=form.cleaned_data.get('username')
-            messages.success(request,f'Account was created for {username}!')
-            return redirect ("accounts:login")
-
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account was created for {username}!')
+            return redirect('accounts:login')
     else:
-        form = Registrationform()
+        form = RegistrationForm()
         if role == 'restaurant':
             profile_form = RestaurantProfileForm()
         else:
@@ -68,6 +69,8 @@ def register(request,role):
     context = {
         'form': form,
         'profile_form': profile_form,
-        'title': 'Register'
+        'title': 'Register',
+        'role': role.title()
     }
-    return render(request, "accounts/register.html", context)
+
+    return render(request, 'accounts/register.html', context)

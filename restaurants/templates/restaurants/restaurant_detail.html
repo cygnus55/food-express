@@ -123,8 +123,8 @@
                                                         <a href="{% url 'foods:food_detail' food.pk %}" class="text-decoration-none text-dark">
                                                             {{ food.name }}
                                                             {% if food.discount_percent > 0 %}
-                                                                (<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
-                                                                {{ food.discount_percent }}% off)
+                                                                <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
+                                                                    {{ food.discount_percent }}% off)</small>
                                                             {% endif %}
                                                         </a>
                                                     </h6>
