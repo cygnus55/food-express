@@ -23,12 +23,14 @@ urlpatterns = [
     path('cart/', include('cart.urls', namespace='cart')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('ratings/', include('star_ratings.urls', namespace='ratings')),
+    path('coupons/', include('coupons.urls', namespace='coupons')),
     path('', include('base.urls', namespace='base')),
     path('', include('accounts.urls', namespace='accounts')),
     path('restaurants/', include('restaurants.urls', namespace='restaurants')),
     path('customer/', include('customer.urls', namespace='customer')),
     path('foods/', include('foods.urls', namespace='foods')),
     path('location/', include('location.urls', namespace='location')),
+    
 ]
 
 #debug mode only not suitable for production
