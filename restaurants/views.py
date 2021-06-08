@@ -189,3 +189,5 @@ class RestaurantFoodDetailView(LoginRequiredMixin, UserPassesTestMixin, FoodDeta
     def test_func(self):
         return self.request.user.is_active and self.request.user.is_restaurant \
             and self.get_object().restaurant == self.request.user.restaurant
+
+

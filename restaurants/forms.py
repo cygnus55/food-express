@@ -3,6 +3,7 @@ from django import forms
 from .models import Restaurant
 
 
+
 class RestaurantProfileForm(forms.ModelForm):
     class Meta:
         model = Restaurant
@@ -21,3 +22,6 @@ class RestaurantProfileForm(forms.ModelForm):
             raise forms.ValidationError('Closing hour should be greater than opening hour!')
         
         return closed_hour
+
+
+
