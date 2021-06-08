@@ -12,3 +12,13 @@
 * Developed Chef App
 * Designed restaurant cards on the homepage
 * Integration of chef apps with restaurant app and food app
+
+
+#### Week 4/5:
+* Redesigned Logo
+* Fixed some UI elements
+
+
+
+#### Week 6:
+* Fixed email issue
