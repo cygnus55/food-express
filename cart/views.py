@@ -7,6 +7,7 @@ from .cart import Cart
 from foods.models import Food
 from customer.decorators import customer_required
 from orders.forms import CreateOrderForm
+from coupons.forms import CouponApplyForm
 
 # Create your views here.
 
