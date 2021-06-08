@@ -1,6 +1,9 @@
 from django.urls import path
+
 from . import views
 from location.views import add_restaurant_location
+from coupons.views import add_coupon
+
 
 app_name = 'restaurants'
 
@@ -27,4 +30,6 @@ urlpatterns = [
     path('food/<int:pk>/', views.RestaurantFoodDetailView.as_view(), name='food_detail'),
     # Restaurant Location View
      path('location/', add_restaurant_location, name="add_location"),
+     # Coupon View
+     path('coupon/', add_coupon, name="add_coupon"),
 ]
