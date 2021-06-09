@@ -4,13 +4,25 @@
 
 {% block content %}
     <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
+
+        <div class="row">
+            <div class="col-md-12">
+                  {% if messages %}
+                    {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+              </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-12">
                 <a class="btn btn-outline-dark" href="{% url 'foods:food_list' %}">&#x2190; Continue Shopping</a>
                 <br>
                 <br>
         </div>
-
 
         <div class="row">
             <div class="col-lg-4">
@@ -19,19 +31,30 @@
             <div class="col-lg-6">
                 <form action="{% url 'coupons:apply' %}" method="post">
                     {{ coupon_apply_form|crispy}}
-                    <button class="btn btn-primary" type="submit">Apply</button>
                     {% csrf_token %}
+            </div>
+            <div class="col-lg-2">
+                <br>
+                <button class="btn btn-primary" type="submit">Apply</button>
                 </form>
             </div>
-            <div class="col-lg-4"></div>
         </div>
-
+        <br/>
         <div class="row">
             <div class="col-lg-12">
                 <table class="table">
                     <tr>
                         <th><h5>Items: {{ cart|length }}</h5></th>
-                        <th><h5>Total: Rs. {{ cart.get_total_price }}</h5></th>
+                        {% if cart.coupon %}
+                            <th>
+                                <h5>
+                                    Total: Rs. <del class="text-muted">{{ cart.get_total_price }}</del> {{ cart.get_total_price_after_discount }} <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
+                                        {{ cart.coupon.discount }}% off, using promo code "{{ cart.coupon.code }}")</small>
+                                </h5>
+                            </th>
+                        {% else %}
+                            <th><h5>Total: Rs. {{ cart.get_total_price }}</h5></th>
+                        {% endif %}
                         <th>
                             <button type="button" style="float:right; margin:5px;" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paymentModal">Checkout</button>
                         </th>
