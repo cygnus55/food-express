@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 
 
 from restaurants.decorators import restaurant_required
+from customer.decorators import customer_required
 from .models import Coupon
 from .forms import CouponApplyForm
 from .forms import AddCouponForm
@@ -36,9 +37,32 @@ def add_coupon(request):
             form_ = form.save(commit=False)
             form_.restaurant = request.user.restaurant
             form_.save()
-            messages.success(request, 'Sucessfully applied!')
-            return redirect('restaurants:add_coupon')
+            messages.success(request, 'Coupon sucessfully added!')
+            return redirect('restaurants:update_coupon', coupon_id=form_.id)
     else:
         form = AddCouponForm()
-    return render(request, 'coupons/add_coupon.html', {'form': form, 'section': 'coupons'})    
+    return render(request, 'coupons/add_coupon.html', {'form': form, 'section': 'coupons'})
 
+
+@login_required
+@restaurant_required
+def update_coupon(request, coupon_id):
+    coupon = get_object_or_404(Coupon, id=coupon_id, restaurant=request.user.restaurant)
+    if request.method == 'POST':
+        form = AddCouponForm(data=request.POST, instance=coupon)
+        if form.is_valid():
+            form_ = form.save()
+            messages.success(request, 'Coupon succesfully updated!')
+            return redirect('restaurants:update_coupon', coupon_id=coupon_id)
+    else:
+        form = AddCouponForm(instance=coupon)
+    return render(request, 'coupons/update_coupon.html', {'form': form, 'section': coupon.code, 'coupon': coupon})
+
+
+@login_required
+@restaurant_required
+def delete_coupon(request,coupon_id):
+    coupon = get_object_or_404(Coupon, id=coupon_id, restaurant=request.user.restaurant)
+    coupon.delete()
+    messages.success(request, 'Coupon deleted!')
+    return redirect('restaurants:restaurant_dashboard')

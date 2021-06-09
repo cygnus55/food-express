@@ -5,12 +5,15 @@ from django.contrib import messages
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
 
 from .decorators import restaurant_required
 from .models import Category, Restaurant
 from .forms import RestaurantProfileForm
 from foods.models import Food, FoodTemplate, Category as FoodCategory
 from foods.views import FoodListView, FoodDetailView
+from orders.models import Order
 
 
 def restaurant_list(request, category_slug=None):
@@ -61,9 +64,21 @@ def restaurant_detail(request, id, slug):
 @login_required
 @restaurant_required
 def restaurant_dashboard(request):
+    sales = Order.objects.filter(complete=True).filter(items__food__restaurant=request.user.restaurant).annotate(month=TruncMonth('created')) \
+                                    .values('month') \
+                                    .annotate(count=Count('id')) \
+                                    .order_by()
+    labels = [sale['month'].strftime('%b %Y') for sale in sales]
+    data = [sale['count'] for sale in sales]
+    print(data)
+
+    print(Order.objects.filter(items__food__restaurant=request.user.restaurant))
+
     context = {
         'restaurant': request.user.restaurant,
         'section': 'dashboard',
+        'labels': labels,
+        'data': data,
     }
     return render(request, 'restaurants/dashboard.html', context)
 

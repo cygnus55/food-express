@@ -70,14 +70,27 @@
                         <i class="fas fa-map-marker-alt"></i> Location
                       </a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link {% if section == 'coupons' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:add_coupon' %}">
-                        <i class="fas fa-ticket-alt"></i> Add Coupon 
-                      </a>
-                    </li>
                   </ul>
-          
-                  <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                  
+                  <h6 class="d-flex text-uppercase justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span><i class="fas fa-ticket-alt"></i> Active Coupons</span>
+                  </h6>
+                  <ul class="nav flex-column mb-2">
+                    {% for coupon in active_coupons%}
+                        <li class="nav-item">
+                            <a class="nav-link {% if section == coupon.code %} active {% else %} text-dark {% endif %} display-inline" href="{% url 'restaurants:update_coupon' coupon.id %}">
+                                <i class="fas fa-edit"></i> {{ coupon.code }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if section == 'coupons' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:add_coupon' %}">
+                          <i class="fas fa-plus"></i> Add Coupon 
+                        </a>
+                      </li>
+                  </ul>
+
+                  <!-- <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                     <span>Orders</span>
                   </h6>
                   <ul class="nav flex-column mb-2">
@@ -87,7 +100,7 @@
                         Current month
                       </a>
                     </li>
-                  </ul>
+                  </ul> -->
                 </div>
               </nav>
           </div>
@@ -96,7 +109,42 @@
           
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             {% block content %}
-              <h3>Dashboard</h3>
+              <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+              
+              <div class="container">
+                <h3>{{ user.restaurant.name }}</h3>
+                <h5>Sales</h5>
+                <canvas id="pie-chart" style="max-height: 70vh; width: auto;"></canvas>
+              </div>
+
+              <script>
+                var config = {
+                  type: 'bar',
+                  data: {
+                    datasets: [{
+                      data: {{ data|safe }},
+                      label: 'Sales',
+                      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                      borderColor: 'rgb(255, 99, 132)',
+                      borderColor: 'rgb(242, 119, 148)',
+                      borderWidth: 1
+                    }],
+                    labels: {{ labels|safe }}
+                  },
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
+                      }
+                    }
+                  }
+                };
+            
+                window.onload = function() {
+                  var ctx = document.getElementById('pie-chart').getContext('2d');
+                  window.myPie = new Chart(ctx, config);
+                };
+              </script>
             {% endblock %}
           </div>
         </main>
