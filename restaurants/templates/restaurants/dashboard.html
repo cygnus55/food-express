@@ -73,7 +73,7 @@
                   </ul>
                   
                   <h6 class="d-flex text-uppercase justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span><i class="fas fa-ticket-alt"></i> Active Coupons</span>
+                    <span><i class="fas fa-ticket-alt text-success"></i> Active Coupons</span>
                   </h6>
                   <ul class="nav flex-column mb-2">
                     {% for coupon in active_coupons%}
@@ -113,29 +113,43 @@
               
               <div class="container">
                 <h3>{{ user.restaurant.name }}</h3>
-                <h5>Sales</h5>
+                <div class="container d-flex justify-content-between">
+                  <h5>Sales</h5>
+                  <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                      <a class="nav-link {% if order_parameter == 'month' %}active{% endif %}" aria-current="page" href="?order_by=month">Month</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link {% if order_parameter == 'date' %}active{% endif %}" href="?order_by=date">Date</a>
+                    </li>
+                  </ul>
+                </div>
                 <canvas id="pie-chart" style="max-height: 70vh; width: auto;"></canvas>
               </div>
 
               <script>
+                var data = {
+                  datasets: [{
+                    data: {{ data|safe }},
+                    label: 'Sales',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(242, 119, 148)',
+                    borderWidth: 1
+                  }],
+                  labels: {{ labels|safe }}
+                }
+          
                 var config = {
                   type: 'bar',
-                  data: {
-                    datasets: [{
-                      data: {{ data|safe }},
-                      label: 'Sales',
-                      backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                      borderColor: 'rgb(255, 99, 132)',
-                      borderColor: 'rgb(242, 119, 148)',
-                      borderWidth: 1
-                    }],
-                    labels: {{ labels|safe }}
-                  },
+                  data: data,
                   options: {
                     scales: {
-                      y: {
-                        beginAtZero: true
-                      }
+                      yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
                     }
                   }
                 };

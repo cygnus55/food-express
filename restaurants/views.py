@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
-from django.db.models.functions import TruncMonth
+from django.urls import reverse, reverse_lazy
+from django.db.models.functions import TruncMonth, TruncDate
 from django.db.models import Count
 
 from .decorators import restaurant_required
@@ -64,21 +64,38 @@ def restaurant_detail(request, id, slug):
 @login_required
 @restaurant_required
 def restaurant_dashboard(request):
-    sales = Order.objects.filter(complete=True).filter(items__food__restaurant=request.user.restaurant).annotate(month=TruncMonth('created')) \
-                                    .values('month') \
-                                    .annotate(count=Count('id')) \
-                                    .order_by()
-    labels = [sale['month'].strftime('%b %Y') for sale in sales]
-    data = [sale['count'] for sale in sales]
-    print(data)
+    allowed_categories = ['month', 'date']
+    order_category = request.GET.get('order_by', 'date')
 
-    print(Order.objects.filter(items__food__restaurant=request.user.restaurant))
+    # if order_category not in allowed_categories:
+    #     return redirect('restaurants:restaurant_dashboard')
+
+    if order_category == 'month':
+        sales = Order.objects.filter(complete=True) \
+                                        .filter(items__food__restaurant=request.user.restaurant) \
+                                        .annotate(month=TruncMonth('created')) \
+                                        .values('month') \
+                                        .annotate(count=Count('id')) \
+                                        .order_by()
+        labels = [sale['month'].strftime('%b %Y') for sale in sales]
+    elif order_category == 'date':
+        sales = Order.objects.filter(complete=True) \
+                                        .filter(items__food__restaurant=request.user.restaurant) \
+                                        .annotate(date=TruncDate('created')) \
+                                        .values('date') \
+                                        .annotate(count=Count('id')) \
+                                        .order_by()
+                                        
+        labels = [sale['date'].strftime('%d %b %Y') for sale in sales]
+    
+    data = [sale['count'] for sale in sales]
 
     context = {
         'restaurant': request.user.restaurant,
         'section': 'dashboard',
         'labels': labels,
         'data': data,
+        'order_parameter': order_category
     }
     return render(request, 'restaurants/dashboard.html', context)
 

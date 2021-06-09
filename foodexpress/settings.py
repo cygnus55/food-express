@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 
 load_dotenv()
 
@@ -190,3 +191,6 @@ GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 #EMAIL_PORT = 587
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}

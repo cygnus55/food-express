@@ -98,7 +98,7 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-4 col-md-5">
+            <div class="col-lg-4 col-md-5 d-flex justify-content-center">
                 <form action="{% url 'cart:cart_add' food.id %}" method="post">
                     <span>
                         {{ cart_food_form.quantity }}

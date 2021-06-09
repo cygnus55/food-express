@@ -17,6 +17,7 @@ class Cart(object):
             self.cart = cart
         except Exception:
             self.cart = None
+        
         #store the current applied coupon
         #self.coupon_id = self.session.get('coupon_id')
 
@@ -52,20 +53,23 @@ class Cart(object):
 
     def clear(self):
         self.cart.delete()
-        
+    
+    def add_coupon(self, coupon_code):
+        self.cart.coupon_code = coupon_code
+        self.cart.save()
+
     @property
     def coupon(self):
-        if self.coupon_id:
+        if self.cart.coupon_code:
             try:
-                return Coupon.objects.get(id=self.coupon_id)
+                return Coupon.objects.get(code__iexact = self.cart.coupon_code)
             except Coupon.DoesNotExist:
                 pass
         return None
 
     def get_discount(self):
-        if self.coupon:
-            return (self.coupon.discount / Decimal(100)) \
-                * self.get_total_price()
+        if self.cart.coupon_code:
+            return (self.coupon.discount / Decimal(100)) * self.get_total_price()
         return Decimal(0)
     
     def get_total_price_after_discount(self):
