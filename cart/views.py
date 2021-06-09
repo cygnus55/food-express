@@ -11,6 +11,7 @@ from coupons.forms import CouponApplyForm
 
 # Create your views here.
 
+
 @require_POST
 @login_required
 @customer_required
@@ -35,9 +36,17 @@ def cart_remove(request, food_id):
     cart.remove(food)
     return redirect('cart:cart_detail')
 
+
 @login_required
 @customer_required
 def cart_detail(request):
     cart = Cart(request)
     create_order_form = CreateOrderForm(request)
-    return render(request, 'cart/cart_detail.html', {'cart': cart, 'create_order_form': create_order_form})
+    coupon_apply_form = CouponApplyForm()
+    return render(request,
+            'cart/cart_detail.html',
+            {
+                'cart': cart,
+                'create_order_form': create_order_form,
+                'coupon_apply_form': coupon_apply_form,
+            })

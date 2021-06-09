@@ -52,6 +52,7 @@ class Cart(object):
 
     def clear(self):
         self.cart.delete()
+        
     @property
     def coupon(self):
         if self.coupon_id:

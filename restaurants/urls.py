@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 from location.views import add_restaurant_location
-from coupons.views import add_coupon
+from coupons.views import add_coupon, update_coupon, delete_coupon
 
 
 app_name = 'restaurants'
@@ -32,4 +32,6 @@ urlpatterns = [
      path('location/', add_restaurant_location, name="add_location"),
      # Coupon View
      path('coupon/', add_coupon, name="add_coupon"),
+     path('coupon/<int:coupon_id>/', update_coupon, name="update_coupon"),
+     path('coupon/delete/<int:coupon_id>/', delete_coupon, name="delete_coupon"),
 ]
