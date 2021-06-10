@@ -41,4 +41,17 @@
             {% endwith %}
         </div>
     </div>
+
+    <script>
+        $(function () {
+            $("#id_open_hour").datetimepicker({
+                datepicker:false,
+                format: 'H:i',
+            });
+            $("#id_close_hour").datetimepicker({
+                datepicker:false,
+                format: 'H:i',
+            });
+          });
+    </script>
 {% endblock content %}
