@@ -41,4 +41,17 @@
             <a class="btn btn-success" href="{% url 'accounts:password_change' %}">Change Password</a>
         </div>
     </div> 
+
+    <script>
+        $(function () {
+            $("#id_open_hour").datetimepicker({
+                datepicker:false,
+                format: 'H:i',
+            });
+            $("#id_close_hour").datetimepicker({
+                datepicker:false,
+                format: 'H:i',
+            });
+          });
+    </script>
 {% endblock content %}
