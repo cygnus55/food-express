@@ -157,14 +157,6 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# EMAIL_USE_TLS = True
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER =os.e
-# EMAIL_HOST_PASSWORD ='***************'
-# EMAIL_PORT = 587
-
 AUTH_USER_MODEL = 'accounts.User'
 
 LOGOUT_REDIRECT_URL = 'accounts:login'
@@ -184,13 +176,24 @@ STAR_RATINGS_STAR_HEIGHT = 20
 
 GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 
-#EMAIL_USE_TLS = True
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_HOST_USER = os.environ.get('EMAIL')
-#EMAIL_HOST_PASSWORD =os.environ.get('PASSWORD')
-#EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
+# EMAIL_HOST = 'smtp.gmail.com'
+
+# EMAIL_HOST_USER = os.getenv('EMAIL')
+
+# EMAIL_HOST_PASSWORD =os.getenv('PASSWORD')
+
+# EMAIL_PORT = 587
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+CELERY_BROKER_URL = 'amqps://woykfzgv:hdoV2AYJF1nd94H-KL_mUUrvL9nNgY-z@puffin.rmq2.cloudamqp.com/woykfzgv'
+
+CELERY_ACCEPT_CONTENT = ['json']
+
+CELERY_TASK_SERIALIZER = 'json'
