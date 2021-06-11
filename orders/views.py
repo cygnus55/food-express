@@ -10,6 +10,7 @@ from cart.cart import Cart
 from customer.decorators import customer_required
 from .forms import CreateOrderForm
 from location.models import DeliveryLocation
+from .tasks import order_created_successfully
 
 # Create your views here.
 
@@ -39,6 +40,8 @@ def order_create(request):
                                 quantity=item.quantity,
                                 price=item.price)
         cart.clear()
+        # launch asynchronous task
+        order_created_successfully.delay(order.id)
         order_items = OrderItem.objects.filter(order=order)
         success = True
         return render(request,
