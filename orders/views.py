@@ -1,9 +1,14 @@
+import requests
+import json
+import os
+
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core import serializers
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Order, OrderItem
 from cart.cart import Cart
@@ -17,7 +22,68 @@ from .tasks import order_created_successfully
 @require_POST
 @login_required
 @customer_required
-def order_create(request):
+def order_create_cash_payment(request):
+    success = False
+    cart = Cart(request)
+    if len(cart) == 0:
+        return render(request,
+                'orders/created.html',
+                {'success': success})
+    else:
+        form = CreateOrderForm(request,data=request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+            order = Order.objects.create(customer=request.user.customer, payment_by_cash=True, delivery_location=delivery_location)
+            for item in cart.get_all_items():
+                OrderItem.objects.create(order=order,
+                                    food=item.food,
+                                    quantity=item.quantity,
+                                    price=item.price)
+            cart.clear()
+            # launch asynchronous task
+            order_created_successfully.delay(order.id)
+            order_items = OrderItem.objects.filter(order=order)
+            success = True
+        return render(request,
+                    'orders/created.html',
+                    {'order': order, 'order_items': order_items, 'success': success})
+
+
+@csrf_exempt
+def verify_payment(request):
+    data = request.POST
+    token = data['token']
+    amount = data['amount']
+
+    url = "https://khalti.com/api/v2/payment/verify/"
+    payload = {
+    "token": token,
+    "amount": amount,
+    }
+    headers = {
+    "Authorization": os.getenv('KHALTI_SECRET_KEY'),
+    }
+
+    response = requests.post(url, payload, headers = headers)
+    response_data = json.loads(response.text)
+    status_code = str(response.status_code)
+
+    if status_code == '400':
+        response = JsonResponse(f"response_data['detail']", status=500)
+        return response
+
+    import pprint 
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(response_data)
+    
+    return JsonResponse({'token': token,})
+
+
+@require_POST
+@login_required
+@customer_required
+def order_create_khalti_payment(request, token):
     cart = Cart(request)
     if len(cart) == 0:
         success = False
@@ -29,32 +95,20 @@ def order_create(request):
         if form.is_valid():
             cd = form.cleaned_data
             delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
-            if cd['payment_method'] == 'pay-by-cash':
-                payment_by_cash = True
-            elif cd['payment_method'] == 'pay-by-khalti':
-                payment_by_cash = False
-        order = Order.objects.create(customer=request.user.customer, payment_by_cash=payment_by_cash, delivery_location=delivery_location)
-        for item in cart.get_all_items():
-            OrderItem.objects.create(order=order,
-                                food=item.food,
-                                quantity=item.quantity,
-                                price=item.price)
-        cart.clear()
-        # launch asynchronous task
-        order_created_successfully.delay(order.id)
-        order_items = OrderItem.objects.filter(order=order)
-        success = True
+            order = Order.objects.create(customer=request.user.customer, verified=True, delivery_location=delivery_location, transaction=token)
+            for item in cart.get_all_items():
+                OrderItem.objects.create(order=order,
+                                    food=item.food,
+                                    quantity=item.quantity,
+                                    price=item.price)
+            cart.clear()
+            # launch asynchronous task
+            order_created_successfully.delay(order.id)
+            order_items = OrderItem.objects.filter(order=order)
+            success = True
         return render(request,
                     'orders/created.html',
                     {'order': order, 'order_items': order_items, 'success': success})
-
-
-
-def order_list(request):
-    queryset = list(Order.objects.filter(payment_by_cash=True, verified=False))
-    data = serializers.serialize("json", queryset)
-    # json.dump(queryset, open('order.json', 'w'))
-    return JsonResponse({'orders': data})
 
 
 @login_required
