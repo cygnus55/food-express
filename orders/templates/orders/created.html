@@ -9,7 +9,14 @@
                 </div>
                 <div class="card-body">
                     <h4 class="card-title">Order sucessfully created.</h4>
-                    <p class="card-text">Your order has been sucessfully completed. Your order number is <strong>{{ order.id }}.</strong></p>
+                    <p class="card-text">
+                        Your order has been sucessfully completed. Your order number is <strong>{{ order.id }}.</strong><br>
+                        {% if not order.payment_by_cash %}
+                            Khalti Transaction ID: <strong>{{ order.transaction }}</strong>
+                        {% endif %}
+                        <br/>
+                        Payment Method: <strong>{% if order.payment_by_cash %}Cash on delivery{% else %}Khalti{% endif %}</strong>
+                    </p>
                 </div>
             </div>
             <div class="card text-center">

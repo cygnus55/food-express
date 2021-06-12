@@ -15,29 +15,36 @@
 </head>
 
 <body class="text-center">
-    <main class="form-signin">
-        <form method="POST">
-          <a href="{% url 'base:home' %}">
-            <img class="mb-4 mx-auto" src="{% static 'base/img/logo.png' %}" alt="logo" width="80"/>
-          </a>
-          <h4 class="h4 mb-3">Sign In</h1>
-          <div class="form-floating">
-            {{ form.username }}
-            {{form.username.label_tag}}
+  <main class="form-signin">
+    <form method="POST">
+      <a href="{% url 'base:home' %}">
+        <img class="mb-4 mx-auto" src="{% static 'base/img/logo.png' %}" alt="logo" width="80"/>
+      </a>
+      <h4 class="h4 mb-3">Sign In</h1>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
           </div>
-          <div class="form-floating">
-            {{ form.password }}
-            {{ form.password.label_tag }}
-          </div>
-          {% csrf_token %}
-          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign In</button>
-          <p class="mt-5 mb-3 text-muted">
-            Need An Account? <a class="ml-2" href="{% url 'accounts:register' 'customer' %}">Sign Up</a>
-          </p>
-          <p class="mb-3 text-muted">
-            <a class="ml-2" href="{% url 'accounts:password_reset' %}">Forgot Password</a>
-          </p>
-        </form>
-      </main>          
+        {% endfor %}
+      {% endif %}
+      <div class="form-floating">
+        {{ form.username }}
+        {{form.username.label_tag}}
+      </div>
+      <div class="form-floating">
+        {{ form.password }}
+        {{ form.password.label_tag }}
+      </div>
+      {% csrf_token %}
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign In</button>
+      <p class="mt-5 mb-3 text-muted">
+        Need An Account? <a class="ml-2" href="{% url 'accounts:register' 'customer' %}">Sign Up</a>
+      </p>
+      <p class="mb-3 text-muted">
+        <a class="ml-2" href="{% url 'accounts:password_reset' %}">Forgot Password</a>
+      </p>
+    </form>
+  </main>          
 </body>
 </html>

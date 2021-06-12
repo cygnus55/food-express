@@ -8,6 +8,7 @@ from location.models import DeliveryLocation
 class Order(models.Model):
     customer = models.ForeignKey(Customer, related_name='order', on_delete=models.CASCADE)
     delivery_location = models.ForeignKey(DeliveryLocation, related_name='delivery_location', on_delete=models.CASCADE)
+    transaction = models.CharField(max_length=250, default='')
     payment_by_cash = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
     complete = models.BooleanField(default=False)

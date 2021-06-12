@@ -3,6 +3,14 @@
 <p>Here are your details:</p>
 <ul>
     <li>Created on: {{ order.created }}</li>
+    <li>
+        {% if not order.payment_by_cash %}
+            Khalti Transaction ID: {{ order.transaction }}
+        {% endif %}
+    </li>
+    <li>
+        Payment Method: {% if order.payment_by_cash %}Cash on delivery{% else %}Khalti{% endif %}
+    </li>
     <li>Delivery Location: {{ order.delivery_location.address }}</li>
     <li>Total Amount: Rs. {{ order.get_total_cost }}</li>
     <li>Status: {% if order.complete %}Completed {% else %}Incomplete{% endif %}</li>
