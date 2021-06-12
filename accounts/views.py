@@ -28,9 +28,11 @@ def user_login(request):
                         # return HttpResponseRedirect(reverse('restaurants:restaurant_dashboard', args=(user.username,)))
                         return redirect('restaurants:restaurant_dashboard')
                 else:
-                    return HttpResponse('Disabled Account')
+                    messages.error(request, 'Your account has been disabled, as you remain deactive for long time.')
+                    return redirect('accounts:login')
             else:
-                return HttpResponse('Invalid Login')
+                messages.error(request,'Username or password incorrect!')
+                return redirect('accounts:login')
     else:
         form = LoginForm()
     

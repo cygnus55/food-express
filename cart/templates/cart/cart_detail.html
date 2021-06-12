@@ -128,27 +128,84 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'orders:order_create' %}" method="post">
-                    <div class="form-group mb-3">
+                <form method="post" id="create-order-form">
+                    <div class="form-group mb-3 text-center">
                         {{ create_order_form.delivery_location.label }}:
                         {{ create_order_form.delivery_location }}
+                        {% csrf_token %}
                         <a class="text-muted text-decoration-none " href="{% url 'customer:add_delivery_location' %}">
                             <i class="fas fa-plus"></i> Add New
                         </a>
                     </div>
-                    <div class="form-group mb-3">
-                        {{ create_order_form.payment_method.label }}:
-                        {{ create_order_form.payment_method }}
-                        {% csrf_token %}
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-success" type="submit">Submit</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <div class="text-center">
+                        <button class="btn btn-success" type="submit" formaction="{% url 'orders:order_create' %}">Pay by cash on delivery</button>
                     </div>
                 </form>
+                <div class="text-center mb-0">
+                    <p class="mb-0">-or-</p>
+                    <button class="btn btn-success" type="submit" id="payment-button">Pay by Khalti</button>
+                </div>
                 <br/>
             </div>
         </div>
         </div>
     </div>
+{% endblock %}
+
+{% block extra %}
+<script>
+
+    var createOrderForm = document.getElementById('create-order-form')
+    var amount = {{ cart.get_total_price_in_paisa }}
+
+    function verifyPayment(payload){
+        $.ajax({
+            url: "{% url 'orders:verify_payment' %}",
+            type: 'POST',
+            data: payload,
+            dataType: 'json',
+            success: function(data){
+                createOrderForm.action = "{% url 'orders:order_create_khalti_payment' 1234 %}".replace('1234', data.token.toString());
+                createOrderForm.submit();
+            },
+            error: function(error){
+                console.log(error)
+            }
+        });
+    }
+
+    var config = {
+        "publicKey":  "test_public_key_a90725c412574caea7a09d3bf750d3da",
+        "productIdentity": "{{ cart.identity }}",
+        "productName": "food-express-cart-{{ cart.identity }}",
+        "productUrl": "http://wikipedia.org/",
+        "paymentPreference": [
+            "KHALTI",
+            "EBANKING",
+            "MOBILE_BANKING",
+            "CONNECT_IPS",
+            "SCT",
+            ],
+        "eventHandler": {
+            onSuccess (payload) {
+                // hit merchant api for initiating verfication
+                //console.log(payload);
+                verifyPayment(payload);
+            },
+            onError (error) {
+                console.log(error);
+            },
+            onClose () {
+                console.log('widget is closing');
+            }
+        }
+    };
+
+    var checkout = new KhaltiCheckout(config);
+    var btn = document.getElementById("payment-button");
+    btn.onclick = function () {
+        // minimum transaction amount must be 10, i.e 1000 in paisa.
+        checkout.show({amount: amount});
+    }
+</script>
 {% endblock %}
