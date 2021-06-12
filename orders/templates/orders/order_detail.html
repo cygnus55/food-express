@@ -39,6 +39,16 @@
             <th>Created</th>
             <td>{{ order.created }}</td>
         </tr>
+        {% if not order.payment_by_cash %}
+            <tr>
+                <th>Khalti Transaction ID</th>
+                <td>{{ order.transaction }}</td>
+            </tr>
+        {% endif %}
+        <tr>
+            <th>Payment Method</th>
+            <td>{% if order.payment_by_cash %}Cash on delivery{% else %}Khalti{% endif %}</td>
+        </tr>
         <tr>
             <th>Customer</th>
             <td>{{ order.customer.full_name }}</td>

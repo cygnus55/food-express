@@ -66,6 +66,9 @@ class Cart(object):
             except Coupon.DoesNotExist:
                 pass
         return None
+    
+    def identity(self):
+        return self.cart.id
 
     def get_discount(self):
         if self.cart.coupon_code:
@@ -74,3 +77,7 @@ class Cart(object):
     
     def get_total_price_after_discount(self):
         return self.get_total_price() - self.get_discount()
+    
+    def get_total_price_in_paisa(self):
+        return self.get_total_price_after_discount() * 100
+            
