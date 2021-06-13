@@ -17,8 +17,16 @@
 #### Week 4/5:
 * Redesigned Logo
 * Fixed some UI elements
+* Suffered from Covid so couldn't do more
 
 
 
 #### Week 6:
 * Fixed email issue
+* Introduced Coupon system app in the program
+
+
+### Week 7:
+* Implemented Coupon system 
+* Fixed some basic UI elements
+
