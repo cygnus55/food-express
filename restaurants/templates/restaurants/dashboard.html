@@ -79,24 +79,6 @@
                       </a>
                     </li>
                   </ul>
-                  
-                  <h6 class="d-flex text-uppercase justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span><i class="fas fa-ticket-alt text-success"></i> Active Coupons</span>
-                  </h6>
-                  <ul class="nav flex-column mb-2">
-                    {% for coupon in active_coupons%}
-                        <li class="nav-item">
-                            <a class="nav-link {% if section == coupon.code %} active {% else %} text-dark {% endif %} display-inline" href="{% url 'restaurants:update_coupon' coupon.id %}">
-                                <i class="fas fa-edit"></i> {{ coupon.code }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if section == 'coupons' %} active {% else %} text-dark {% endif %}" href="{% url 'restaurants:add_coupon' %}">
-                          <i class="fas fa-plus"></i> Add Coupon 
-                        </a>
-                      </li>
-                  </ul>
 
                   <!-- <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                     <span>Orders</span>

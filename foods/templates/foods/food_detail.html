@@ -1,6 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 {% load ratings %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <div class="container">
@@ -30,6 +31,33 @@
             </div>
 
             <div class="col-lg-8 col-md-7">
+                <div class="col-md-12">
+                    
+                        <div class="col-md-6">
+                        <form action="{% url 'cart:cart_add' food.id %}" method="post">
+                            <span>
+                                {{ cart_food_form.quantity|as_crispy_field }}
+                                {{ cart_food_form.override }}
+                        </div>
+                        <div class="col-md-6" style="margin-top:2%;margin-bottom:2%">
+                                {% csrf_token %}
+                                <div class="row">
+                                <div class="col-md-6">
+                                <a class="btn btn-sm btn-success" href="#">
+                                    <i class="fas fa-money-check-alt"></i> Buy Now
+                                </a>
+                                </div>
+                                <div class="col-md-6">
+                                <button type="submit" class="btn btn-sm btn-primary" style="float:right" ><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                                </div>
+                            </span>
+                        </div>
+                        </form>
+                    
+
+                    
+                </div>
+
                 <div class="row">
                     {% if food.description %}
                         <div class="row">
@@ -94,19 +122,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-4 col-md-5 d-flex justify-content-center">
-                <form action="{% url 'cart:cart_add' food.id %}" method="post">
-                    <span>
-                        {{ cart_food_form.quantity }}
-                        {{ cart_food_form.override }}
-                        {% csrf_token %}
-                        <button type="submit" class="btn text-success"><i class="fas fa-cart-plus"></i></button>
-                    </span>
-                </form>
             </div>
         </div>
     </div>

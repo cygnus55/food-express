@@ -16,7 +16,6 @@ class Coupon(models.Model):
     valid_to = models.DateTimeField()
     discount = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
     active = models.BooleanField(default=True)
-    restaurant = models.ForeignKey(Restaurant, related_name='coupon', on_delete=models.CASCADE)
 
     objects = models.Manager()
     activated = ActiveManager()

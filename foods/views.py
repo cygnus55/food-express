@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.contrib.auth.decorators import login_required
 
 from foods.models import Food, Category
-from cart.forms import CartAddFoodForm
+from cart.forms import CartAddFoodForm, BuyNowForm
+from customer.decorators import customer_required
 
 
 class FoodListView(ListView):
@@ -36,3 +38,14 @@ class FoodDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['cart_food_form'] = CartAddFoodForm() 
         return context
+
+
+@login_required
+@customer_required
+def buy_now(request):
+    food_id = request.GET.get('id')
+    quantity = request.GET.get('quantity')
+    if not food_id or not quantity:
+        return redirect('cart:cart_detail')
+    food = get_object_or_404(Food, id=food_id)
+    form = BuyNowForm(init)

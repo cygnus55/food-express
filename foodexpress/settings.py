@@ -85,7 +85,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
                 'location.context_processors.get_delivery_location',
-                'coupons.context_processors.get_restaurant_coupons',
             ],
         },
     },

@@ -24,22 +24,24 @@
                             <div class="card-body">
                                 <div class="card-title">
                                     <a href="{{ food.get_absolute_url_for_customer }}" class="text-dark text-decoration-none">{{ food.name }}</a>
-                                    {% if food.discount_percent > 0 %}
-                                        <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
-                                        {{ food.discount_percent }}% off)</small>
-                                    {% endif %}
                                 </div> 
-                                <small class="text-muted">{{ food.category.name }}</small>
+                                {% if food.discount_percent > 0 %}
+                                    <small class="text-muted"><img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
+                                    {{ food.discount_percent }}% off</small><br/>
+                                {% else %}
+                                    <br/>
+                                {% endif %}
+                                <small>{{ food.category.name }}</small>
                                 <br/>
-                                <small class="text-muted">
+                                <small>
                                     {% if food.discount_percent > 0 %}
-                                        <del class="text-danger"> Rs. {{ food.price }}</del> Rs. {{ food.get_selling_price }}
+                                        Rs. <del class="text-muted">{{ food.price }}</del> {{ food.get_selling_price }}
                                     {% else %}
                                         Rs. {{ food.price }}
                                     {% endif %}
                                 </small>
                                 <br/>
-                                <small class="text-muted">{{ food.restaurant.name }}</small>
+                                <small>{{ food.restaurant.name }}</small>
                                 <br/>
                                 {% ratings food %}
                             </div>
@@ -71,8 +73,8 @@
                                 <div class="card-title">
                                     <a href="{{ restaurant.get_absolute_url }}" class="text-dark text-decoration-none">{{ restaurant.name }}</a>
                                 </div> 
-                                <small class="text-muted">{{ restaurant.category.name }}</small><br/>
-                                <small class="text-muted">Opening hour: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
+                                <small>{{ restaurant.category.name }}</small><br/>
+                                <small>Opening hour: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
                                 <br/>
                                 {% ratings restaurant %}
                             </div>

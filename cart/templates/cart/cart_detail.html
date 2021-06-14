@@ -25,16 +25,13 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-4">
-                <strong>Apply a coupon:</strong>
-            </div>
+            
             <div class="col-lg-6">
                 <form action="{% url 'coupons:apply' %}" method="post">
                     {{ coupon_apply_form|crispy}}
                     {% csrf_token %}
             </div>
             <div class="col-lg-2">
-                <br>
                 <button class="btn btn-primary" type="submit">Apply</button>
                 </form>
             </div>
@@ -56,7 +53,7 @@
                             <th><h5>Total: Rs. {{ cart.get_total_price }}</h5></th>
                         {% endif %}
                         <th>
-                            <button type="button" style="float:right; margin:5px;" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paymentModal">Checkout</button>
+                            <button type="button" style="float:right; margin:5px;" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paymentModal"><i class="fas fa-money-check-alt"></i> Checkout</button>
                         </th>
                     </tr>
                 </table>
@@ -85,15 +82,19 @@
                                     <td class="align-middle">{{ food.name }}</td>
                                     <td class="align-middle">
                                         <form action="{% url 'cart:cart_add' food.id %}" method="post">
-                                                <input type="number" name="quantity" min="1" max="10" value="{{ quantity }}" required id="id_quantity">
-                                                <input type="hidden" name="override" value="True" id="id_override">
-                                            <input type="submit" value="Update">
+                                            <input type="number" name="quantity" min="1" max="10" value="{{ quantity }}" required id="id_quantity">
+                                            <input type="hidden" name="override" value="True" id="id_override">
+                                            <button class="btn btn-sm btn-primary" type="submit">
+                                                <i class="fas fa-edit"></i> Update
+                                            </button>
                                             {% csrf_token %}
                                         </form>
                                     </td>
                                     <td class="align-middle">
                                         <form action="{% url 'cart:cart_remove' food.id %}" method="post">
-                                            <input type="submit" value="Remove">
+                                            <button class="btn btn-sm btn-danger" type="submit">
+                                                <i class="fas fa-trash-alt"></i> Remove
+                                            </button>
                                             {% csrf_token %}
                                         </form>
                                     </td>
@@ -113,6 +114,16 @@
                             </td>
                         </tr>
                     {% endfor %}
+                    {% if cart.coupon %}
+                        <tr>
+                            <td>
+                                Used <strong>{{ cart.coupon.code }}</strong> coupon ({{cart.coupon.discount}}% off)
+                            </td>
+                            <td>
+                                -Rs. {{cart.get_discount}}
+                            </td>
+                        </tr>
+                    {% endif %}
                     </tbody>
                 </table>
             </div>
