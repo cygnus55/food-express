@@ -7,13 +7,25 @@ from accounts.models import User
 from .models import Customer
 from .forms import CustomerProfileForm
 from foods.models import Food
-
+from orders.models import *
 
 @login_required
 @customer_required
 def customer_homepage(request):
     foods = Food.objects.filter(restaurant__available=True).filter(available=True)
     return render(request, 'customer/home.html', {'foods': foods})
+
+
+
+
+@login_required
+@customer_required
+def orderhistory(request):
+    orders = Order.objects.filter(customer=request.user.customer)
+    context={}
+    for order in orders:
+        context[order]=OrderItem.objects.filter(order=order)
+    return render(request,'customer/orderhistory.html',{'context':context})
 
 
 @login_required
