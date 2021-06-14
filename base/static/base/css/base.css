@@ -8,6 +8,10 @@ body {
     font-family: Roboto;
 }
 
+.food img{
+    background-color: red;
+}
+
 #cart-icon:after {
     content: attr(value);
     font-size: 12px;
@@ -88,3 +92,9 @@ body {
   .dropdown-menu > li:hover > .dropdown-submenu {
     display: block;
   }
+
+
+.table-striped
+{
+    background-color: red;
+}
