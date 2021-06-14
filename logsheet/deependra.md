@@ -18,3 +18,12 @@
 ### Week 4/5
 
 - Corona break
+
+
+##week 6
+-email reset
+-card height problem
+
+#week 7
+-order history
+-fix some ui related problem

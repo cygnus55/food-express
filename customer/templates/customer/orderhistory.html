@@ -3,24 +3,27 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>Ordered Date</th>
+            <th>Restaurant</th>
             <th>Food</th>
             <th>Quantity</th>
             <th>Unit Price</th>
-            <th>Price</th>
+            <th>Total Price</th>
         </tr>
     </thead>
     <tbody>
-        {%for orders,values in context.items %}
-            {%for value in values%}
-            <tr>
-            <td>{{value.food}}</td>
-            <td>{{value.quantity}}</td>
-            <td>{{value.price}}</td>
-            
-            <td>{{value.get_cost}}</td>
-            </tr>
-                
-            {%endfor%}
-        {%endfor%}
+        {% for orders,values in context.items %}
+            {% for value in values %}
+                <tr>
+                    <td>{{ orders.created|date:'j M, Y' }}</td>
+                    <td>{{ value.food.restaurant.name }}</td>
+                    <td>{{ value.food.name }}</td>
+                    <td>{{ value.quantity }}</td>
+                    <td>{{ value.price }}</td>
+                    <td>{{ value.get_cost }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %}

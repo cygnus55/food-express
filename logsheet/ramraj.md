@@ -19,8 +19,25 @@
 - Integrate food with restaurant (Add, update, view functionality) 
 
 
-### Week 4/5:
+### Week 4:
 
 - Created cart for customer 
 - Create order app
 - Designed Logo
+- Verify unverified order by admin
+- Order detail page for admin
+
+
+### Week 5:
+
+- Location for restaurant (using leafletjs)
+- AJAX feature to get place address of given coords
+
+### Week 6:
+
+- Added pic in food list for restaurant
+- Delivery location for restaurant
+
+### Week 7:
+- Added celery task in project
+- Added khalti payment for ordering foods.

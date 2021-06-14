@@ -1,6 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 {% load ratings %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <div class="container" style="margin-top: 20px; margin-bottom: 20px">
@@ -115,26 +116,33 @@
                                     <div class="list-group-item list-group-item-action"style="margin-bottom:20px">
                                         <div class="row">
                                             <div class="col-sm-2">
-                                                <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=75 height=75/> 
+                                                <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" 
+                                                alt="" width=75 height=75/> 
                                             </div>
                                             <div class="col-sm-10">
                                                 <div class="d-flex w-100 justify-content-between">
                                                     <h6 class="mb-1">
-                                                        <a href="{% url 'foods:food_detail' food.pk %}" class="text-decoration-none text-dark">
+                                                        <a href="{% url 'foods:food_detail' food.pk %}" 
+                                                            class="text-decoration-none text-dark">
                                                             {{ food.name }}
-                                                            {% if food.discount_percent > 0 %}
-                                                                <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
-                                                                    {{ food.discount_percent }}% off)</small>
-                                                            {% endif %}
                                                         </a>
                                                     </h6>
                                                     <form action="{% url 'cart:cart_add' food.id %}" method="post">
-                                                        {{ cart_add_form.quantity }}
+                                                        {{ cart_add_form.quantity|as_crispy_field }}
                                                         {{ cart_add_form.override }}
                                                         {% csrf_token %}
-                                                        <button type="submit" class="btn text-success"><i class="fas fa-cart-plus"></i></button>
+                                                        <button type="submit" class="btn btn-sm btn-success">
+                                                            <i class="fas fa-cart-plus"></i> Add to Cart
+                                                        </button>
                                                     </form>
                                                 </div>
+                                                {% if food.discount_percent > 0 %}
+                                                    <small class="text-muted">
+                                                        <img src="{% static 'base/img/tag.png' %}" 
+                                                            style="width: 20px; height: 20px;" />
+                                                        {{ food.discount_percent }}% off
+                                                    </small><br/>
+                                                {% endif %}
                                                 <small class="text-muted">{{ food.category.name }}</small> <br/>
                                                 <small class="text-muted">
                                                     {% if food.discount_percent > 0 %}

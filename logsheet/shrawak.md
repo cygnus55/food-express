@@ -23,10 +23,15 @@
 
 #### Week 6:
 * Fixed email issue
+* Made chart in dashboard of restaurant
 * Introduced Coupon system app in the program
 
 
 ### Week 7:
 * Implemented Coupon system 
 * Fixed some basic UI elements
+* Added Buy now feature in food detai page
+
+
+
 

@@ -16,6 +16,8 @@ from customer.decorators import customer_required
 from .forms import CreateOrderForm
 from location.models import DeliveryLocation
 from .tasks import order_created_successfully
+from coupons.models import CouponUsed
+from foods.models import Food
 
 # Create your views here.
 
@@ -35,6 +37,11 @@ def order_create_cash_payment(request):
             cd = form.cleaned_data
             delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
             order = Order.objects.create(customer=request.user.customer, payment_by_cash=True, delivery_location=delivery_location)
+            if cart.coupon:
+                coupon = cart.coupon
+                order.coupon = coupon
+                order.save()
+                CouponUsed.objects.create(coupon=coupon, customer=request.user.customer)
             for item in cart.get_all_items():
                 OrderItem.objects.create(order=order,
                                     food=item.food,
@@ -96,6 +103,11 @@ def order_create_khalti_payment(request, token):
             cd = form.cleaned_data
             delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
             order = Order.objects.create(customer=request.user.customer, verified=True, delivery_location=delivery_location, transaction=token)
+            if cart.coupon:
+                coupon = cart.coupon
+                order.coupon = coupon
+                order.save()
+                CouponUsed.objects.create(coupon=coupon, customer=request.user.customer)
             for item in cart.get_all_items():
                 OrderItem.objects.create(order=order,
                                     food=item.food,

@@ -1,7 +1,10 @@
+from decimal import Decimal
+
 from django.db import models
 from customer.models import Customer
 from foods.models import Food
 from location.models import DeliveryLocation
+from coupons.models import Coupon
 
 # Create your models here.
 
@@ -14,15 +17,26 @@ class Order(models.Model):
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    
+    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, blank=True, null=True)
+
     class Meta:
         ordering = ('created',)
 
     def __str__(self):
         return f'Order {self.id} by customer {self.customer.user.username}'
 
-    def get_total_cost(self):
+    def get_total_cost_before_discount(self):
         return sum(item.get_cost() for item in self.items.all())
+    
+    def get_discount(self):
+        if self.coupon:
+            discount = (self.coupon.discount / Decimal(100)) * self.get_total_cost_before_discount()
+        else:
+            discount = Decimal(0)
+        return discount
+
+    def get_total_cost(self):
+        return round(self.get_total_cost_before_discount() - self.get_discount(), 2)
 
 
 class OrderItem(models.Model):

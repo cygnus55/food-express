@@ -26,6 +26,9 @@
                             {% for item in order_items %}
                                 {{ item.quantity }}x {{ item.food.name }}................Rs. {{ item.get_cost}}<br/>
                             {% endfor %}
+                            {% if order.coupon %}
+                                Used <strong>{{ order.coupon.code }}</strong> coupon ({{order.coupon.discount}}% off)............. -Rs. {{order.get_discount}}
+                            {% endif %}
                     </p>
                 </div>
                 <div class="card-footer text-muted">
