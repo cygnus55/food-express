@@ -34,7 +34,7 @@
                 <div class="col-md-12">
                     
                         <div class="col-md-6">
-                        <form action="{% url 'cart:cart_add' food.id %}" method="post">
+                        <form id="quantity_form" action="{% url 'cart:cart_add' food.id %}" method="post">
                             <span>
                                 {{ cart_food_form.quantity|as_crispy_field }}
                                 {{ cart_food_form.override }}
@@ -43,9 +43,9 @@
                                 {% csrf_token %}
                                 <div class="row">
                                 <div class="col-md-6">
-                                <a class="btn btn-sm btn-success" href="#">
+                                <button class="btn btn-sm btn-success" id="id_buy_now_btn">
                                     <i class="fas fa-money-check-alt"></i> Buy Now
-                                </a>
+                                </button>
                                 </div>
                                 <div class="col-md-6">
                                 <button type="submit" class="btn btn-sm btn-primary" style="float:right" ><i class="fas fa-cart-plus"></i> Add to Cart</button>
@@ -53,9 +53,6 @@
                             </span>
                         </div>
                         </form>
-                    
-
-                    
                 </div>
 
                 <div class="row">
@@ -126,3 +123,15 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block extra %}
+    <script>
+        var btn = document.getElementById('id_buy_now_btn');
+        var form = document.getElementById('quantity_form');
+
+        btn.onclick(function(){
+            form.action = "{% url 'foods:buy_now' %}"
+            form.submit()
+        });
+    </script>
+{% endblock %}
