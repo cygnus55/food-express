@@ -11,6 +11,11 @@ urlpatterns = [
         views.customer_profile_update,
         name='profile_update'
     ),
+    path(
+        'orderhistory/',
+        views.orderhistory,
+        name='order_history'
+    ),
     path('add-delivery-location/',
         add_delivery_location,
         name="add_delivery_location"),
