@@ -44,7 +44,9 @@
                         {% for food in foods %}
                             <div class="col-md-4">
                                 <div class="card h-100" style=" height:300px auto; margin-bottom:10px;">
-                                    <img class="thumbnail" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
+                                    
+                                    <img class="thumbnail food" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
+                                    
                                     <div class="card-body">
                                         <div class="card-title">
                                             <a href="{{ food.get_absolute_url_for_customer }}" class="text-dark text-decoration-none">{{ food.name }}</a>

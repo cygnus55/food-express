@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'star_ratings',
     'phonenumber_field',
+    'fav',
     'base.apps.BaseConfig',
     'customer.apps.CustomerConfig',
     'restaurants.apps.RestaurantsConfig',

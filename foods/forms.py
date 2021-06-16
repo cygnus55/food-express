@@ -4,10 +4,6 @@ from location.models import DeliveryLocation
 
 class BuyNowForm(forms.Form):
     delivery_location = forms.ChoiceField(widget=forms.Select())
-    coupon_code = forms.CharField(
-        label='', 
-        widget=forms.TextInput(attrs={'placeholder': 'Apply Coupon'})
-    )
     quantity = forms.IntegerField(
             min_value=1,
             max_value=10,

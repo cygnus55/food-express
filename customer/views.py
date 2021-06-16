@@ -1,31 +1,42 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .decorators import customer_required
-from accounts.models import User
 from .models import Customer
 from .forms import CustomerProfileForm
+from accounts.models import User
 from foods.models import Food
+from restaurants.models import Restaurant
 from orders.models import *
+from fav.models import Favorite
+
 
 @login_required
 @customer_required
 def customer_homepage(request):
-    foods = Food.objects.filter(restaurant__available=True).filter(available=True)
-    return render(request, 'customer/home.html', {'foods': foods})
-
-
+    fav_foods = Favorite.objects.for_user(request.user, model=Food)
+    foods = list(map(lambda x: x.target, fav_foods))
+    fav_restaurants = Favorite.objects.for_user(request.user, model=Restaurant)
+    restaurants = list(map(lambda x: x.target, fav_restaurants))
+    return render(
+        request, 
+        'customer/home.html', 
+        {
+            'foods': foods,
+            'restaurants': restaurants
+        }
+    )
 
 
 @login_required
 @customer_required
 def orderhistory(request):
     orders = Order.objects.filter(customer=request.user.customer)
-    context={}
+    context = {}
     for order in orders:
-        context[order]=OrderItem.objects.filter(order=order)
-    return render(request,'customer/orderhistory.html',{'context':context})
+        context[order] = OrderItem.objects.filter(order=order)
+    return render(request, 'customer/orderhistory.html', {'context':context})
 
 
 @login_required
@@ -51,3 +62,65 @@ def customer_profile_update(request):
         'customer/profile_update.html',
         context
     )
+
+
+@login_required
+@customer_required
+def fav_restaurant(request, pk):
+    ''' Add restaurant to user's favourite '''
+    
+    user = request.user
+    restaurant = get_object_or_404(Restaurant, pk=pk)
+    if Favorite.objects.get_favorite(user, restaurant):
+        messages.warning(request, 'Restaurant already added to favourites!')
+        return redirect('customer:homepage')
+    Favorite.objects.create(user, restaurant)
+    messages.success(request, 'Restaurant successfully added to favourites!')
+    return redirect('customer:homepage')
+
+
+@login_required
+@customer_required
+def fav_food(request, pk):
+    ''' Add food to user's favourite '''
+    
+    user = request.user
+    food = get_object_or_404(Food, pk=pk)
+    if Favorite.objects.get_favorite(user, food):
+        messages.warning(request, 'Food already added to favourites!')
+        return redirect('customer:homepage')
+    Favorite.objects.create(user, food)
+    messages.success(request, 'Food successfully added to favourites!')
+    return redirect('customer:homepage')
+
+
+@login_required
+@customer_required
+def unfav_restaurant(request, pk):
+    ''' Remove restaurant from user's favourite '''
+    
+    user = request.user
+    restaurant = get_object_or_404(Restaurant, pk=pk)
+    fav = Favorite.objects.get_favorite(user, restaurant)
+    if not fav:
+        messages.error(request, 'No such restaurant in your favourites!')
+        return redirect('customer:homepage')
+    fav.delete()
+    messages.success(request, 'Restaurant successfully removed from favourites!')
+    return redirect('customer:homepage')
+
+
+@login_required
+@customer_required
+def unfav_food(request, pk):
+    ''' Remove food from user's favourite '''
+    
+    user = request.user
+    food = get_object_or_404(Food, pk=pk)
+    fav = Favorite.objects.get_favorite(user, food)
+    if not fav:
+        messages.error(request, 'No such food in your favourites!')
+        return redirect('customer:homepage')
+    fav.delete()
+    messages.success(request, 'Food successfully removed from favourites!')
+    return redirect('customer:homepage')

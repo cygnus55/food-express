@@ -18,6 +18,7 @@ from location.models import DeliveryLocation
 from .tasks import order_created_successfully
 from coupons.models import CouponUsed
 from foods.models import Food
+from foods.forms import BuyNowForm
 
 # Create your views here.
 
@@ -91,6 +92,7 @@ def verify_payment(request):
 @login_required
 @customer_required
 def order_create_khalti_payment(request, token):
+    success = False
     cart = Cart(request)
     if len(cart) == 0:
         success = False
@@ -137,3 +139,51 @@ def verify_order(request, order_id):
     order.verified = True
     order.save()
     return redirect('orders:order_detail', order_id=order_id)
+
+
+@require_POST
+@login_required
+@customer_required
+def order_create_buy_now(request, food_id):
+    food = get_object_or_404(Food, id=food_id)
+    success = False
+    form = BuyNowForm(request,data=request.POST)
+    if form.is_valid():
+        cd = form.cleaned_data
+        delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+        order = Order.objects.create(customer=request.user.customer, payment_by_cash=True, delivery_location=delivery_location)
+        OrderItem.objects.create(order=order,
+                                    food=food,
+                                    quantity=cd['quantity'],
+                                    price=food.price)
+        # launch asynchronous task
+        order_created_successfully.delay(order.id)
+        order_items = OrderItem.objects.filter(order=order)
+        success = True
+    return render(request,
+                    'orders/created.html',
+                    {'order': order, 'order_items': order_items, 'success': success})
+
+
+@require_POST
+@login_required
+@customer_required
+def order_create_buy_now_khalti_payment(request, food_id, token):
+    food = get_object_or_404(Food, id=food_id)
+    success = False
+    form = BuyNowForm(request,data=request.POST)
+    if form.is_valid():
+        cd = form.cleaned_data
+        delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+        order = Order.objects.create(customer=request.user.customer, verified=True, delivery_location=delivery_location, transaction=token)
+        OrderItem.objects.create(order=order,
+                                    food=food,
+                                    quantity=cd['quantity'],
+                                    price=food.price)
+        # launch asynchronous task
+        order_created_successfully.delay(order.id)
+        order_items = OrderItem.objects.filter(order=order)
+        success = True
+    return render(request,
+                    'orders/created.html',
+                    {'order': order, 'order_items': order_items, 'success': success})
