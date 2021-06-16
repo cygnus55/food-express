@@ -76,7 +76,7 @@ def fav_restaurant(request, pk):
         return redirect('customer:homepage')
     Favorite.objects.create(user, restaurant)
     messages.success(request, 'Restaurant successfully added to favourites!')
-    return redirect('customer:homepage')
+    return redirect('restaurants:restaurant_detail', id=restaurant.id, slug=restaurant.slug)
 
 
 @login_required
@@ -91,7 +91,7 @@ def fav_food(request, pk):
         return redirect('customer:homepage')
     Favorite.objects.create(user, food)
     messages.success(request, 'Food successfully added to favourites!')
-    return redirect('customer:homepage')
+    return redirect('foods:food_detail', pk=food.id)
 
 
 @login_required
@@ -107,7 +107,7 @@ def unfav_restaurant(request, pk):
         return redirect('customer:homepage')
     fav.delete()
     messages.success(request, 'Restaurant successfully removed from favourites!')
-    return redirect('customer:homepage')
+    return redirect('restaurants:restaurant_detail', id=restaurant.id, slug=restaurant.slug)
 
 
 @login_required
@@ -123,4 +123,4 @@ def unfav_food(request, pk):
         return redirect('customer:homepage')
     fav.delete()
     messages.success(request, 'Food successfully removed from favourites!')
-    return redirect('customer:homepage')
+    return redirect('foods:food_detail', pk=food.id)

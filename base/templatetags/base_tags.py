@@ -37,7 +37,6 @@ def matching_food(obj: Restaurant, keyword=None) -> int:
 @register.simple_tag
 def is_favourite(obj: Union[Food, Restaurant], user) -> bool:
     fav = Favorite.objects.get_favorite(user, obj)
-    print(fav)
     if fav:
         return True
     return False
