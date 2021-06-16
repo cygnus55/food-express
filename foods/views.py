@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 from foods.models import Food, Category
 from cart.forms import CartAddFoodForm
+from coupons.forms import CouponApplyForm
 from .forms import BuyNowForm
 from customer.decorators import customer_required
 
@@ -45,10 +46,25 @@ class FoodDetailView(DetailView):
 @customer_required
 def buy_now(request, food_id):
     food = get_object_or_404(Food, id=food_id)
-    # form = BuyNowForm(initial={
-    #     'quantity': quantity,
-    # })
+    if request.method == 'POST':
+        form_ = CartAddFoodForm(data=request.POST)
+        if form_.is_valid():
+            quantity = form_.cleaned_data['quantity']
+            form = BuyNowForm(request, initial={
+                'quantity': quantity,
+            })
+            coupon_apply_form = CouponApplyForm()
+            return render(request,
+                'foods/buy_now.html',
+                {'food': food,
+                'form': form,
+                'coupon_apply_form': coupon_apply_form,}
+            )
+    form = BuyNowForm(request)
+    coupon_apply_form = CouponApplyForm()
     return render(request,
-        'foods/buy_now.html',
-        {'food': food},
-    )
+            'foods/buy_now.html',
+            {'food': food,
+            'form': form,
+            'coupon_apply_form': coupon_apply_form,}
+        )

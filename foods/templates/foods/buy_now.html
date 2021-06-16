@@ -5,6 +5,10 @@
 {% block content %}
     <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
 
+        <div class="row" style="margin-bottom: 20px;">
+            <h4><i class="fas fa-money-check-alt"></i> Buy now</h4>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                   {% if messages %}
@@ -16,148 +20,65 @@
                   {% endif %}
               </div>
         </div>
-
         <div class="row">
-            
+            <p><img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=300px /></p>
+            <p>Name: {{ food.name }}</p>
+            <p>Price: Rs. {{ food.price }}</p>
+            <p>Restaurant: {{ food.restaurant.name }}</p>
+        </div>
+        <div class="row">
             <div class="col-lg-6">
-                <form action="{% url 'coupons:apply' %}" method="post">
+                <form>
                     {{ coupon_apply_form|crispy}}
                     {% csrf_token %}
             </div>
             <div class="col-lg-2">
-                <button class="btn btn-primary" type="submit">Apply</button>
+                    <button class="btn btn-primary" id="apply-button">Apply</button>
                 </form>
             </div>
         </div>
         <br/>
-                                
         <div class="row">
-            <div class="col-lg-12">
-                <table class="table">
-                    <tr>
-                        <th><h5>Items: {{ cart|length }}</h5></th>
-                        {% if cart.coupon %}
-                            <th>
-                                <h5>
-                                    Total: Rs. <del class="text-muted">{{ cart.get_total_price }}</del> {{ cart.get_total_price_after_discount }} <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
-                                        {{ cart.coupon.discount }}% off, using promo code "{{ cart.coupon.code }}")</small>
-                                </h5>
-                            </th>
-                        {% else %}
-                            <th><h5>Total: Rs. {{ cart.get_total_price }}</h5></th>
-                        {% endif %}
-                        <th>
-                            <button type="button" style="float:right; margin:5px;" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paymentModal">Proceed To Pay</button>
-                        </th>
-                    </tr>
-                </table>
-                <br>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Food</th>
-                            <th>Quantity</th>
-                            <th>Remove</th>
-                            <th>Unit Price</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in cart.get_all_items %}
-                            {% with food=item.food %}
-                            {% with quantity=item.quantity %}
-                                <tr>
-                                    <td class="align-middle">
-                                        <a href="{{ food.get_absolute_url_for_customer }}">
-                                            <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=75 height=75 style="border-radius: 50%;" />
-                                        </a>
-                                    </td>
-                                    <td class="align-middle">{{ food.name }}</td>
-                                    <td class="align-middle">
-                                        <form action="{% url 'cart:cart_add' food.id %}" method="post">
-                                                <input type="number" name="quantity" min="1" max="10" value="{{ quantity }}" required id="id_quantity">
-                                                <input type="hidden" name="override" value="True" id="id_override">
-                                            <input type="submit" value="Update">
-                                            {% csrf_token %}
-                                        </form>
-                                    </td>
-                                    <td class="align-middle">
-                                        <form action="{% url 'cart:cart_remove' food.id %}" method="post">
-                                            <input type="submit" value="Remove">
-                                            {% csrf_token %}
-                                        </form>
-                                    </td>
-                                    <td class="align-middle">Rs. {{ item.price }}</td>
-                                    <td class="align-middle">Rs. {{ item.get_total_price }}</td>
-                                </tr>
-                            {% endwith %}
-                            {% endwith %}
-                    {% empty %}
-                        <tr>
-                            <td colspan="6">
-                                <div class="row">
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <img src="{% static 'base/img/empty_cart.png' %}" style="width: 80px;" />
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    {% if cart.coupon %}
-                        <tr>
-                            <td>
-                                Used <strong>{{ cart.coupon.code }}</strong> coupon ({{cart.coupon.discount}}% off)
-                            </td>
-                            <td>
-                                -Rs. {{cart.get_discount}}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- paymentModal -->
-    <div class="modal fade" id="paymentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="paymentModalLabel">Create Order</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" id="create-order-form">
-                    <div class="form-group mb-3 text-center">
-                        {{ create_order_form.delivery_location.label }}:
-                        {{ create_order_form.delivery_location }}
-                        {% csrf_token %}
+            <div class="col-lg-6">
+                <form method="post" id="order-form">
+                    <div class="form-group">
+                        {{ form.delivery_location.label }}
+                        {{form.delivery_location }}
                         <a class="text-muted text-decoration-none " href="{% url 'customer:add_delivery_location' %}">
                             <i class="fas fa-plus"></i> Add New
                         </a>
                     </div>
-                    <div class="text-center">
-                        <button class="btn btn-success" type="submit" formaction="{% url 'orders:order_create' %}">Pay by cash on delivery</button>
+                    <div class="form-group">
+                        {{ form.quantity.label }}
+                        {{ form.quantity }}
+                        {% csrf_token %}
+                        <p id="total-price"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-success" type="submit" formaction="{% url 'orders:order_create_buy_now' food.id %}">Pay by cash on delivery</button>
                     </div>
                 </form>
-                <div class="text-center mb-0">
-                    <p class="mb-0">-or-</p>
-                    <button class="btn btn-success" type="submit" id="payment-button">Pay by Khalti</button>
-                </div>
-                <br/>
+                <p class="mb-0">-or-</p>
+                <button class="btn btn-success" type="submit" id="payment-button">Pay by Khalti</button>
             </div>
         </div>
-        </div>
+
     </div>
 {% endblock %}
 
 {% block extra %}
 <script>
+    var createOrderForm = document.getElementById('order-form')
+    var totalPriceTag = document.getElementById('total-price');
+    var quantityField = document.getElementById('id_quantity');
+    var amount = {{ food.price }} * quantityField.value;
+    totalPriceTag.innerHTML = "Total Price: "+ amount.toString();
 
-    var createOrderForm = document.getElementById('create-order-form')
-    var amount = {{ cart.get_total_price_in_paisa }}
+    quantityField.onchange = function(){
+        amount = {{ food.price }} * quantityField.value;
+        totalPriceTag.innerHTML = "Total Price: "+ amount.toString();
+    };
 
     function verifyPayment(payload){
         $.ajax({
@@ -166,7 +87,7 @@
             data: payload,
             dataType: 'json',
             success: function(data){
-                createOrderForm.action = "{% url 'orders:order_create_khalti_payment' 1234 %}".replace('1234', data.token.toString());
+                createOrderForm.action = "{% url 'orders:order_create_buy_now_khalti_payment' food.id 1234 %}".replace('1234', data.token.toString());
                 createOrderForm.submit();
             },
             error: function(error){
@@ -177,8 +98,8 @@
 
     var config = {
         "publicKey":  "test_public_key_a90725c412574caea7a09d3bf750d3da",
-        "productIdentity": "{{ cart.identity }}",
-        "productName": "food-express-cart-{{ cart.identity }}",
+        "productIdentity": "{{ food.id }}",
+        "productName": "food-express-food-{{ food.name }}",
         "productUrl": "http://wikipedia.org/",
         "paymentPreference": [
             "KHALTI",
@@ -190,7 +111,7 @@
         "eventHandler": {
             onSuccess (payload) {
                 // hit merchant api for initiating verfication
-                //console.log(payload);
+                console.log(payload);
                 verifyPayment(payload);
             },
             onError (error) {
@@ -203,10 +124,18 @@
     };
 
     var checkout = new KhaltiCheckout(config);
-    var btn = document.getElementById("payment-button");
-    btn.onclick = function () {
+    var paymentBtn = document.getElementById("payment-button");
+    paymentBtn.onclick = function () {
         // minimum transaction amount must be 10, i.e 1000 in paisa.
-        checkout.show({amount: amount});
-    }
+        checkout.show({amount: amount * 100.00});
+    };
+
+    var applyBtn = document.getElementById('apply-button');
+    var couponField = document.getElementById('id_code');
+    applyBtn.onclick = function(){
+        coupon = couponField.value;
+        alert(coupon);
+    };
+
 </script>
 {% endblock %}

@@ -2,6 +2,7 @@
 {% load static %}
 {% load ratings %}
 {% load crispy_forms_tags %}
+{% load base_tags %}
 
 {% block content %}
     <div class="container" style="margin-top: 20px; margin-bottom: 20px">
@@ -11,7 +12,21 @@
               <li class="breadcrumb-item"><a href="{% url 'restaurants:restaurant_list_by_category' restaurant.category.slug %}">{{ restaurant.category.name }}</a></li>
               <li class="breadcrumb-item active" aria-current="page">{{ restaurant.name }}</li>
             </ol>
+
+            {% if user.is_authenticated and user.is_customer %}
+                {% is_favourite restaurant user as fav %}
+                {% if fav %}
+                    <a href={% url 'customer:unfav_restaurant' restaurant.id %} class="float-end btn outline-secondary" title="Remove from favourite">
+                        <i class="fa fa-heart text-danger"></i>
+                    </a>
+                {% else %}
+                    <a href={% url 'customer:fav_restaurant' restaurant.id %} class="float-end btn outline-secondary" title="Add to favourite">
+                        <i class="far fa-heart text-danger"></i>
+                    </a>
+                {% endif %}
+            {% endif %}
         </nav>
+
         <div class="row">
             <div class="row">
                 <div class="col-lg-4 col-md-5">

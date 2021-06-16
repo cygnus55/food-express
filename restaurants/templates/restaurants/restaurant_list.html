@@ -48,7 +48,7 @@
                                         <a href="{{ restaurant.get_absolute_url }}" class="text-dark text-decoration-none">{{ restaurant.name }}</a>
                                     </div> 
                                     <small class="text-muted">{{ restaurant.category.name }}</small><br/>
-                                    <small class="text-muted">Opening hour: {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
+                                    <small class="text-muted"><i class="fa fa-clock"></i> {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
                                     <br/>
                                     {% ratings restaurant %}
                                 </div>
