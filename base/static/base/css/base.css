@@ -8,7 +8,7 @@ body {
     font-family: Roboto;
 }
 
-.food img{
+.food img {
     background-color: red;
 }
 
@@ -69,7 +69,6 @@ body {
     padding: 10px;
 }
 
-
 .restaurant-logo {
     justify-content: center;
     align-items: center;
@@ -90,11 +89,7 @@ body {
     right: 100%;
     left: auto;
 }
-  
-.dropdown-menu > li:hover > .dropdown-submenu {
+
+.dropdown-menu>li:hover>.dropdown-submenu {
     display: block;
 }
-
-
-
-
