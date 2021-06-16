@@ -4,179 +4,196 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Express{% if title %} - {{ title }} {% endif %}</title>
-    
+
     <!--Custom Font Import-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-    
+
     <!--Favicon-->
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'base/img/favicon.ico' %}"/>
-    
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'base/img/favicon.ico' %}" />
+
     <!--Django Star Ratings-->
     <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
     <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
-    
+
     <!--Bootstrap and FontAwesome-->
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     {% fontawesome_5_static %}
 
     <!--Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="{% static 'base/css/base.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/base.css' %}" />
 
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
 
     <!--AJAX-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- XDSoft DateTimePicker -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
-    
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
+        integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"
+        integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+
     <!--Khalti Payment-->
     <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
 
     <style>
-      .imgcontainer{
-        overflow: hidden;
-        margin: 0 auto;
-    }
-    
-       .food {
-        width:100%;
-        opacity:0.8;
-        transition: 0.7s all ease-in-out;
-      }
-      .card:hover  .food{
-        transform: scale(1.1);
-        opacity:1.0;
-        background-color: rgba(red, green, blue, alpha);
-    }
-    .center {
-      
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    
-    }
+        .imgcontainer {
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .food {
+            width: 100%;
+            opacity: 0.8;
+            transition: 0.7s all ease-in-out;
+        }
+
+        .card:hover .food {
+            transform: scale(1.1);
+            opacity: 1.0;
+            background-color: rgba(red, green, blue, alpha);
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
     {% block extraheadelements %}{% endblock %}
 </head>
 
 <body>
-   <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark top-navbar" data-toggle="sticky-onscroll" style="padding: 0px 20px;">  
-          <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'base:home' %}" >
-              <img src="{% static 'base/img/logo.png' %}" width=50 /> Food Express
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-              <ul class="navbar-nav">
-                <form class="d-flex my-2 my-lg-0" action="{% url 'base:search' %}">
-                  <input class="form-control me-2 " style="width:220px;" name="q" type="search" placeholder="Search Food/Restaurant " aria-label="Search">
-                </form>
-                <!-- <li class="nav-item">
-                  <a class="nav-link btn  my-md-0 ms-md-3" href="{% url 'restaurants:restaurant_list' %}">Restaurants</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link btn my-md-0 ms-md-3" href="{% url 'foods:food_list' %}">Foods</a>
-                </li> -->
-                
-                {% if user.is_authenticated %}
-                    {% if user.is_customer %}
-                      {% with total_foods=cart|length %}
-                        <li class="nav-item">
-                          <a class="nav-link btn my-md-0 ms-md-3" href="{% url 'cart:cart_detail' %}" title="{% if total_foods > 0 %}{{ total_foods }} food{{total_foods|pluralize}}, Rs. {{ cart.get_total_price }}
-                          {% else %} Your cart is empty{% endif %}">
-                            <i id="cart-icon" class="fas fa-shopping-cart" value={{ total_foods }}></i>
-                          </a>
-                        </li>
-                      {% endwith %}
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark top-navbar" data-toggle="sticky-onscroll"
+            style="padding: 0px 20px;">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'base:home' %}">
+                    <img src="{% static 'base/img/logo.png' %}" width=50 /> Food Express
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <form class="d-flex my-2 my-lg-0" action="{% url 'base:search' %}">
+                            <input class="form-control me-2 " style="width:220px;" name="q" type="search"
+                                placeholder="Search Food/Restaurant " aria-label="Search">
+                        </form>
 
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle btn my-md-0 ms-md-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{% if user.customer.profile_pic %}{{ user.customer.profile_pic.url }}{% else %}{% static 'base/img/default-user.png' %}{% endif %}" alt="{{ user.username }}'s image" class="avatar" style="width: 25px; height: 25px; border-radius: 50%; transform: translatey(-10%);" />
-                      </a>
-                      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                          <li>
-                            <a class="dropdown-item" href="{% url 'customer:homepage' %}">
-                              <i class="fas fa-home"></i> Home
+                        {% if user.is_authenticated %}
+                        {% if user.is_customer %}
+                        {% with total_foods=cart|length %}
+                        <li class="nav-item">
+                            <a class="nav-link btn my-md-0 ms-md-3" href="{% url 'cart:cart_detail' %}" title="{% if total_foods > 0 %}{{ total_foods }} food{{total_foods|pluralize}}, Rs. {{ cart.get_total_price }}
+                          {% else %} Your cart is empty{% endif %}">
+                                <i id="cart-icon" class="fas fa-shopping-cart" value={{ total_foods }}></i>
                             </a>
-                          </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                          <a class="dropdown-item" href="{% url 'customer:profile_update' %}">
-                            <i class="fas fa-users-cog"></i> Update Profile
-                          </a>
                         </li>
-                        <li>
-                          <a class="dropdown-item" href="{% url 'customer:order_history' %}">
-                            <i class="fas fa-history"></i> Order History
-                          </a>
+                        {% endwith %}
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle btn my-md-0 ms-md-3" href="#" id="navbarDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="{% if user.customer.profile_pic %}{{ user.customer.profile_pic.url }}{% else %}{% static 'base/img/default-user.png' %}{% endif %}"
+                                    alt="{{ user.username }}'s image" class="avatar"
+                                    style="width: 25px; height: 25px; border-radius: 50%; transform: translatey(-10%);" />
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark"
+                                aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'customer:homepage' %}">
+                                        <i class="fas fa-home"></i> Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'customer:profile_update' %}">
+                                        <i class="fas fa-users-cog"></i> Update Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'customer:order_history' %}">
+                                        <i class="fas fa-history"></i> Order History
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'accounts:password_change' %}">
+                                        <i class="fas fa-key"></i> Change Password
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-map-marker-alt"></i> Delivery Location &raquo;
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-submenu dropdown-submenu-left">
+                                        {% for location in delivery_locations %}
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="{% url 'customer:update_delivery_location' location.id %}">
+                                                <i class="fas fa-edit"></i> {{ location.title }}
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'customer:add_delivery_location' %}">
+                                                <i class="fas fa-plus"></i> Add New
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li>
-                          <a class="dropdown-item" href="{% url 'accounts:password_change' %}">
-                            <i class="fas fa-key"></i> Change Password
-                          </a>
+
+                        {% endif %}
+                        {% if user.is_superuser or user.is_restaurant %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-info my-md-0 ms-md-3"
+                                href="{% url 'accounts:logout' %}">Logout</a>
                         </li>
-                        <li>
-                          <a class="dropdown-item" href="#">
-                            <i class="fas fa-map-marker-alt"></i> Delivery Location &raquo;
-                          </a>
-                          <ul class="dropdown-menu dropdown-menu-dark dropdown-submenu dropdown-submenu-left">
-                            {% for location in delivery_locations %}
-                              <li>
-                                <a class="dropdown-item" href="{% url 'customer:update_delivery_location' location.id %}">
-                                  <i class="fas fa-edit"></i> {{ location.title }}
-                                </a>
-                              </li>
-                            {% endfor %}
-                            <li>
-                              <a class="dropdown-item" href="{% url 'customer:add_delivery_location' %}">
-                                <i class="fas fa-plus"></i> Add New
-                              </a>
-                            </li>
-                          </ul>
+                        {% endif %}
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link btn my-md-0 ms-md-3"
+                                href="{% url 'accounts:register' 'customer' %}">Register</a>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                          <a class="dropdown-item" href="{% url 'accounts:logout' %}">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                          </a>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-info my-md-0 ms-md-3"
+                                href="{% url 'accounts:login' %}">Login</a>
                         </li>
-                      </ul>
-                    </li>
-                      
-                    {% endif %}
-                    {% if user.is_superuser or user.is_restaurant %}
-                    <li class="nav-item">
-                      <a class="nav-link btn btn-outline-info my-md-0 ms-md-3" href="{% url 'accounts:logout' %}">Logout</a>
-                    </li>
-                    {% endif %}
-                {% else %}
-                    <li class="nav-item">
-                      <a class="nav-link btn my-md-0 ms-md-3" href="{% url 'accounts:register' 'customer' %}">Register</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link btn btn-outline-info my-md-0 ms-md-3" href="{% url 'accounts:login' %}">Login</a>
-                    </li>
-                {% endif %}
-              </ul>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-          </div>
-      </nav>
-    </header> 
-    
+        </nav>
+    </header>
+
     <main>
-      <div class="container" style="padding: 20px 0;">{% block content %}{% endblock content %}</div>
-      {% block extra %}{% endblock extra %}
+        <div class="container" style="padding: 20px 0;">{% block content %}{% endblock content %}</div>
+        {% block extra %}{% endblock extra %}
     </main>
 </body>
+
 </html>
