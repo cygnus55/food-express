@@ -32,7 +32,7 @@ def customer_homepage(request):
 @login_required
 @customer_required
 def order_history(request):
-    orders = Order.objects.filter(customer=request.user.customer)
+    orders = Order.objects.filter(customer=request.user.customer).order_by('-created')
     context = {}
     for order in orders:
         context[order] = OrderItem.objects.filter(order=order)
