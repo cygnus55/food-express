@@ -20,47 +20,48 @@
                   {% endif %}
               </div>
         </div>
+
+
         <div class="row">
-            <p><img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=300px /></p>
-            <p>Name: {{ food.name }}</p>
-            <p>Price: Rs. {{ food.price }}</p>
-            <p>Restaurant: {{ food.restaurant.name }}</p>
-        </div>
-        <div class="row">
-            <div class="col-lg-6">
+            <div class="col-md-5">
+                <p><img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=300px /></p>
+                <p>Name: {{ food.name }}</p>
+                <p>Price: Rs. {{ food.price }}</p>
+                <p>Restaurant: {{ food.restaurant.name }}</p>
+            </div>
+            <div class="col-md-4">
                 <form>
-                    {{ coupon_apply_form|crispy}}
-                    {% csrf_token %}
-            </div>
-            <div class="col-lg-2">
-                    <button class="btn btn-primary" id="apply-button">Apply</button>
+                    <div class="row">
+                        <div class=col-md-8>
+                        {{ coupon_apply_form|crispy}}
+                        {% csrf_token %}
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary" id="apply-button">Apply</button>
+                        </div>
+                    </div>
                 </form>
-            </div>
-        </div>
-        <br/>
-        <div class="row">
-            <div class="col-lg-6">
                 <form method="post" id="order-form">
                     <div class="form-group">
                         {{ form.delivery_location.label }}
                         {{form.delivery_location }}
-                        <a class="text-muted text-decoration-none " href="{% url 'customer:add_delivery_location' %}">
+                        <a class="text-muted text-decoration-none " style="margin-left: 3%;" href="{% url 'customer:add_delivery_location' %}">
                             <i class="fas fa-plus"></i> Add New
                         </a>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top: 3%;">
                         {{ form.quantity.label }}
                         {{ form.quantity }}
                         {% csrf_token %}
-                        <p id="total-price"></p>
+                        <br>
+                        <p id="total-price" style="margin-top: 2%;"></p>
                     </div>
-
-                    <div class="form-group">
-                        <button class="btn btn-success" type="submit" formaction="{% url 'orders:order_create_buy_now' food.id %}">Pay by cash on delivery</button>
+                    <div class="form-group" >
+                        <button class="btn btn-success" style="width:200px; text-align:center" type="submit" formaction="{% url 'orders:order_create_buy_now' food.id %}">Pay by cash on delivery</button>
                     </div>
                 </form>
-                <p class="mb-0">-or-</p>
-                <button class="btn btn-success" type="submit" id="payment-button">Pay by Khalti</button>
+                <p class="mb-0" style="margin-left: 21%;">-or-</p>
+                <button class="btn btn-success" style="width:200px; text-align:center" type="submit" id="payment-button">Pay by Khalti</button>
             </div>
         </div>
 
