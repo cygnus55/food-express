@@ -3,55 +3,55 @@
 {% load static %}
 
 {% block content %}
-    <div class="container">
-        <h3 class="border-bottom">Restaurant Profile</h3>
+<div class="container">
+    <h3 class="border-bottom">Restaurant Profile</h3>
 
-        <div class="row">
-            <div class="col-md-8">
-                  {% if messages %}
-                    {% for message in messages %}
-                      <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                      </div>
-                    {% endfor %}
-                  {% endif %}
-              </div>
-        </div>
-
-        <div class="row flex-column-reverse flex-md-row">
-            <div class="col-md-6 col-sm-12">
-                <form action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <fieldset class="form-group">
-                        {{ form|crispy }}
-                    </fieldset>
-                    <div class="form-group">
-                        <button class="btn btn-outline-info" type="submit">Update</button>
-                    </div>
-                </form>
+    <div class="row">
+        <div class="col-md-8">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
             </div>
-            <div class="col-md-4 col-sm-12">
-                <img src="{% if user.restaurant.logo %}{{ user.restaurant.logo.url }} {% else %} {% static 'base/img/no_image.png' %}{% endif %}" 
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row flex-column-reverse flex-md-row">
+        <div class="col-md-6 col-sm-12">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    {{ form|crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <img src="{% if user.restaurant.logo %}{{ user.restaurant.logo.url }} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"
                 style="width: 200px; height: 200px; border-radius: 50%; margin-bottom: 5px;" />
-            </div>
         </div>
+    </div>
 
-        <div class="mt-10">
-            <h2 class='border-bottom'>Account Settings</h2>
-            <a class="btn btn-success" href="{% url 'accounts:password_change' %}">Change Password</a>
-        </div>
-    </div> 
+    <div class="mt-10">
+        <h2 class='border-bottom'>Account Settings</h2>
+        <a class="btn btn-success" href="{% url 'accounts:password_change' %}">Change Password</a>
+    </div>
+</div>
 
-    <script>
-        $(function () {
-            $("#id_open_hour").datetimepicker({
-                datepicker:false,
-                format: 'H:i',
-            });
-            $("#id_close_hour").datetimepicker({
-                datepicker:false,
-                format: 'H:i',
-            });
-          });
-    </script>
+<script>
+    $(function () {
+        $("#id_open_hour").datetimepicker({
+            datepicker: false,
+            format: 'H:i',
+        });
+        $("#id_close_hour").datetimepicker({
+            datepicker: false,
+            format: 'H:i',
+        });
+    });
+</script>
 {% endblock content %}

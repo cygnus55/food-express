@@ -3,82 +3,84 @@
 {% load ratings %}
 
 {% block title %}
-    {% if category %}{{ category.name }} - {% endif %}Foods
+{% if category %}{{ category.name }} - {% endif %}Foods
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2" style='float:inline-start;'>
-                <h3 class="align-items-center">
-                    Category
-                </h3>
-                <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
-                        <a href="{% url 'foods:food_list' %}" 
-                            class="nav-link {% if not category %}active{% else %}text-dark{% endif %}">
-                            All
-                        </a>
-                    </li>
-                    {% for c in categories %}
-                        <li class="nav-item">
-                            <a href="{{ c.get_absolute_url_for_customer }}" 
-                                class="nav-link {% if category.slug == c.slug %} \ 
+<div class="container">
+    <div class="row">
+        <div class="col-md-2" style='float:inline-start;'>
+            <h3 class="align-items-center">
+                Category
+            </h3>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="{% url 'foods:food_list' %}"
+                        class="nav-link {% if not category %}active{% else %}text-dark{% endif %}">
+                        All
+                    </a>
+                </li>
+                {% for c in categories %}
+                <li class="nav-item">
+                    <a href="{{ c.get_absolute_url_for_customer }}" class="nav-link {% if category.slug == c.slug %} \ 
                                 active{% else %}text-dark{% endif %}">
-                                {{ c.name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-    
-            <div class="col-md-10">
-                <h3 class="align-items-center text-dark">
-                    Foods{% if category %} - {{ category.name }}{% endif %}
-                </h3>
-                <hr>
-                <div class="row">
-                    <div class="col-md-11">
-                        <div class="row">
-                        {% for food in foods %}
-                            <div class="col-md-4">
-                                <div class="card h-100" style=" height:300px auto; margin-bottom:10px;">
-                                    
-                                    <img class="thumbnail food" src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
-                                    
-                                    <div class="card-body">
-                                        <div class="card-title">
-                                            <a href="{{ food.get_absolute_url_for_customer }}" class="text-dark text-decoration-none">{{ food.name }}</a>
-                                        </div>
-                                        {% if food.discount_percent > 0 %}
-                                            <small class="text-muted"><img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
-                                            {{ food.discount_percent }}% off</small><br/>
-                                        {% else %}
-                                            <br/>
-                                        {% endif %}
-                                        <small>{{ food.category.name }}</small>
-                                        <br/>
-                                        <small>
-                                            {% if food.discount_percent > 0 %}
-                                                Rs. <del class="text-muted">{{ food.price }}</del> {{ food.get_selling_price }}
-                                            {% else %}
-                                                Rs. {{ food.price }}
-                                            {% endif %}
-                                        </small>
-                                        <br/>
-                                        <small>{{ food.restaurant.name }}</small>
-                                        <br/>
-                                        {% ratings food %}
-                                    </div>
-                                </div>
+                        {{ c.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-md-10">
+            <h3 class="align-items-center text-dark">
+                Foods{% if category %} - {{ category.name }}{% endif %}
+            </h3>
+            <hr>
+            <div class="row">
+                <div class="col-md-11 row">
+                    {% for food in foods %}
+                    <div class="col-md-4">
+                        <div class="card h-100" style=" height:300px auto; margin-bottom:10px;">
+                            <div class="img-container">
+                                <img class="thumbnail display-img"
+                                    src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
+                                    style=" height:200px" />
                             </div>
-                        {% endfor %}
+
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <a href="{{ food.get_absolute_url_for_customer }}"
+                                        class="text-dark text-decoration-none">{{ food.name }}</a>
+                                </div>
+                                {% if food.discount_percent > 0 %}
+                                <small class="text-muted"><img src="{% static 'base/img/tag.png' %}"
+                                        style="width: 20px; height: 20px;" />
+                                    {{ food.discount_percent }}% off</small><br />
+                                {% else %}
+                                <br />
+                                {% endif %}
+                                <small>{{ food.category.name }}</small>
+                                <br />
+                                <small>
+                                    {% if food.discount_percent > 0 %}
+                                    Rs. <del class="text-muted">{{ food.price }}</del> {{ food.get_selling_price }}
+                                    {% else %}
+                                    Rs. {{ food.price }}
+                                    {% endif %}
+                                </small>
+                                <br />
+                                <small>{{ food.restaurant.name }}</small>
+                                <br />
+                                {% ratings food %}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-1"></div>
+                    {% endfor %}
                 </div>
+                <div class="col-md-1"></div>
             </div>
         </div>
-    </div>    
+    </div>
+</div>
 {% endblock content %}
