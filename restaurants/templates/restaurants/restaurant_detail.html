@@ -5,200 +5,206 @@
 {% load base_tags %}
 
 {% block content %}
-    <div class="container" style="margin-top: 20px; margin-bottom: 20px">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="{% url 'restaurants:restaurant_list' %}">Restaurants</a></li>
-              <li class="breadcrumb-item"><a href="{% url 'restaurants:restaurant_list_by_category' restaurant.category.slug %}">{{ restaurant.category.name }}</a></li>
-              <li class="breadcrumb-item active" aria-current="page">{{ restaurant.name }}</li>
-            </ol>
+<div class="container" style="margin-top: 20px; margin-bottom: 20px">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'restaurants:restaurant_list' %}">Restaurants</a></li>
+            <li class="breadcrumb-item"><a
+                    href="{% url 'restaurants:restaurant_list_by_category' restaurant.category.slug %}">{{ restaurant.category.name }}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ restaurant.name }}</li>
+        </ol>
 
-            {% if user.is_authenticated and user.is_customer %}
-                {% is_favourite restaurant user as fav %}
-                {% if fav %}
-                    <a href={% url 'customer:unfav_restaurant' restaurant.id %} class="float-end btn outline-secondary" title="Remove from favourite">
-                        <i class="fa fa-heart text-danger"></i>
-                    </a>
-                {% else %}
-                    <a href={% url 'customer:fav_restaurant' restaurant.id %} class="float-end btn outline-secondary" title="Add to favourite">
-                        <i class="far fa-heart text-danger"></i>
-                    </a>
-                {% endif %}
+        {% if user.is_authenticated and user.is_customer %}
+        {% is_favourite restaurant user as fav %}
+        {% if fav %}
+        <a href={% url 'customer:unfav_restaurant' restaurant.id %} class="float-end btn outline-secondary"
+            title="Remove from favourite">
+            <i class="fa fa-heart text-danger"></i>
+        </a>
+        {% else %}
+        <a href={% url 'customer:fav_restaurant' restaurant.id %} class="float-end btn outline-secondary"
+            title="Add to favourite">
+            <i class="far fa-heart text-danger"></i>
+        </a>
+        {% endif %}
+        {% endif %}
+    </nav>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
             {% endif %}
-        </nav>
-
-        <div class="row">
-            <div class="col-md-12">
-                  {% if messages %}
-                    {% for message in messages %}
-                      <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                      </div>
-                    {% endfor %}
-                  {% endif %}
-              </div>
-        </div>
-
-        <div class="row">
-            <div class="row">
-                <div class="col-lg-4 col-md-5">
-                    <div style="text-align: center;">
-                        <img src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}" alt="" width=300 height=300 style="border-radius: 50%;" />
-                    </div>
-                    <div class="row" style="margin-top: 20px; text-align: center;">
-                        <h4>{{ restaurant.name }}</h4>
-                        <p>{{ restaurant.category }}</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-8 col-md-7">
-                    <div class="row">
-                        {% if restaurant.description %}
-                            <div class="row">
-                                <div class="col-md-5 col-5">
-                                    <strong>Description:</strong>
-                                </div>
-                                <div class="col-md-7 col-7">
-                                    <p>{{ restaurant.description }}</p>
-                                </div>
-                            </div>
-                        {% endif %}
-
-                        {% if restaurant.website_link %}
-                            <div class="row">
-                                <div class="col-md-5 col-5">
-                                    <strong>Website:</strong>
-                                </div>
-                                <div class="col-md-7 col-7">
-                                    <p>{{ restaurant.website_link }}</p>
-                                </div>
-                            </div>
-                        {% endif %}
-
-                        <div class="row">
-                            <div class="col-md-5 col-5">
-                                <strong>Available:</strong>
-                            </div>
-                            <div class="col-md-7 col-7">
-                                <p>
-                                    {% if restaurant.available %}
-                                        <i class="fas fa-check text-success"></i>
-                                    {% else  %}
-                                        <i class="fas fa-times text-danger"></i>
-                                    {% endif %}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-5 col-5">
-                                <strong>Open hours:</strong>
-                            </div>
-                            <div class="col-md-7 col-7">
-                                <p>{{ restaurant.open_hour }} - {{ restaurant.close_hour }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-5 col-5">
-                                <strong>Phone:</strong>
-                            </div>
-                            <div class="col-md-7 col-7">
-                                <p>{{ restaurant.phone_no }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-5 col-5">
-                                <strong>Ratings:</strong>
-                            </div>
-                            <div class="col-md-7 col-7">
-                                {% ratings restaurant %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-2" style="position: sticky; ">
-                    <div class="list-group list-group-flush" id="categories-group">
-                        {% for category in foods %}
-                            <div class="list-group-item">
-                                <a href="#{{ category }}" class="text-decoration-none text-dark">{{ category }}</a>
-                            </div>
-                        {% endfor %}
-                        </div>
-                </div>
-                <div class="col-lg-8">
-                    {% for category,foods_list in foods.items %}
-                        <div id="{{ category }}" >
-                            <legend>{{ category}}</legend>
-                            {% with total=foods_list|length%}
-                                <small class="text-muted">{{ total }} item{{ total|pluralize }}</small>
-                            {% endwith %}
-
-                            <div class="list-group list-group-flush">
-                                {% for food in foods_list %}
-                                    <div class="list-group-item list-group-item-action"style="margin-bottom:20px">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" 
-                                                alt="" width=75 height=75/> 
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div >
-                                                    <h6 class="mb-1">
-                                                        <a href="{% url 'foods:food_detail' food.pk %}" 
-                                                            class="text-decoration-none text-dark">
-                                                            {{ food.name }}   
-                                                        </a>
-                                                    </h6>
-                                                    {% if food.discount_percent > 0 %}
-                                                    <small class="text-muted">
-                                                        <img src="{% static 'base/img/tag.png' %}" 
-                                                            style="width: 20px; height: 20px;" />
-                                                        {{ food.discount_percent }}% off
-                                                    </small><br/>
-                                                {% endif %}
-                                                <small class="text-muted">{{ food.category.name }}</small> <br/>
-                                                <small class="text-muted">
-                                                    {% if food.discount_percent > 0 %}
-                                                        <del class="text-danger"> Rs. {{ food.price }}</del> Rs. {{ food.get_selling_price }}
-                                                    {% else %}
-                                                        Rs. {{ food.price }}
-                                                    {% endif %}
-                                                </small>
-                                                </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="row">
-                                                        <div class="col-md-3 center"  style="text-align: center;">
-                                                        <form action="{% url 'cart:cart_add' food.id %}" method="post">
-                                                            {{ cart_add_form.quantity|as_crispy_field }}
-                                                            {{ cart_add_form.override }}
-                                                            {% csrf_token %}
-                                                        </div>
-                                                        <div  class="col-md-9 center" style="margin-top:3.5%">
-                                                            <button type="submit" class="btn btn-sm btn-success" style="width:200px;">
-                                                            <i class="fas fa-cart-plus"></i> Add to Cart
-                                                        </button>
-                                                        </div>
-                                                    </form>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <hr>
-                    {% endfor %}
-                </div>
-            </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-4 col-md-5">
+                <div style="text-align: center;">
+                    <img src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"
+                        alt="" width=300 height=300 style="border-radius: 50%;" />
+                </div>
+                <div class="row" style="margin-top: 20px; text-align: center;">
+                    <h4>{{ restaurant.name }}</h4>
+                    <p>{{ restaurant.category }}</p>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-7">
+                <div class="row">
+                    {% if restaurant.description %}
+                    <div class="row">
+                        <div class="col-md-5 col-5">
+                            <strong>Description:</strong>
+                        </div>
+                        <div class="col-md-7 col-7">
+                            <p>{{ restaurant.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if restaurant.website_link %}
+                    <div class="row">
+                        <div class="col-md-5 col-5">
+                            <strong>Website:</strong>
+                        </div>
+                        <div class="col-md-7 col-7">
+                            <p>{{ restaurant.website_link }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-5 col-5">
+                            <strong>Available:</strong>
+                        </div>
+                        <div class="col-md-7 col-7">
+                            <p>
+                                {% if restaurant.available %}
+                                <i class="fas fa-check text-success"></i>
+                                {% else  %}
+                                <i class="fas fa-times text-danger"></i>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5 col-5">
+                            <strong>Open hours:</strong>
+                        </div>
+                        <div class="col-md-7 col-7">
+                            <p>{{ restaurant.open_hour }} - {{ restaurant.close_hour }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5 col-5">
+                            <strong>Phone:</strong>
+                        </div>
+                        <div class="col-md-7 col-7">
+                            <p>{{ restaurant.phone_no }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5 col-5">
+                            <strong>Ratings:</strong>
+                        </div>
+                        <div class="col-md-7 col-7">
+                            {% ratings restaurant %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-2" style="position: sticky; ">
+                <div class="list-group list-group-flush" id="categories-group">
+                    {% for category in foods %}
+                    <div class="list-group-item">
+                        <a href="#{{ category }}" class="text-decoration-none text-dark">{{ category }}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-8">
+                {% for category,foods_list in foods.items %}
+                <div id="{{ category }}">
+                    <legend>{{ category}}</legend>
+                    {% with total=foods_list|length%}
+                    <small class="text-muted">{{ total }} item{{ total|pluralize }}</small>
+                    {% endwith %}
+
+                    <div class="list-group list-group-flush">
+                        {% for food in foods_list %}
+                        <div class="list-group-item list-group-item-action" style="margin-bottom:20px">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
+                                        alt="" width=75 height=75 />
+                                </div>
+                                <div class="col-md-6">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <a href="{% url 'foods:food_detail' food.pk %}"
+                                                class="text-decoration-none text-dark">
+                                                {{ food.name }}
+                                            </a>
+                                        </h6>
+                                        {% if food.discount_percent > 0 %}
+                                        <small class="text-muted">
+                                            <img src="{% static 'base/img/tag.png' %}"
+                                                style="width: 20px; height: 20px;" />
+                                            {{ food.discount_percent }}% off
+                                        </small><br />
+                                        {% endif %}
+                                        <small class="text-muted">{{ food.category.name }}</small> <br />
+                                        <small class="text-muted">
+                                            {% if food.discount_percent > 0 %}
+                                            <del class="text-danger"> Rs. {{ food.price }}</del> Rs.
+                                            {{ food.get_selling_price }}
+                                            {% else %}
+                                            Rs. {{ food.price }}
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-3 center" style="text-align: center;">
+                                            <form action="{% url 'cart:cart_add' food.id %}" method="post">
+                                                {{ cart_add_form.quantity|as_crispy_field }}
+                                                {{ cart_add_form.override }}
+                                                {% csrf_token %}
+                                        </div>
+                                        <div class="col-md-9 center" style="margin-top:3.5%">
+                                            <button type="submit" class="btn btn-sm btn-success" style="width:200px;">
+                                                <i class="fas fa-cart-plus"></i> Add to Cart
+                                            </button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+</div>
+</div>
+</div>
 {% endblock %}

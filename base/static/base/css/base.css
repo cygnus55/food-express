@@ -69,11 +69,6 @@ body {
     padding: 10px;
 }
 
-.restaurant-logo {
-    justify-content: center;
-    align-items: center;
-}
-
 .dropdown-menu li {
     position: relative;
 }
@@ -92,4 +87,27 @@ body {
 
 .dropdown-menu>li:hover>.dropdown-submenu {
     display: block;
+}
+
+.img-container {
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.display-img {
+    width: 100%;
+    opacity: 0.8;
+    transition: 0.7s all ease-in-out;
+}
+
+.card:hover .display-img {
+    transform: scale(1.1);
+    opacity: 1.0;
+    background-color: rgba(red, green, blue, alpha);
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

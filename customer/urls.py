@@ -14,8 +14,8 @@ urlpatterns = [
         name='profile_update'
     ),
     path(
-        'orderhistory/',
-        views.orderhistory,
+        'order-history/',
+        views.order_history,
         name='order_history'
     ),
     path(
