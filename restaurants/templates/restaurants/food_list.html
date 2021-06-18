@@ -3,92 +3,95 @@
 {% load ratings %}
 
 {% block title %}
-    {% if category %}{{ category.name }} - {% endif %}Foods
+{% if category %}{{ category.name }} - {% endif %}Foods
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2" style='float:inline-start;'>
-                <h3 class="align-items-center">
-                    Category
-                </h3>
-                <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
-                        <a href="{% url 'restaurants:food_list' %}" 
-                            class="nav-link {% if not category %}active{% else %}text-dark{% endif %}">
-                            All
-                        </a>
-                    </li>
-                    {% for c in categories %}
-                        <li class="nav-item">
-                            <a href="{{ c.get_absolute_url }}" 
-                                class="nav-link {% if category.slug == c.slug %} \ 
+<div class="container">
+    <div class="row">
+        <div class="col-md-2" style='float:inline-start;'>
+            <h3 class="align-items-center">
+                Category
+            </h3>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="{% url 'restaurants:food_list' %}"
+                        class="nav-link {% if not category %}active{% else %}text-dark{% endif %}">
+                        All
+                    </a>
+                </li>
+                {% for c in categories %}
+                <li class="nav-item">
+                    <a href="{{ c.get_absolute_url }}" class="nav-link {% if category.slug == c.slug %} \ 
                                 active{% else %}text-dark{% endif %}">
-                                {{ c.name }}
+                        {{ c.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-md-10">
+            <h3 class="align-items-center text-dark">
+                Foods{% if category %} - {{ category.name }}{% endif %}
+            </h3>
+            <hr>
+            <div class="row">
+                {% for food in foods %}
+                <div class="col-md-3" style="margin-bottom:20px;">
+                    <div class="card" style=" height: 100%;">
+                        <span style="display: inline-block;">
+                            <a href="{% url 'restaurants:update_food' food.id %}" style="text-decoration: none;">
+                                <i class="far fa-edit text-info"></i>
+                            </a>&nbsp;
+                            <a href="{% url 'restaurants:delete_food' food.id %}" style="text-decoration: none;">
+                                <i class="far fa-trash-alt text-danger"></i>
                             </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-    
-            <div class="col-md-10">
-                <h3 class="align-items-center text-dark">
-                    Foods{% if category %} - {{ category.name }}{% endif %}
-                </h3>
-                <hr>
-                <div class="row">
-                    {% for food in foods %}
-                        <div class="col-md-3" style="margin-bottom:20px;">
-                            <div class="card" style=" height: 100%;">
-                                <span style="display: inline-block;">
-                                    <a href="{% url 'restaurants:update_food' food.id %}" style="text-decoration: none;">
-                                        <i class="far fa-edit text-info"></i>
-                                    </a>&nbsp;
-                                    <a href="{% url 'restaurants:delete_food' food.id %}" style="text-decoration: none;">
-                                        <i class="far fa-trash-alt text-danger"></i>
-                                    </a>
-                                </span>
-                                
-                                    <img class="thumbnail " src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" style=" height:200px" />
-                            
-                                    <div class="card-body">
-                                    <div class="card-title">
-                                        <a href="{{ food.get_absolute_url }}" class="text-dark text-decoration-none">
-                                            {{ food.name }}
-                                        </a>
-                                        {% if food.discount_percent > 0 %}
-                                            <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
-                                            {{ food.discount_percent }}% off)</small>
-                                        {% endif %}
-                                    </div> 
-                                    <small class="text-muted">{{ food.category.name }}</small>
-                                    <br/>
-                                    <small class="text-muted">
-                                        {% if food.discount_percent > 0 %}
-                                            <del class="text-danger"> Rs. {{ food.price }}</del> Rs. {{ food.get_selling_price }}
-                                        {% else %}
-                                            Rs. {{ food.price }}
-                                        {% endif %}
-                                    </small>
-                                    <br/>
-                                    {% ratings food read_only=True %}
-                                </div>
+                        </span>
+
+                        <img class="thumbnail "
+                            src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
+                            style=" height:200px" />
+
+                        <div class="card-body">
+                            <div class="card-title">
+                                <a href="{{ food.get_absolute_url }}" class="text-dark text-decoration-none">
+                                    {{ food.name }}
+                                </a>
+                                {% if food.discount_percent > 0 %}
+                                <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}"
+                                        style="width: 20px; height: 20px;" />
+                                    {{ food.discount_percent }}% off)</small>
+                                {% endif %}
                             </div>
+                            <small class="text-muted">{{ food.category.name }}</small>
+                            <br />
+                            <small class="text-muted">
+                                {% if food.discount_percent > 0 %}
+                                <del class="text-danger"> Rs. {{ food.price }}</del> Rs. {{ food.get_selling_price }}
+                                {% else %}
+                                Rs. {{ food.price }}
+                                {% endif %}
+                            </small>
+                            <br />
+                            {% ratings food read_only=True %}
                         </div>
-                    {% endfor %}
-                    <div class="col-md-3" style="margin-bottom:20px;">
-                        <a href="{% url 'restaurants:create_food' %}" title="Add New Food">
-                            <div class="card border-primary justify-content-center" style=" height: 100%; min-height: 300px;" >
-                                <span style="text-align: center;">
-                                    <i class="fas fa-plus fa-3x text-primary"></i>
-                                </span>
-                            </div>
-                        </a>
                     </div>
+                </div>
+                {% endfor %}
+                <div class="col-md-3" style="margin-bottom:20px;">
+                    <a href="{% url 'restaurants:create_food' %}" title="Add New Food">
+                        <div class="card border-primary justify-content-center"
+                            style=" height: 100%; min-height: 300px;">
+                            <span style="text-align: center;">
+                                <i class="fas fa-plus fa-3x text-primary"></i>
+                            </span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
+</div>
 {% endblock content %}

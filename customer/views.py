@@ -31,12 +31,12 @@ def customer_homepage(request):
 
 @login_required
 @customer_required
-def orderhistory(request):
+def order_history(request):
     orders = Order.objects.filter(customer=request.user.customer)
     context = {}
     for order in orders:
         context[order] = OrderItem.objects.filter(order=order)
-    return render(request, 'customer/orderhistory.html', {'context':context})
+    return render(request, 'customer/order_history.html', {'context': context})
 
 
 @login_required

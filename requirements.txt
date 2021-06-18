@@ -18,6 +18,7 @@ Django==3.2
 django-bootstrap-v5==1.0.2
 django-braces==1.14.0
 django-crispy-forms==1.11.2
+django-fav==0.3
 django-fontawesome-5==1.0.18
 django-model-utils==4.1.1
 django-phonenumber-field==5.1.0

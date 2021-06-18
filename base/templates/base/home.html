@@ -20,8 +20,8 @@
             {% for food in foods %}
             <div class="col-md-3">
                 <div class="card h-100" style="height: 300px auto; margin-bottom:10px;">
-                    <div class="imgcontainer">
-                        <img class="thumbnail food"
+                    <div class="img-container">
+                        <img class="thumbnail display-img"
                             src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
                             style=" height:200px" />
                     </div>
@@ -75,8 +75,8 @@
             {% for restaurant in restaurants %}
             <div class="col-md-3">
                 <div class="card" style="height: 300px auto; margin-bottom:10px;">
-                    <div class="imgcontainer">
-                        <img class="thumbnail restaurant-logo food"
+                    <div class="img-container">
+                        <img class="thumbnail display-img"
                             src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"
                             style=" height:200px" />
                     </div>

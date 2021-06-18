@@ -1,9 +1,11 @@
+from PIL import Image
+
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
-from phonenumber_field.modelfields import PhoneNumberField
-from PIL import Image
 from django.contrib.contenttypes.fields import GenericRelation
+
+from phonenumber_field.modelfields import PhoneNumberField
 from star_ratings.models import Rating
 
 from accounts.models import User
@@ -31,7 +33,7 @@ class Category(models.Model):
             'restaurants:restaurant_list_by_category',
             args=[self.slug]
         )
-    
+
 
 class Restaurant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -73,7 +75,7 @@ class Restaurant(models.Model):
                 output_size = (300, 300)
                 img.thumbnail(output_size)
                 img.save(self.logo.path)
-        
+
     def get_absolute_url(self):
         return reverse(
             'restaurants:restaurant_detail',
