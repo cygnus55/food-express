@@ -11,21 +11,23 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Restaurant</th>
-                        <th>Food</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Total Price</th>
+                        <div class="row">
+                        <th class="col-md-2">Restaurant</th>
+                        <th class="col-md-4">Food</th>
+                        <th class="col-md-2">Quantity</th>
+                        <th class="col-md-2">Unit Price</th>
+                        <th class="col-md-2">Total Price</th>
+                    </div>
                     </tr>
                 </thead>
                 <tbody>
                     {% for value in values %}
-                    <tr>
+                    <tr>      
                         <td>{{ value.food.restaurant.name }}</td>
                         <td>{{ value.food.name }}</td>
                         <td>{{ value.quantity }}</td>
                         <td>{{ value.price }}</td>
-                        <td>{{ value.get_cost }}</td>
+                        <td>{{ value.get_cost }}</td>   
                     </tr>
                     {% endfor %}
                 </tbody>
