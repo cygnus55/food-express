@@ -124,87 +124,96 @@
                 </div>
             </div>
         </div>
-        <hr>
-        <div class="row">
-            <div class="col-2" style="position: sticky; ">
-                <div class="list-group list-group-flush" id="categories-group">
-                    {% for category in foods %}
-                    <div class="list-group-item">
-                        <a href="#{{ category }}" class="text-decoration-none text-dark">{{ category }}</a>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col-lg-8">
-                {% for category,foods_list in foods.items %}
-                <div id="{{ category }}">
-                    <legend>{{ category}}</legend>
-                    {% with total=foods_list|length%}
-                    <small class="text-muted">{{ total }} item{{ total|pluralize }}</small>
-                    {% endwith %}
+        <hr>        
+</div>
+<div class="container-fluid">
+    <div class="row">
 
-                    <div class="list-group list-group-flush">
-                        {% for food in foods_list %}
-                        <div class="list-group-item list-group-item-action" style="margin-bottom:20px">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
-                                        alt="" width=75 height=75 />
-                                </div>
-                                <div class="col-md-6">
-                                    <div>
-                                        <h6 class="mb-1">
-                                            <a href="{% url 'foods:food_detail' food.pk %}"
-                                                class="text-decoration-none text-dark">
-                                                {{ food.name }}
-                                            </a>
-                                        </h6>
-                                        {% if food.discount_percent > 0 %}
-                                        <small class="text-muted">
-                                            <img src="{% static 'base/img/tag.png' %}"
-                                                style="width: 20px; height: 20px;" />
-                                            {{ food.discount_percent }}% off
-                                        </small><br />
-                                        {% endif %}
-                                        <small class="text-muted">{{ food.category.name }}</small> <br />
-                                        <small class="text-muted">
-                                            {% if food.discount_percent > 0 %}
-                                            <del class="text-danger"> Rs. {{ food.price }}</del> Rs.
-                                            {{ food.get_selling_price }}
-                                            {% else %}
-                                            Rs. {{ food.price }}
-                                            {% endif %}
-                                        </small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="row">
-                                        <div class="col-md-3 center" style="text-align: center;">
-                                            <form action="{% url 'cart:cart_add' food.id %}" method="post">
-                                                {{ cart_add_form.quantity|as_crispy_field }}
-                                                {{ cart_add_form.override }}
-                                                {% csrf_token %}
-                                        </div>
-                                        <div class="col-md-9 center" style="margin-top:3.5%">
-                                            <button type="submit" class="btn btn-sm btn-success" style="width:200px;">
-                                                <i class="fas fa-cart-plus"></i> Add to Cart
-                                            </button>
-                                        </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+        <div class="col-md-2">
+            <div class="list-group list-group-flush" id="">
+                {% for category in foods %}
+                <div class="list-group-item">
+                    <a href="#{{ category }}" class="text-decoration-none text-dark">{{ category }}</a>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        <hr>
-        {% endfor %}
+
+        <div class="col-md-10">
+            {% for category,foods_list in foods.items %}
+                <div class="row restaurant_card">
+                    <div class="col-md-5">
+                        <div id="{{ category }}">
+                            <legend>{{ category}}</legend>
+                            {% with total=foods_list|length%}
+                            <small class="text-muted">{{ total }} item{{ total|pluralize }}</small>
+                            {% endwith %}
+                        </div>
+                        <div class="">
+                            {% for food in foods_list %}
+                            <div class="" style="margin-bottom:20px">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
+                                            alt="" width=75 height=75 />
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="margin-top: 50px;">
+                        <div>
+                            {% for food in foods_list %}
+                            <h6 class="mb-1">
+                                <a href="{% url 'foods:food_detail' food.pk %}"
+                                    class="text-decoration-none text-dark">
+                                    {{ food.name }}
+                                </a>
+                            </h6>
+                            {% if food.discount_percent > 0 %}
+                            <small class="text-muted">
+                                <img src="{% static 'base/img/tag.png' %}"
+                                    style="width: 20px; height: 20px;" />
+                                {{ food.discount_percent }}% off
+                            </small><br />
+                            {% endif %}
+                            <small class="text-muted">{{ food.category.name }}</small> <br />
+                            <small class="text-muted">
+                                {% if food.discount_percent > 0 %}
+                                <del class="text-danger"> Rs. {{ food.price }}</del> Rs.
+                                {{ food.get_selling_price }}
+                                {% else %}
+                                Rs. {{ food.price }}
+                                {% endif %}
+                            </small>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="margin-top:60px">
+                        {% for food in foods_list %}
+                        <div class="row">
+                            <div class="col-md-6 " style="text-align: center;">
+                                <form action="{% url 'cart:cart_add' food.id %}" method="post">
+                                    {{ cart_add_form.quantity|as_crispy_field }}
+                                    {{ cart_add_form.override }}
+                                    {% csrf_token %}
+                                </form>
+                            </div>
+                            <div class="col-md-6" style="margin-top:11.5%">
+                                <button type="submit" class="btn btn-sm btn-success" style="width:150px;">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr>
+                
+            {% endfor %}
+        
+        </div>
     </div>
-</div>
-</div>
 </div>
 {% endblock %}
