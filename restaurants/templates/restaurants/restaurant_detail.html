@@ -48,7 +48,7 @@
             <div class="col-lg-4 col-md-5">
                 <div style="text-align: center;">
                     <img src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"
-                        alt="" width=300 height=300 style="border-radius: 50%;" />
+                        alt="" width=275 height=275 style="border-radius: 50%; object-fit: cover;" />
                 </div>
                 <div class="row" style="margin-top: 20px; text-align: center;">
                     <h4>{{ restaurant.name }}</h4>

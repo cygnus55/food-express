@@ -1,14 +1,24 @@
 {% extends "base/base.html" %}
-{% block content %}
 
-{% for orders, values in context.items %}
-<div class="card order_history">
+{% block content %}
+<div class="container">
+    <h4>Order History</h4>
+</div>
+
+{% for order, values in context.items %}
+<div class="card order-history">
     <div class="card-body">
-        <div class="row d-flex justify-content-around">
-            <span>{{ orders.created|date:'j M, Y' }}</span>
+        <div class="d-flex justify-content-between">
+            <h5>Order {{ order.id }}</h5>
+            <span>{{ order.created|date:'j M, Y' }}</span>
+            <a class="text-primary btn-sm text-decoration-none" 
+                href="#re-order"
+                title="Re-order the items">
+                <i class="fas fa-redo"></i> Re-order
+            </a>
         </div>
-        <div class="row ">
-            <table class="table table-bordered">
+        <div class="row">
+            <table class="table table-bordered" id="table-{{ order.id }}">
                 <thead>
                     <tr>
                         <div class="row">

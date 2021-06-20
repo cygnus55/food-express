@@ -20,20 +20,19 @@
             {% for food in foods %}
             <div class="col-md-3">
                 <div class="card h-100" style="height: 300px auto; margin-bottom:10px;">
-                
                     <div class="img-container discount-tag">
                         <img class="thumbnail display-img"
                             src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
                             style=" height:200px" />
-                        <div class="bottom-left">
-                            {% if food.discount_percent > 0 %}
-                        <small class="text-muted tag">
-                            {{ food.discount_percent }}% OFF</small><br />
-                        {% else %}
-                        <br />
-                        {% endif %}
-                        </div>
                     </div>
+
+                    {% if food.discount_percent > 0 %}
+                    <div class="ribbon-wrapper">
+                            <div class="ribbon green">
+                                {{ food.discount_percent }}% OFF
+                            </div>
+                    </div>
+                    {% endif %}
     
                     <div class="card-body">
                         <div class="card-title">
