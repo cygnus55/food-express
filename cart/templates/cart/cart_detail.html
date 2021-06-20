@@ -53,6 +53,7 @@
                             <th><h5>Total: Rs. {{ cart.get_total_price }}</h5></th>
                         {% endif %}
                         <th>
+                            <button type="button" style="float:right; margin:5px;" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cartClearModal"><i class="fas fa-times-circle" ></i> Clear Cart</button>
                             <button type="button" style="float:right; margin:5px;" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paymentModal"><i class="fas fa-money-check-alt"></i> Checkout</button>
                         </th>
                     </tr>
@@ -64,9 +65,9 @@
                             <th></th>
                             <th>Food</th>
                             <th>Quantity</th>
-                            <th>Remove</th>
                             <th>Unit Price</th>
                             <th>Price</th>
+                            <th>Remove</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,16 +91,16 @@
                                             {% csrf_token %}
                                         </form>
                                     </td>
+                                    <td class="align-middle">Rs. {{ item.price }}</td>
+                                    <td class="align-middle">Rs. {{ item.get_total_price }}</td>
                                     <td class="align-middle">
                                         <form action="{% url 'cart:cart_remove' food.id %}" method="post">
                                             <button class="btn btn-sm btn-danger" type="submit">
-                                                <i class="fas fa-trash-alt"></i> Remove
+                                                <i class="fas fa-minus-circle"></i> Remove
                                             </button>
                                             {% csrf_token %}
                                         </form>
                                     </td>
-                                    <td class="align-middle">Rs. {{ item.price }}</td>
-                                    <td class="align-middle">Rs. {{ item.get_total_price }}</td>
                                 </tr>
                             {% endwith %}
                             {% endwith %}
@@ -121,6 +122,11 @@
                             </td>
                             <td>
                                 -Rs. {{cart.get_discount}}
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-danger" href="{% url 'coupons:unapply' %}">
+                                    <i class="fas fa-minus-circle"></i> Unapply
+                                </a>
                             </td>
                         </tr>
                     {% endif %}
@@ -159,6 +165,25 @@
                 <br/>
             </div>
         </div>
+        </div>
+    </div>
+
+    <!-- Cart Clear Modal -->
+    <div class="modal fade" id="cartClearModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentModalLabel">Clear Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to clear your cart?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a class="btn btn-danger" href="{% url 'cart:cart_clear' %}">Yes, clear!</a>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

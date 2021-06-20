@@ -2,14 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
-from .forms import CartAddFoodForm
-from .cart import Cart
 from foods.models import Food
 from customer.decorators import customer_required
 from orders.forms import CreateOrderForm
 from coupons.forms import CouponApplyForm
-
-# Create your views here.
+from cart.forms import CartAddFoodForm
+from cart.cart import Cart
 
 
 @require_POST
@@ -50,3 +48,12 @@ def cart_detail(request):
                 'create_order_form': create_order_form,
                 'coupon_apply_form': coupon_apply_form,
             })
+
+
+@login_required
+@customer_required
+def cart_clear(request):
+    cart = Cart(request)
+    cart.clear()
+    return redirect('cart:cart_detail')
+

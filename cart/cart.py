@@ -1,11 +1,11 @@
 from decimal import Decimal
 from django.conf import settings
 
-from .models import Cart as cart_model, CartItem
+from cart.models import Cart as cart_model, CartItem
 from coupons.models import Coupon
 
-class Cart(object):
 
+class Cart(object):
     def __init__(self,request):
         try:
             if request.user.is_customer:
@@ -18,10 +18,9 @@ class Cart(object):
         except Exception:
             self.cart = None
         
-        #store the current applied coupon
-        #self.coupon_id = self.session.get('coupon_id')
+        # Store the current applied coupon
+        # self.coupon_id = self.session.get('coupon_id')
 
-    
     def add(self, food, quantity=1, override_quantity=False):
         try:
             cart_item = CartItem.objects.get(cart=self.cart, food=food)
@@ -67,6 +66,12 @@ class Cart(object):
                 pass
         return None
     
+    def clear_coupon(self):
+        if self.cart.coupon_code:
+            self.cart.coupon_code = ''
+            self.cart.save()
+        return
+    
     def identity(self):
         return self.cart.id
 
@@ -80,4 +85,3 @@ class Cart(object):
     
     def get_total_price_in_paisa(self):
         return self.get_total_price_after_discount() * 100
-            

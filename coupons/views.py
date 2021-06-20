@@ -11,7 +11,8 @@ from .models import Coupon, CouponUsed
 from cart.cart import Cart
 from .forms import CouponApplyForm
 
-
+@login_required
+@customer_required
 @require_POST
 def coupon_apply(request):
     cart = Cart(request)
@@ -31,3 +32,10 @@ def coupon_apply(request):
             messages.error(request, 'Coupon code error!')
     return redirect('cart:cart_detail')
 
+
+@login_required
+@customer_required
+def coupon_unapply(request):
+    cart = Cart(request)
+    cart.clear_coupon()
+    return redirect('cart:cart_detail')

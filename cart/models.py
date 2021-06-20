@@ -1,7 +1,8 @@
 from django.db import models
+
 from customer.models import Customer
 from foods.models import Food
-# Create your models here.
+
 
 class Cart(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
