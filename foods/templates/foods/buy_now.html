@@ -56,11 +56,11 @@
                         <p id="total-price" style="margin-top: 2%;"></p>
                     </div>
                     <div class="form-group" >
-                        <button class="btn btn-success" style="width:200px; text-align:center" id="cash-payment" type="submit" formaction="{% url 'orders:order_create_buy_now' food.id %}">Pay by cash on delivery</button>
+                        <button class="btn btn-success" style="width:200px; text-align:center" id="cash-payment" type="submit" >Pay by cash on delivery</button>
                     </div>
                 </form>
                 <p class="mb-0" style="margin-left: 21%;">-or-</p>
-                <button class="btn btn-success" style="width:200px; text-align:center" type="submit" id="khalti-button">Pay by Khalti</button>
+                <button class="btn btn-success" style="width:200px; text-align:center" id="khalti-button">Pay by Khalti</button>
             </div>
         </div>
 
@@ -92,7 +92,14 @@
             data: payload,
             dataType: 'json',
             success: function(data){
-                createOrderForm.action = "{% url 'orders:order_create_buy_now_khalti_payment' food.id 1234 %}".replace('1234', data.token.toString());
+                quantity = quantityField.value;
+                coupon = couponField.value;
+                if (coupon == ''){
+                    createOrderForm.action = "{% url 'orders:order_create_buy_now_khalti_payment' food.id 1234 5678 %}".replace('1234', quantity.toString()).replace('5678', data.token.toString());
+                }
+                else{
+                    createOrderForm.action = "{% url 'orders:order_create_buy_now_khalti_payment_coupon' food.id 123 345 567%}".replace('123', quantity.toString()).replace('345', data.token.toString()).replace('567', coupon.toString());
+                }
                 createOrderForm.submit();
             },
             error: function(error){
@@ -174,6 +181,19 @@
         coupon = couponField.value;
         verifyCoupon(coupon);
     };
+
+    var cashPaymentBtn = document.getElementById('cash-payment')
+    cashPaymentBtn.onclick = function(){
+        quantity = quantityField.value;
+        coupon = couponField.value;
+        if (coupon == ''){
+            createOrderForm.action="{% url 'orders:order_create_buy_now' food.id 1234 %}".replace('1234', quantity.toString());
+        }
+        else{
+            createOrderForm.action="{% url 'orders:order_create_buy_now_coupon' food.id 1234 '5678' %}".replace('1234', quantity.toString()).replace('5678', coupon.toString());
+        }
+        createOrderForm.submit();
+    }
 
 </script>
 {% endblock %}
