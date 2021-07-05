@@ -10,10 +10,9 @@ from cart.forms import CartAddFoodForm
 from cart.cart import Cart
 
 
-@require_POST
 @login_required
 @customer_required
-def cart_add(request,food_id):
+def cart_add(request, food_id):
     cart = Cart(request)
     food = get_object_or_404(Food,id=food_id)
     form = CartAddFoodForm(request.POST)
@@ -25,7 +24,6 @@ def cart_add(request,food_id):
     return redirect('cart:cart_detail')
 
 
-@require_POST
 @login_required
 @customer_required
 def cart_remove(request, food_id):
@@ -56,4 +54,3 @@ def cart_clear(request):
     cart = Cart(request)
     cart.clear()
     return redirect('cart:cart_detail')
-

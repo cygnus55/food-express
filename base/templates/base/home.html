@@ -21,9 +21,11 @@
             <div class="col-md-3">
                 <div class="card h-100" style="height: 300px auto; margin-bottom:10px;">
                     <div class="img-container discount-tag">
-                        <img class="thumbnail display-img"
-                            src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
-                            style=" height:200px" />
+                        <a href="{{ food.get_absolute_url_for_customer }}">
+                            <img class="thumbnail display-img"
+                                src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
+                                style=" height:200px" />
+                        </a>
                     </div>
 
                     {% if food.discount_percent > 0 %}
@@ -78,9 +80,11 @@
             <div class="col-md-3">
                 <div class="card" style="height: 300px auto; margin-bottom:10px;">
                     <div class="img-container">
-                        <img class="thumbnail display-img"
-                            src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"
-                            style=" height:200px" />
+                        <a href="{{ restaurant.get_absolute_url }}">
+                            <img class="thumbnail display-img"
+                                src="{% if restaurant.logo %}{{restaurant.logo.url}} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"
+                                style=" height:200px" />
+                        </a>
                     </div>
                     <div class="card-body">
                         <div class="card-title">
