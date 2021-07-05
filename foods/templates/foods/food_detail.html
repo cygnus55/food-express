@@ -6,26 +6,34 @@
 
 {% block content %}
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="{% url 'foods:food_list' %}">Foods</a></li>
-              <li class="breadcrumb-item"><a href="{% url 'foods:foods_list_by_category' food.category.slug %}">{{ food.category.name }}</a></li>
-              <li class="breadcrumb-item active" aria-current="page">{{ food.name }}</li>
-            </ol>
-
+        <div class="d-flex justify-content-start">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'foods:food_list' %}">Foods</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'foods:foods_list_by_category' food.category.slug %}">{{ food.category.name }}</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">{{ food.name }}</li>
+                </ol>
+            </nav>
+    
             {% if user.is_authenticated and user.is_customer %}
                 {% is_favourite food user as fav %}
                 {% if fav %}
-                    <a href={% url 'customer:unfav_food' food.id %} class="float-end btn outline-secondary" title="Remove from favourite">
-                        <i class="fa fa-heart text-danger"></i>
+                    <a href={% url 'customer:unfav_food' food.id %} 
+                        class="btn outline-secondary" 
+                        title="Remove from favourite"
+                        style="padding: 0; margin-left: 10px;">
+                            <i class="fa fa-heart text-danger"></i>
                     </a>
                 {% else %}
-                    <a href={% url 'customer:fav_food' food.id %} class="float-end btn outline-secondary" title="Add to favourite">
-                        <i class="far fa-heart text-danger"></i>
+                    <a href={% url 'customer:fav_food' food.id %} 
+                        class="btn outline-secondary" 
+                        title="Add to favourite"
+                        style="padding: 0; margin-left: 10px;">
+                            <i class="far fa-heart text-danger"></i>
                     </a>
                 {% endif %}
             {% endif %}
-        </nav>
+        </div>
 
         <div class="row">
             <div class="col-md-12">
@@ -39,12 +47,13 @@
               </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-4 col-md-5">
+        <div class="row" style="margin-top: 30px;">
+            <div class="col-md-6 col-lg-4">
                 <div style="text-align: center;">
-                    <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=250 height=250 style="border-radius: 8px; object-fit: cover;" />
+                    <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" 
+                    alt="" width=250 height=250 style="border-radius: 8px; object-fit: cover;" />
                 </div>
-                <div class="row" style="margin-top: 20px; text-align: center;">
+                <div style="margin-top: 20px; text-align: center;">
                     <h4>{{ food.name }}</h4>
                     <p>{{ food.category.name }}</p>
                     <p>
@@ -98,10 +107,11 @@
                         </div>
                         <div class="col-md-7 col-7">
                             <p>
+                                Rs. 
                                 {% if food.discount_percent > 0 %}
-                                    <del class="text-danger"> Rs. {{ food.price }}</del> Rs. {{ food.get_selling_price }}
+                                    <del class="text-muted">{{ food.price }}</del> {{ food.get_selling_price }}
                                 {% else %}
-                                    Rs. {{ food.price }}
+                                    {{ food.price }}
                                 {% endif %}
                             </p>
                         </div>
@@ -113,8 +123,8 @@
                         </div>
                         <div class="col-md-7 col-7">
                             <p>
-                                <a href="{{ food.restaurant.get_absolute_url }}">
-                                    {{ food.restaurant.name }}
+                                <a href="{{ food.restaurant.get_absolute_url }}" class="text-decoration-none">
+                                    <strong>{{ food.restaurant.name }}</strong>
                                 </a>
                             </p>
                         </div>

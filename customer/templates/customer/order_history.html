@@ -5,45 +5,53 @@
     <h4>Order History</h4>
 </div>
 
-{% for order, values in context.items %}
-<div class="card order-history">
-    <div class="card-body">
-        <div class="d-flex justify-content-between">
-            <h5>Order {{ order.id }}</h5>
-            <span>{{ order.created|date:'j M, Y' }}</span>
-            <a class="text-primary btn-sm text-decoration-none" 
-                href="#re-order"
-                title="Re-order the items">
-                <i class="fas fa-redo"></i> Re-order
-            </a>
+<div class="accordion" id="accordionPanelsStayOpenExample" style="margin-top: 30px;">
+    {% for order, values in context.items %}
+        <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-heading-{{ order.id }}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-{{ order.id }}" aria-expanded="true" aria-controls="panelsStayOpen-collapse-{{ order.id }}">
+                <h5>Order {{ order.id }} <small class="text-muted">({{ order.created|date:'j M, Y' }})</small></h5>
+            </button>
+        </h2>
+        <div id="panelsStayOpen-collapse-{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-{{ order.id }}">
+            <div class="accordion-body">
+                <a class="text-primary btn-sm text-decoration-none" 
+                    href="#re-order"
+                    title="Re-order items ordered in order {{ order.id }}">
+                    <i class="fas fa-redo"></i> Re-order
+                </a>
+                <table class="table table-bordered" id="table-{{ order.id }}" style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <div class="row">
+                                <th class="col-md-2">Restaurant</th>
+                                <th class="col-md-4">Food</th>
+                                <th class="col-md-2">Quantity</th>
+                                <th class="col-md-2">Unit Price</th>
+                                <th class="col-md-2">Total Price</th>
+                            </div>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for value in values %}
+                        <tr>      
+                            <td>{{ value.food.restaurant.name }}</td>
+                            <td>{{ value.food.name }}</td>
+                            <td>{{ value.quantity }}</td>
+                            <td>Rs. {{ value.price }}</td>
+                            <td>Rs. {{ value.get_cost }}</td>   
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="4"><strong>Grand Total</strong></td>
+                            <td>Rs. {{ order.get_total_cost }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="row">
-            <table class="table table-bordered" id="table-{{ order.id }}">
-                <thead>
-                    <tr>
-                        <div class="row">
-                        <th class="col-md-2">Restaurant</th>
-                        <th class="col-md-4">Food</th>
-                        <th class="col-md-2">Quantity</th>
-                        <th class="col-md-2">Unit Price</th>
-                        <th class="col-md-2">Total Price</th>
-                    </div>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in values %}
-                    <tr>      
-                        <td>{{ value.food.restaurant.name }}</td>
-                        <td>{{ value.food.name }}</td>
-                        <td>{{ value.quantity }}</td>
-                        <td>{{ value.price }}</td>
-                        <td>{{ value.get_cost }}</td>   
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
-    </div>
+    {% endfor %}
 </div>
-{% endfor %}
+
 {% endblock %}
