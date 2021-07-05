@@ -8,6 +8,7 @@ class BuyNowForm(forms.Form):
             min_value=1,
             max_value=10,
             initial=1,
+            required=False
         )
     
     def __init__(self, request, *args, **kwargs):
