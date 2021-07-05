@@ -10,7 +10,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" id="msg-div">
                   {% if messages %}
                     {% for message in messages %}
                       <div class="alert alert-{{ message.tags }}">
@@ -26,21 +26,20 @@
             <div class="col-md-5">
                 <p><img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" alt="" width=300px /></p>
                 <p>Name: {{ food.name }}</p>
-                <p>Price: Rs. {{ food.price }}</p>
+                <p>Price: Rs. {{ food.get_selling_price }}</p>
                 <p>Restaurant: {{ food.restaurant.name }}</p>
             </div>
             <div class="col-md-4">
-                <form>
-                    <div class="row">
-                        <div class=col-md-8>
-                        {{ coupon_apply_form|crispy}}
+                <div class="row">
+                    <div class=col-md-8>
+                        <input type="text" name="code" placeholder="Apply Coupon" class="textinput textInput form-control" required id="id_code">
                         {% csrf_token %}
-                        </div>
-                        <div class="col-md-4">
-                            <button class="btn btn-primary" id="apply-button">Apply</button>
-                        </div>
                     </div>
-                </form>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary" id="apply-button">Apply</button>
+                    </div>
+                </div>
+                <br>
                 <form method="post" id="order-form">
                     <div class="form-group">
                         {{ form.delivery_location.label }}
@@ -57,11 +56,11 @@
                         <p id="total-price" style="margin-top: 2%;"></p>
                     </div>
                     <div class="form-group" >
-                        <button class="btn btn-success" style="width:200px; text-align:center" type="submit" formaction="{% url 'orders:order_create_buy_now' food.id %}">Pay by cash on delivery</button>
+                        <button class="btn btn-success" style="width:200px; text-align:center" id="cash-payment" type="submit" formaction="{% url 'orders:order_create_buy_now' food.id %}">Pay by cash on delivery</button>
                     </div>
                 </form>
                 <p class="mb-0" style="margin-left: 21%;">-or-</p>
-                <button class="btn btn-success" style="width:200px; text-align:center" type="submit" id="payment-button">Pay by Khalti</button>
+                <button class="btn btn-success" style="width:200px; text-align:center" type="submit" id="khalti-button">Pay by Khalti</button>
             </div>
         </div>
 
@@ -70,14 +69,19 @@
 
 {% block extra %}
 <script>
+    var khaltiBtn = document.getElementById("khalti-button");
+    var cashBtn = document.getElementById("cash-button");
+
+    var couponField = document.getElementById('id_code');
     var createOrderForm = document.getElementById('order-form')
     var totalPriceTag = document.getElementById('total-price');
     var quantityField = document.getElementById('id_quantity');
-    var amount = {{ food.price }} * quantityField.value;
+    quantityField.disabled = true;
+    var amount = {{ food.get_selling_price }} * quantityField.value;
     totalPriceTag.innerHTML = "Total Price: "+ amount.toString();
 
     quantityField.onchange = function(){
-        amount = {{ food.price }} * quantityField.value;
+        amount = {{ food.get_selling_price }} * quantityField.value;
         totalPriceTag.innerHTML = "Total Price: "+ amount.toString();
     };
 
@@ -112,7 +116,7 @@
         "eventHandler": {
             onSuccess (payload) {
                 // hit merchant api for initiating verfication
-                console.log(payload);
+                //console.log(payload);
                 verifyPayment(payload);
             },
             onError (error) {
@@ -125,17 +129,50 @@
     };
 
     var checkout = new KhaltiCheckout(config);
-    var paymentBtn = document.getElementById("payment-button");
-    paymentBtn.onclick = function () {
+    khaltiBtn.onclick = function () {
         // minimum transaction amount must be 10, i.e 1000 in paisa.
         checkout.show({amount: amount * 100.00});
     };
+
+    function verifyCoupon(coupon){
+        $.ajax({
+            url: "{% url 'coupons:ajax_verify_coupon' %}",
+            type: 'POST',
+            data: {coupon: coupon},
+            dataType: 'json',
+            success: function(response){
+                var msgDiv = document.getElementById('msg-div');
+                var tag = response['response'];
+                if (tag=='danger'){
+                    msgDiv.innerHTML = "<div class='alert alert-danger'> Coupon code error! </div>"
+                    couponField.value='';
+                }
+                else if(tag=='warning'){
+                    msgDiv.innerHTML = "<div class='alert alert-warning'> You have already used this code. </div>"
+                    couponField.value='';
+                }
+                else if(tag=='success'){
+                    msgDiv.innerHTML = "<div class='alert alert-success'> Coupon code valid. </div>"
+                    var discount_percent = response['discount'];
+                    var discount = amount * (discount_percent/100);
+                    amount = amount - discount;
+                    totalPriceTag.innerHTML = "Total Price: "+ amount.toString();
+                    applyBtn.hidden = true;
+                    couponField.disabled = true;
+                }
+                console.log(tag);
+            },
+            error: function(error){
+                console.log('error', error);
+            }
+        });
+    }
 
     var applyBtn = document.getElementById('apply-button');
     var couponField = document.getElementById('id_code');
     applyBtn.onclick = function(){
         coupon = couponField.value;
-        alert(coupon);
+        verifyCoupon(coupon);
     };
 
 </script>
