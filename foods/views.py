@@ -44,27 +44,15 @@ class FoodDetailView(DetailView):
 
 @login_required
 @customer_required
-def buy_now(request, food_id):
+def buy_now(request, food_id, quantity):
     food = get_object_or_404(Food, id=food_id)
-    if request.method == 'POST':
-        form_ = CartAddFoodForm(data=request.POST)
-        if form_.is_valid():
-            quantity = form_.cleaned_data['quantity']
-            form = BuyNowForm(request, initial={
-                'quantity': quantity,
-            })
-            coupon_apply_form = CouponApplyForm()
-            return render(request,
-                'foods/buy_now.html',
-                {'food': food,
-                'form': form,
-                'coupon_apply_form': coupon_apply_form,}
-            )
-    form = BuyNowForm(request)
+    form = BuyNowForm(request, initial={
+        'quantity': quantity,
+    })
     coupon_apply_form = CouponApplyForm()
     return render(request,
-            'foods/buy_now.html',
-            {'food': food,
-            'form': form,
-            'coupon_apply_form': coupon_apply_form,}
-        )
+        'foods/buy_now.html',
+        {'food': food,
+        'form': form,
+        'coupon_apply_form': coupon_apply_form,}
+    )

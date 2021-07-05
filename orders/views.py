@@ -16,7 +16,7 @@ from customer.decorators import customer_required
 from .forms import CreateOrderForm
 from location.models import DeliveryLocation
 from .tasks import order_created_successfully
-from coupons.models import CouponUsed
+from coupons.models import Coupon, CouponUsed
 from foods.models import Food
 from foods.forms import BuyNowForm
 
@@ -26,12 +26,11 @@ from foods.forms import BuyNowForm
 @login_required
 @customer_required
 def order_create_cash_payment(request):
-    success = False
     cart = Cart(request)
     if len(cart) == 0:
         return render(request,
                 'orders/created.html',
-                {'success': success})
+                {'response': 'cart_empty'})
     else:
         form = CreateOrderForm(request,data=request.POST)
         if form.is_valid():
@@ -52,10 +51,9 @@ def order_create_cash_payment(request):
             # launch asynchronous task
             order_created_successfully.delay(order.id)
             order_items = OrderItem.objects.filter(order=order)
-            success = True
         return render(request,
                     'orders/created.html',
-                    {'order': order, 'order_items': order_items, 'success': success})
+                    {'order': order, 'order_items': order_items, 'response': 'success'})
 
 
 @csrf_exempt
@@ -92,13 +90,11 @@ def verify_payment(request):
 @login_required
 @customer_required
 def order_create_khalti_payment(request, token):
-    success = False
     cart = Cart(request)
     if len(cart) == 0:
-        success = False
         return render(request,
                 'orders/created.html',
-                {'success': success})
+                {'response': 'cart_empty'})
     else:
         form = CreateOrderForm(request,data=request.POST)
         if form.is_valid():
@@ -119,10 +115,9 @@ def order_create_khalti_payment(request, token):
             # launch asynchronous task
             order_created_successfully.delay(order.id)
             order_items = OrderItem.objects.filter(order=order)
-            success = True
         return render(request,
                     'orders/created.html',
-                    {'order': order, 'order_items': order_items, 'success': success})
+                    {'order': order, 'order_items': order_items, 'response': 'success'})
 
 
 @login_required
@@ -144,46 +139,74 @@ def verify_order(request, order_id):
 @require_POST
 @login_required
 @customer_required
-def order_create_buy_now(request, food_id):
+def order_create_buy_now(request, food_id, quantity, coupon=''):
+    if coupon:
+        coupon_code = Coupon.objects.get(code__iexact = coupon)
+        try:
+            CouponUsed.objects.get(coupon=coupon_code, customer=request.user.customer)
+            return render(request,
+                'orders/created.html',
+                {'response': 'coupon_already_used'},)
+        except Exception:
+            pass
     food = get_object_or_404(Food, id=food_id)
-    success = False
     form = BuyNowForm(request,data=request.POST)
     if form.is_valid():
         cd = form.cleaned_data
         delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
         order = Order.objects.create(customer=request.user.customer, payment_by_cash=True, delivery_location=delivery_location)
+        if coupon:
+            order.coupon = Coupon.objects.get(code__iexact = coupon)
+            order.save()
+            CouponUsed.objects.create(coupon=order.coupon, customer=request.user.customer)
         OrderItem.objects.create(order=order,
                                     food=food,
-                                    quantity=cd['quantity'],
-                                    price=food.price)
+                                    quantity=quantity,
+                                    price=food.get_selling_price)
         # launch asynchronous task
         order_created_successfully.delay(order.id)
         order_items = OrderItem.objects.filter(order=order)
-        success = True
-    return render(request,
+        return render(request,
                     'orders/created.html',
-                    {'order': order, 'order_items': order_items, 'success': success})
+                    {'order': order, 'order_items': order_items, 'response': 'success'})
+    return render(request,
+                'orders/created.html',
+                {'response': 'error'},)
 
 
 @require_POST
 @login_required
 @customer_required
-def order_create_buy_now_khalti_payment(request, food_id, token):
+def order_create_buy_now_khalti_payment(request, food_id, quantity, token, coupon=''):
+    if coupon:
+        coupon_code = Coupon.objects.get(code__iexact = coupon)
+        try:
+            CouponUsed.objects.get(coupon=coupon_code, customer=request.user.customer)
+            return render(request,
+                'orders/created.html',
+                {'response': 'coupon_already_used'},)
+        except Exception:
+            pass
     food = get_object_or_404(Food, id=food_id)
-    success = False
     form = BuyNowForm(request,data=request.POST)
     if form.is_valid():
         cd = form.cleaned_data
         delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
         order = Order.objects.create(customer=request.user.customer, verified=True, delivery_location=delivery_location, transaction=token)
+        if coupon:
+            order.coupon = Coupon.objects.get(code__iexact = coupon)
+            order.save()
+            CouponUsed.objects.create(coupon=order.coupon, customer=request.user.customer)
         OrderItem.objects.create(order=order,
                                     food=food,
-                                    quantity=cd['quantity'],
-                                    price=food.price)
+                                    quantity=quantity,
+                                    price=food.get_selling_price)
         # launch asynchronous task
         order_created_successfully.delay(order.id)
         order_items = OrderItem.objects.filter(order=order)
-        success = True
+        return render(request,
+                        'orders/created.html',
+                        {'order': order, 'order_items': order_items, 'response': 'success'})
     return render(request,
-                    'orders/created.html',
-                    {'order': order, 'order_items': order_items, 'success': success})
+                'orders/created.html',
+                {'response': 'error'},)
