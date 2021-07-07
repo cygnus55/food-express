@@ -19,7 +19,7 @@
             {% endif %}
         </div>
     </div>
-    
+
     <div class="row flex-column-reverse flex-md-row">
         <div class="col-md-6 col-sm-12">
             <form action="" method="POST" enctype="multipart/form-data">
@@ -33,7 +33,7 @@
             </form>
         </div>
         <div class="col-md-4 col-sm-12">
-            <img src="{% if user.customer.profile_pic %}{{ user.customer.profile_pic.url }} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"
+            <img src="{% if user.delivery_person.profile_pic %}{{ user.delivery_person.profile_pic.url }} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"
                 style="object-fit: cover; width: 200px; height: 200px; border-radius: 50%; margin-bottom: 5px;" />
         </div>
     </div>
