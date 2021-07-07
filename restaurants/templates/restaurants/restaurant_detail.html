@@ -126,7 +126,11 @@
                             <strong>Ratings:</strong>
                         </div>
                         <div class="col-md-7 col-7">
-                            {% ratings restaurant %}
+                            {% if user.is_customer %}
+                                {% ratings restaurant %}
+                            {% else %}
+                                {% ratings restaurant read_only=True %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>

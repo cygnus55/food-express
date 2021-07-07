@@ -30,7 +30,7 @@ urlpatterns = [
     path('customer/', include('customer.urls', namespace='customer')),
     path('foods/', include('foods.urls', namespace='foods')),
     path('location/', include('location.urls', namespace='location')),
-    
+    path('delivery-person/', include('delivery_person.urls', namespace='delivery_person'))
 ]
 
 #debug mode only not suitable for production

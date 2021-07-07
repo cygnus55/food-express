@@ -57,7 +57,11 @@
                                 <small class="text-muted"><i class="fa fa-clock"></i> {{ restaurant.open_hour }} -
                                     {{ restaurant.close_hour }}</small>
                                 <br />
-                                {% ratings restaurant %}
+                                {% if user.is_customer %}
+                                    {% ratings restaurant %}
+                                {% else %}
+                                    {% ratings restaurant read_only=True %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>

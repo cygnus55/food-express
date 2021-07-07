@@ -25,8 +25,9 @@ def user_login(request):
                     elif user.is_customer:
                         return redirect('customer:homepage')
                     elif user.is_restaurant:
-                        # return HttpResponseRedirect(reverse('restaurants:restaurant_dashboard', args=(user.username,)))
                         return redirect('restaurants:restaurant_dashboard')
+                    elif user.is_delivery_person:
+                        return redirect('delivery_person:home')
                 else:
                     messages.error(request, 'Your account has been disabled, as you remain deactive for long time.')
                     return redirect('accounts:login')

@@ -6,7 +6,6 @@ from foods.models import Food
 from location.models import DeliveryLocation
 from coupons.models import Coupon
 
-# Create your models here.
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, related_name='order', on_delete=models.CASCADE)

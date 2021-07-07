@@ -142,8 +142,35 @@
                                 </li>
                             </ul>
                         </li>
-
                         {% endif %}
+
+                        {% if user.is_delivery_person %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle btn my-md-0 ms-md-3" href="#" id="navbarDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="{% if user.delivery_person.profile_pic %}{{ user.delivery_person.profile_pic.url }}{% else %}{% static 'base/img/default-user.png' %}{% endif %}"
+                                    alt="{{ user.username }}'s image" class="avatar"
+                                    style="width: 25px; height: 25px; border-radius: 50%; transform: translatey(-10%);" />
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark"
+                                aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'delivery_person:home' %}"style="margin-left:0%">
+                                        <i class="fas fa-home"></i> Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+
                         {% if user.is_superuser or user.is_restaurant %}
                         <li class="nav-item">
                             <a class="nav-link btn btn-outline-info my-md-0 ms-md-3"
