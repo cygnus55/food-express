@@ -27,7 +27,7 @@
 * Introduced Coupon system app in the program
 
 
-### Week 7:
+#### Week 7:
 * Implemented Coupon system 
 * Fixed some basic UI elements
 * Added Buy now feature in food detai page

@@ -53,7 +53,8 @@ def order_create_cash_payment(request):
             cart.clear()
             # launch asynchronous task
             order_created_successfully.delay(order.id)
-            send_invoice.delay(order.id)
+            message = f"Invoice for your order is attached in the pdf file. Your order is not verified. You would soon get call from our administration."
+            send_invoice.delay(order.id, message)
             order_items = OrderItem.objects.filter(order=order)
         return render(request,
                     'orders/created.html',
@@ -118,7 +119,8 @@ def order_create_khalti_payment(request, token):
             cart.clear()
             # launch asynchronous task
             order_created_successfully.delay(order.id)
-            send_invoice.delay(order.id)
+            message = f"Invoice for your order is attached in the pdf file. Your order is verified. You would soon get our delivery person at your door."
+            send_invoice.delay(order.id, message)
             order_items = OrderItem.objects.filter(order=order)
         return render(request,
                     'orders/created.html',
@@ -170,7 +172,8 @@ def order_create_buy_now(request, food_id, quantity, coupon=''):
                                     price=food.get_selling_price)
         # launch asynchronous task
         order_created_successfully.delay(order.id)
-        send_invoice.delay(order.id)
+        message = f"Invoice for your order is attached in the pdf file. Your order is not verified. You would soon get call from our administration."
+        send_invoice.delay(order.id, message)
         order_items = OrderItem.objects.filter(order=order)
         return render(request,
                     'orders/created.html',
@@ -209,8 +212,9 @@ def order_create_buy_now_khalti_payment(request, food_id, quantity, token, coupo
                                     price=food.get_selling_price)
         # launch asynchronous task
         order_created_successfully.delay(order.id)
+        message = f"Invoice for your order is attached in the pdf file. Your order is verified. You would soon get our delivery person at your door."
+        send_invoice.delay(order.id, message)
         order_items = OrderItem.objects.filter(order=order)
-        send_invoice.delay(order.id)
         return render(request,
                         'orders/created.html',
                         {'order': order, 'order_items': order_items, 'response': 'success'})

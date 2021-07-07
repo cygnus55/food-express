@@ -24,6 +24,6 @@ class DeliveryPerson(models.Model):
 class OrdersDesignation(models.Model):
     delivery_person = models.ForeignKey(DeliveryPerson, on_delete=models.CASCADE, related_name='orders')
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='designation')
-
+    
     def __str__(self):
         return f'OrdersDesignation: Order {self.order.id} <- DeliveryPerson {self.delivery_person}'
