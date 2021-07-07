@@ -31,3 +31,9 @@
 
     * Validated Opening and Closing time and limited query to available foods
     * Added Bootstrap 5 theme for crispy forms and used them in most of the forms
+
+### Week 8/9:
+
+    * View order history for customer
+    * Developed delivery_person user and his/her activities
+    * Complete order feature by delivery person

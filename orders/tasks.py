@@ -30,7 +30,7 @@ def order_created_successfully(order_id):
     return mail_sent
 
 @shared_task
-def send_invoice(order_id):
+def send_invoice(order_id,message):
     """
     Task to send an e-mail notification when an invoice is
     successfully created.
@@ -40,8 +40,7 @@ def send_invoice(order_id):
 
     # create invoice e-mail
     subject = f'Food Express - EE Invoice no. {order.id}'
-    messege = 'Please, find attached invoice for your recent order.'
-    email = EmailMessage(subject, messege, 'foodexpressnepal@gmail.com', ['ch.ramraj35@gmail.com',])
+    email = EmailMessage(subject, message, 'foodexpressnepal@gmail.com', ['ch.ramraj35@gmail.com',])
 
     #generate PDF
     html = render_to_string('orders/pdf.html', {'order': order, 'payment_received': paid})

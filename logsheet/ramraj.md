@@ -41,3 +41,8 @@
 ### Week 7:
 - Added celery task in project
 - Added khalti payment for ordering foods.
+
+### Week 8/9:
+- Added buy now feature for foods
+- Generate Invoice and send by email
+- Added pills in order history

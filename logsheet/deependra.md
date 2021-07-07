@@ -20,10 +20,12 @@
 - Corona break
 
 
-##week 6
--email reset
--card height problem
+### week 6
 
-#week 7
--order history
--fix some ui related problem
+- email reset
+- fixed card height problem
+
+### week 7
+
+- order history
+- fixed some ui related problem
