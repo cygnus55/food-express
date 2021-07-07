@@ -1,21 +1,24 @@
+from django.http.response import HttpResponse
 import requests
 import json
 import os
+import weasyprint
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.core import serializers
+from django.http import JsonResponse, HttpRequest
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from django.template.loader import render_to_string
 
 from .models import Order, OrderItem
 from cart.cart import Cart
 from customer.decorators import customer_required
 from .forms import CreateOrderForm
 from location.models import DeliveryLocation
-from .tasks import order_created_successfully
+from .tasks import order_created_successfully, send_invoice
 from coupons.models import Coupon, CouponUsed
 from foods.models import Food
 from foods.forms import BuyNowForm
@@ -50,6 +53,7 @@ def order_create_cash_payment(request):
             cart.clear()
             # launch asynchronous task
             order_created_successfully.delay(order.id)
+            send_invoice.delay(order.id)
             order_items = OrderItem.objects.filter(order=order)
         return render(request,
                     'orders/created.html',
@@ -114,6 +118,7 @@ def order_create_khalti_payment(request, token):
             cart.clear()
             # launch asynchronous task
             order_created_successfully.delay(order.id)
+            send_invoice.delay(order.id)
             order_items = OrderItem.objects.filter(order=order)
         return render(request,
                     'orders/created.html',
@@ -165,6 +170,7 @@ def order_create_buy_now(request, food_id, quantity, coupon=''):
                                     price=food.get_selling_price)
         # launch asynchronous task
         order_created_successfully.delay(order.id)
+        send_invoice.delay(order.id)
         order_items = OrderItem.objects.filter(order=order)
         return render(request,
                     'orders/created.html',
@@ -204,9 +210,23 @@ def order_create_buy_now_khalti_payment(request, food_id, quantity, token, coupo
         # launch asynchronous task
         order_created_successfully.delay(order.id)
         order_items = OrderItem.objects.filter(order=order)
+        send_invoice.delay(order.id)
         return render(request,
                         'orders/created.html',
                         {'order': order, 'order_items': order_items, 'response': 'success'})
     return render(request,
                 'orders/created.html',
                 {'response': 'error'},)
+
+
+@staff_member_required
+def admin_order_pdf(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    paid = ((not order.verified) and (not order.payment_by_cash)) or (order.verified and (not order.payment_by_cash)) or order.complete
+    html = render_to_string('orders/pdf.html', {'order': order, 'payment_received': paid})
+
+    response = HttpResponse(content_type='application/pdf')
+    response['content-Disposition'] = f'filename=foodexpress_order_{order.id}.pdf'
+
+    weasyprint.HTML(string=html).write_pdf(response, stylesheets=[weasyprint.CSS(settings.STATIC_ROOT + 'orders/css/pdf.css')])
+    return response

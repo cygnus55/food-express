@@ -13,13 +13,18 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ['food']
 
+def order_pdf(obj):
+    url = reverse('orders:admin_order_pdf', args=[obj.id])
+    return mark_safe(f"<a href='{url}'>PDF</a>")
+order_pdf.short_description = 'Invoice'
+
 def order_detail(obj):
     url = reverse('orders:order_detail', args=[obj.id])
     return mark_safe(f'<a href="{url}">View detail</a>')
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'customer', 'created', 'updated', 'complete', 'payment_by_cash', 'verified', order_detail]
+    list_display = ['id', 'customer', 'created', 'updated', 'complete', 'payment_by_cash', 'verified', order_detail, order_pdf]
     list_filter = ['created', 'updated', 'verified', 'payment_by_cash', 'complete']
     inlines = [OrderItemInline]
 
