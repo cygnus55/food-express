@@ -1,0 +1,41 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row" style="margin-bottom: 20px;">
+        <h4><i class="fas fa-user-circle"></i> Profile Update</h4>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row flex-column-reverse flex-md-row">
+        <div class="col-md-6 col-sm-12">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    {{ form|crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <img src="{% if user.delivery_person.profile_pic %}{{ user.delivery_person.profile_pic.url }} {% else %} {% static 'base/img/no_image.png' %}{% endif %}"
+                style="object-fit: cover; width: 200px; height: 200px; border-radius: 50%; margin-bottom: 5px;" />
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -5,6 +5,7 @@ from django.contrib import messages
 
 from accounts.forms import RegistrationForm
 from orders.models import OrderItem, Order
+from orders.tasks import send_invoice
 from delivery_person.models import OrdersDesignation
 from delivery_person.decorators import delivery_person_required
 from delivery_person.forms import DeliveryPersonProfileForm
@@ -57,6 +58,7 @@ def mark_order_as_complete(request, order_id):
         order.complete = True
         order.save()
         messages.success(request, 'Successfully completed order!')
+        send_invoice.delay(order.id)
     else:
         messages.error(request, 'You cannot complete someone else\'s order!')
     return redirect('delivery_person:home')
@@ -73,3 +75,28 @@ def mark_order_as_incomplete(request, order_id):
     else:
         messages.error(request, 'You cannot make someone else\'s order incomplete!')
     return redirect('delivery_person:home')
+
+
+@login_required
+@delivery_person_required
+def delivery_person_profile_update(request):
+    if request.method == 'GET':
+        form = DeliveryPersonProfileForm(instance=request.user.delivery_person)
+    else:
+        form = DeliveryPersonProfileForm(
+            data=request.POST,
+            files=request.FILES,
+            instance=request.user.delivery_person
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile successfully updated!')
+            return redirect('delivery_person:profile_update')
+    context = {
+        'form': form,
+    }
+    return render(
+        request,
+        'delivery_person/profile_update.html',
+        context
+    )
