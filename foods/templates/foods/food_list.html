@@ -72,7 +72,11 @@
                                 <br />
                                 <small>{{ food.restaurant.name }}</small>
                                 <br />
-                                {% ratings food %}
+                                {% if user.is_customer %}
+                                    {% ratings food %}
+                                {% else %}
+                                    {% ratings food read_only=True %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
