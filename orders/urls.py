@@ -1,3 +1,4 @@
+from os import name
 from django.urls import path
 from . import views
 
@@ -13,4 +14,6 @@ urlpatterns = [
     path("create/buynow/<int:food_id>/<int:quantity>/<str:coupon>/", views.order_create_buy_now, name="order_create_buy_now_coupon"),
     path("create/buynow/pay-by-khalti/<int:food_id>/<int:quantity>/<str:token>/", views.order_create_buy_now_khalti_payment,name="order_create_buy_now_khalti_payment"),
     path("create/buynow/pay-by-khalti/<int:food_id>/<int:quantity>/<str:token>/<str:coupon>", views.order_create_buy_now_khalti_payment,name="order_create_buy_now_khalti_payment_coupon"),
+
+    path('admin/order/<int:order_id>/invoice/', views.admin_order_pdf, name='admin_order_pdf')
 ]
