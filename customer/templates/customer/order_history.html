@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container">
@@ -15,11 +16,31 @@
         </h2>
         <div id="panelsStayOpen-collapse-{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-{{ order.id }}">
             <div class="accordion-body">
-                <a class="text-primary btn-sm text-decoration-none" 
-                    href="#re-order"
-                    title="Re-order items ordered in order {{ order.id }}">
-                    <i class="fas fa-redo"></i> Re-order
-                </a>
+                <div class="body-header d-flex justify-content-between">
+                    <div class="designation">
+                        Delivery Person: 
+                        {% if order.designation %}
+                            <span>
+                                {% if order.designation.delivery_person.full_name %}
+                                    {{ order.designation.delivery_person.full_name }}
+                                {% else %}
+                                    {{ order.designation.delivery_person.user.username }}
+                                {% endif %}
+                            </span>
+                            <img src="{% if order.designation.delivery_person.profile_pic.url %}{{ order.designation.delivery_person.profile_pic.url }}{% else %}{% static 'base/img/default-user.png' %}{% endif %}" width=70 height=70  style="border-radius: 50%; box-shadow: 0px 0px 5px 1px #000000;" />
+                        {% else %}
+                            <p class="text-muted">This order has not been designated yet!</p>
+                        {% endif %}
+                    </div>
+                   
+    
+                    <a class="text-primary btn-sm text-decoration-none" 
+                        href="#re-order"
+                        title="Re-order items ordered in order {{ order.id }}">
+                        <i class="fas fa-redo"></i> Re-order
+                    </a>
+                </div>
+                
                 <table class="table table-bordered" id="table-{{ order.id }}" style="margin-top: 20px;">
                     <thead>
                         <tr>
@@ -53,5 +74,4 @@
         </div>
     {% endfor %}
 </div>
-
 {% endblock %}

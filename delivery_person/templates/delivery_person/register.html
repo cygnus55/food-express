@@ -1,0 +1,29 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static 'orders/css/verify_order.css' %}"/>
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">Food Express</a></h1>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Home</a> &rsaquo; 
+        <a href="/admin/delivery_person/">Delivery Person</a> &rsaquo; Register Delivery User
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="module">
+        <form method="POST" enctype="multipart/form-data" action="">
+            {% csrf_token %}
+            {{ form|crispy }}
+            {{ profile_form|crispy }}
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+{% endblock %}
