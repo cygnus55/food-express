@@ -58,7 +58,9 @@ def mark_order_as_complete(request, order_id):
         order.complete = True
         order.save()
         messages.success(request, 'Successfully completed order!')
-        send_invoice.delay(order.id)
+        message = f"""Invoice for your purchase is attached in the pdf file.Your purchase is completed sucessfully.\n
+        Your purchase was delivered by: {request.user.username}"""
+        send_invoice.delay(order.id, message)
     else:
         messages.error(request, 'You cannot complete someone else\'s order!')
     return redirect('delivery_person:home')
@@ -72,6 +74,8 @@ def mark_order_as_incomplete(request, order_id):
         order.complete = False
         order.save()
         messages.success(request, 'Successfully made order incomplete!')
+        message = f"""Your order was accidentently marked as complete. Sorry for the inconvinence. You would soon get our delivery person on your door"""
+        send_invoice.delay(order.id, message)
     else:
         messages.error(request, 'You cannot make someone else\'s order incomplete!')
     return redirect('delivery_person:home')

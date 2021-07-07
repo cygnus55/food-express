@@ -48,18 +48,19 @@
                                     style=" height:200px" />
                             </div>
 
+                            {% if food.discount_percent > 0 %}
+                            <div class="ribbon-wrapper">
+                                    <div class="ribbon green">
+                                        {{ food.discount_percent }}% OFF
+                                    </div>
+                            </div>
+                            {% endif %}
+
                             <div class="card-body">
                                 <div class="card-title">
                                     <a href="{{ food.get_absolute_url_for_customer }}"
                                         class="text-dark text-decoration-none">{{ food.name }}</a>
                                 </div>
-                                {% if food.discount_percent > 0 %}
-                                <small class="text-muted"><img src="{% static 'base/img/tag.png' %}"
-                                        style="width: 20px; height: 20px;" />
-                                    {{ food.discount_percent }}% off</small><br />
-                                {% else %}
-                                <br />
-                                {% endif %}
                                 <small>{{ food.category.name }}</small>
                                 <br />
                                 <small>
