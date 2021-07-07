@@ -98,6 +98,7 @@
             <thead>
                 <tr>
                     <th>Food</th>
+                    <th>Restaurant</th>
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Total</th>
@@ -107,6 +108,7 @@
                 {% for item in order.items.all %}
                     <tr class="row{% cycle '1' '2' %}">
                         <td> {{ item.food.name }} </td>
+                        <td>{{ item.food.restaurant.name }}</td>
                         <td> Rs. {{ item.price }} </td>
                         <td> {{ item.quantity }} </td>
                         <td> Rs. {{ item.get_cost }} </td>
@@ -114,12 +116,12 @@
                 {% endfor %}
                 {% if order.coupon %}
                     <tr class="total">
-                        <td colspan="3">Used <strong>{{ order.coupon.code }}</strong> coupon ({{order.coupon.discount}}% off)</td>
+                        <td colspan="4">Used <strong>{{ order.coupon.code }}</strong> coupon ({{order.coupon.discount}}% off)</td>
                         <td class="num">-Rs. {{ order.get_discount }}</td>
                     </tr>
                 {% endif %}
                 <tr class="total">
-                    <td colspan="3">Total</td>
+                    <td colspan="4">Total</td>
                     <td class="num">Rs. {{ order.get_total_cost }}</td>
                 </tr>
             </tbody>
