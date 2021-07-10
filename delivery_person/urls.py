@@ -1,6 +1,6 @@
 from django.urls import path
 
-from delivery_person.views import home_view, mark_order_as_complete, mark_order_as_incomplete, delivery_person_profile_update
+from delivery_person.views import home_view, mark_order_as_complete, mark_order_as_incomplete, delivery_person_profile_update, delivery_person_order_detail
 
 app_name = 'delivery_person'
 
@@ -16,5 +16,10 @@ urlpatterns = [
         'mark-order-as-incomplete/<int:order_id>', 
         mark_order_as_incomplete, 
         name='mark_order_as_incomplete'
+    ),
+    path(
+        'order_detail/<int:order_id>/',
+        delivery_person_order_detail,
+        name='order_detail',
     ),
 ]
