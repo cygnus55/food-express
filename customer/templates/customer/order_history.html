@@ -3,7 +3,21 @@
 
 {% block content %}
 <div class="container">
-    <h4>Order History</h4>
+    <div class="row" style="margin-bottom: 20px;">
+        <h4><i class="fas fa-history"></i> Order History</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
 </div>
 
 <div class="accordion" id="accordionPanelsStayOpenExample" style="margin-top: 30px;">
@@ -51,7 +65,7 @@
                    
     
                     <a class="text-primary btn-sm text-decoration-none" 
-                        href="#re-order"
+                        href="{% url 'orders:reorder' order.id %}"
                         title="Re-order items ordered in order {{ order.id }}">
                         <i class="fas fa-redo"></i> Re-order
                     </a>
@@ -79,6 +93,12 @@
                             <td>Rs. {{ value.get_cost }}</td>   
                         </tr>
                         {% endfor %}
+                        {% if order.coupon %}
+                            <tr class="total">
+                                <td colspan="4">Used <strong>{{ order.coupon.code }}</strong> coupon ({{order.coupon.discount}}% off)</td>
+                                <td class="num">-Rs. {{ order.get_discount }}</td>
+                            </tr>
+                        {% endif %}
                         <tr>
                             <td colspan="4"><strong>Grand Total</strong></td>
                             <td>Rs. {{ order.get_total_cost }}</td>
