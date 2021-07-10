@@ -32,7 +32,7 @@ class Order(models.Model):
             discount = (self.coupon.discount / Decimal(100)) * self.get_total_cost_before_discount()
         else:
             discount = Decimal(0)
-        return discount
+        return round(discount,2)
 
     def get_total_cost(self):
         return round(self.get_total_cost_before_discount() - self.get_discount(), 2)

@@ -73,17 +73,12 @@
     var cashBtn = document.getElementById("cash-button");
 
     var couponField = document.getElementById('id_code');
-    var createOrderForm = document.getElementById('order-form')
+    var createOrderForm = document.getElementById('order-form');
     var totalPriceTag = document.getElementById('total-price');
     var quantityField = document.getElementById('id_quantity');
     quantityField.disabled = true;
     var amount = {{ food.get_selling_price }} * quantityField.value;
     totalPriceTag.innerHTML = "Total Price: "+ amount.toString();
-
-    quantityField.onchange = function(){
-        amount = {{ food.get_selling_price }} * quantityField.value;
-        totalPriceTag.innerHTML = "Total Price: "+ amount.toString();
-    };
 
     function verifyPayment(payload){
         $.ajax({
@@ -162,8 +157,9 @@
                     msgDiv.innerHTML = "<div class='alert alert-success'> Coupon code valid. </div>"
                     var discount_percent = response['discount'];
                     var discount = amount * (discount_percent/100);
-                    amount = amount - discount;
-                    totalPriceTag.innerHTML = "Total Price: "+ amount.toString();
+                    var actual_amount = amount;
+                    amount = actual_amount - discount;
+                    totalPriceTag.innerHTML = "Total Price: Rs. <del>"+ actual_amount.toString() + "</del> "+ amount.toString() + "<br>(Using promo code, " + couponField.value +", " + discount_percent.toString() + "% off)";
                     applyBtn.hidden = true;
                     couponField.disabled = true;
                 }
