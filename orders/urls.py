@@ -10,10 +10,20 @@ urlpatterns = [
     path("ajax/verify-payment/", views.verify_payment, name='verify_payment'),
     path("order_detail/<int:order_id>/", views.order_detail, name='order_detail'),
     path("order_detail/<int:order_id>/verify/", views.verify_order, name="verify_order"),
+
+    # buy now
     path("create/buynow/<int:food_id>/<int:quantity>/", views.order_create_buy_now, name="order_create_buy_now"),
     path("create/buynow/<int:food_id>/<int:quantity>/<str:coupon>/", views.order_create_buy_now, name="order_create_buy_now_coupon"),
     path("create/buynow/pay-by-khalti/<int:food_id>/<int:quantity>/<str:token>/", views.order_create_buy_now_khalti_payment,name="order_create_buy_now_khalti_payment"),
     path("create/buynow/pay-by-khalti/<int:food_id>/<int:quantity>/<str:token>/<str:coupon>", views.order_create_buy_now_khalti_payment,name="order_create_buy_now_khalti_payment_coupon"),
 
-    path('admin/order/<int:order_id>/invoice/', views.admin_order_pdf, name='admin_order_pdf')
+    path('admin/order/<int:order_id>/invoice/', views.admin_order_pdf, name='admin_order_pdf'),
+
+    # reorder
+    path('reorder/<int:order_id>/', views.reorder, name='reorder'),
+    path('reorder/create/<int:order_id>/', views.create_order_reorder, name="create_order_reorder"),
+    path('reorder/create/<int:order_id>/<str:coupon>/', views.create_order_reorder, name="create_order_reorder_coupon"),
+    path('reorder/create/pay-by-khalti/<int:order_id>/<str:token>/', views.create_order_reorder_khalti, name="create_order_reorder_khalti"),
+    path('reorder/create/pay-by-khalti/<int:order_id>/<str:token>/<str:coupon>/', views.create_order_reorder_khalti, name="create_order_reorder_khalti_coupon"),
+
 ]

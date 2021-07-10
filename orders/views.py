@@ -22,6 +22,8 @@ from .tasks import order_created_successfully, send_invoice
 from coupons.models import Coupon, CouponUsed
 from foods.models import Food
 from foods.forms import BuyNowForm
+from orders.forms import CreateOrderForm
+from coupons.forms import CouponApplyForm
 
 # Create your views here.
 
@@ -234,3 +236,100 @@ def admin_order_pdf(request, order_id):
 
     weasyprint.HTML(string=html).write_pdf(response, stylesheets=[weasyprint.CSS(settings.STATIC_ROOT + 'orders/css/pdf.css')])
     return response
+
+
+@customer_required
+def reorder(request, order_id):
+    order = get_object_or_404(Order, id=order_id, customer=request.user.customer)
+    create_order_form = CreateOrderForm(request)
+    coupon_apply_form = CouponApplyForm()
+    return render(
+            request,
+            'orders/reorder.html', 
+            {
+                'order': order,
+                'create_order_form': create_order_form,
+                'coupon_apply_form': coupon_apply_form,
+            })
+
+
+@require_POST
+@login_required
+@customer_required
+def create_order_reorder(request, order_id, coupon=''):
+    if coupon:
+        coupon_code = Coupon.objects.get(code__iexact = coupon)
+        try:
+            CouponUsed.objects.get(coupon=coupon_code, customer=request.user.customer)
+            return render(request,
+                'orders/created.html',
+                {'response': 'coupon_already_used'},)
+        except Exception:
+            pass
+    old_order = get_object_or_404(Order, id=order_id, customer=request.user.customer)
+    form = CreateOrderForm(request,data=request.POST)
+    if form.is_valid():
+        cd = form.cleaned_data
+        delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+        order = Order.objects.create(customer=request.user.customer, payment_by_cash=True, delivery_location=delivery_location)
+        if coupon:
+            order.coupon = Coupon.objects.get(code__iexact = coupon)
+            order.save()
+            CouponUsed.objects.create(coupon=order.coupon, customer=request.user.customer)
+        for item in old_order.items.all():
+            OrderItem.objects.create(order=order,
+                                    food=item.food,
+                                    quantity=item.quantity,
+                                    price=item.food.get_selling_price)
+        # launch asynchronous task
+        order_created_successfully.delay(order.id)
+        message = f"Invoice for your order is attached in the pdf file. Your order is not verified. You would soon get call from our administration."
+        send_invoice.delay(order.id, message)
+        order_items = OrderItem.objects.filter(order=order)
+        return render(request,
+                    'orders/created.html',
+                    {'order': order, 'order_items': order_items, 'response': 'success'})
+    return render(request,
+                'orders/created.html',
+                {'response': 'error'},)
+
+
+@require_POST
+@login_required
+@customer_required
+def create_order_reorder_khalti(request, order_id, token, coupon=''):
+    if coupon:
+        coupon_code = Coupon.objects.get(code__iexact = coupon)
+        try:
+            CouponUsed.objects.get(coupon=coupon_code, customer=request.user.customer)
+            return render(request,
+                'orders/created.html',
+                {'response': 'coupon_already_used'},)
+        except Exception:
+            pass
+    old_order = get_object_or_404(Order, id=order_id, customer=request.user.customer)
+    form = CreateOrderForm(request,data=request.POST)
+    if form.is_valid():
+        cd = form.cleaned_data
+        delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+        order = Order.objects.create(customer=request.user.customer, verified=True, delivery_location=delivery_location, transaction=token)
+        if coupon:
+            order.coupon = Coupon.objects.get(code__iexact = coupon)
+            order.save()
+            CouponUsed.objects.create(coupon=order.coupon, customer=request.user.customer)
+        for item in old_order.items.all():
+            OrderItem.objects.create(order=order,
+                                    food=item.food,
+                                    quantity=item.quantity,
+                                    price=item.food.get_selling_price)
+        # launch asynchronous task
+        order_created_successfully.delay(order.id)
+        message = f"Invoice for your order is attached in the pdf file. Your order is verified. You would soon get our delivery person at your door."
+        send_invoice.delay(order.id, message)
+        order_items = OrderItem.objects.filter(order=order)
+        return render(request,
+                        'orders/created.html',
+                        {'order': order, 'order_items': order_items, 'response': 'success'})
+    return render(request,
+                'orders/created.html',
+                {'response': 'error'},)
