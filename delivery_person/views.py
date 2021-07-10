@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
@@ -104,3 +105,28 @@ def delivery_person_profile_update(request):
         'delivery_person/profile_update.html',
         context
     )
+
+
+@login_required
+@delivery_person_required
+def delivery_person_order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if not request.user.delivery_person == order.designation.delivery_person:
+        messages.error(request, 'You are not designated to view the order')
+        return redirect('delivery_person:home')
+    paid = (not order.payment_by_cash) or order.complete
+
+    restaurants_location = []
+    for item in order.items.all():
+        restaurants_location.append(item.food.restaurant.location)
+    
+    restaurants_location = list(set(restaurants_location))
+    print(restaurants_location)
+
+    return render(request,
+        'delivery_person/order_detail.html',
+        {
+            'order': order,
+            'paid': paid,
+            'restaurants_location': restaurants_location,
+        })
