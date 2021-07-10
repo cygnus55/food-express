@@ -1,0 +1,217 @@
+{% extends 'base/base.html' %}
+
+{% block extraheadelements %}
+<style>
+    .paid, .pending {
+        color:#1bae37;
+        border:4px solid #1bae37;
+        text-transform:uppercase;
+        font-weight:bold;
+        font-size:22px;
+        padding:4px 12px 0px;
+        float:right;
+        margin-right:40px;
+    }
+    
+    .pending {
+        color:#a82d2d;
+        border:4px solid #a82d2d;
+    }
+</style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Heading -->
+    <div class="row" style="margin-bottom: 20px;">
+        <h4><i class="fas fa-eye"></i> Order Detail</h4>
+    </div>
+
+    <!-- Message -->
+    <div class="row">
+        <div class="col-md-12" id="msg-div">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Foods Detail-->
+    <div class="row">
+        <table class="table table-sm table-borderless table-responsive w-auto">
+            <tbody>
+                <tr>
+                    <th>Order ID</th>
+                    <td>{{ order.id }}</td>
+                </tr>
+                <tr>
+                    <th>Created</th>
+                    <td>{{ order.created }}</td>
+                </tr>
+                {% if not order.payment_by_cash %}
+                    <tr>
+                        <th>Khalti Transaction ID</th>
+                        <td>{{ order.transaction }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Payment Method</th>
+                    <td>{% if order.payment_by_cash %}Cash on delivery{% else %}Khalti{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Customer</th>
+                    <td>{{ order.customer.full_name }}</td>
+                </tr>
+                <tr>
+                    <th>Delivery Location</th>
+                    <td>{{ order.delivery_location.address }}</td>
+                </tr>
+                <tr>
+                    <th>E-mail</th>
+                    <td><a href="mailto:{{ order.customer.user.email }}">{{ order.customer.user.email }}</a></td>
+                </tr>
+                <tr>
+                    <th>Phone No.</th>
+                    <td>{{ order.customer.phone_no }}</td>
+                </tr>
+                <tr>
+                    <th>Total Amount</th>
+                    <td>Rs. {{ order.get_total_cost }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        {% if order.complete %}
+                            <i class="fas fa-check-circle" style='color: green;'></i> Completed
+                        {% else %}
+                            <i class="fas fa-times-circle" style='color: red;'></i> Incomplete
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Verification Status</th>
+                    <td>
+                        {% if not order.verified %}
+                                <i class="fas fa-times-circle" style='color: red;'></i> Not Verified
+                        {% else %}
+                            <i class="fas fa-check-circle" style='color: green;'></i> Verified
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paid UnPaid -->
+    <div class="row">
+        <div class="col-9"></div>
+        <div class="col">
+            <span class="{% if paid %}paid{% else %}pending{%endif%}">
+                {% if paid %}
+                    Paid
+                {% else %}
+                    Pending Payment
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <!-- Foods Ordered -->
+    <div class="row">
+        <table class="table table-striped caption-top">
+            <caption>Ordered Foods</caption>
+            <thead>
+                <tr>
+                    <th>Food</th>
+                    <th>Restaurant</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                    <tr class="row{% cycle '1' '2' %}">
+                        <td> {{ item.food.name }} </td>
+                        <td>{{ item.food.restaurant.name }}</td>
+                        <td> Rs. {{ item.price }} </td>
+                        <td> {{ item.quantity }} </td>
+                        <td> Rs. {{ item.get_cost }} </td>
+                    </tr>
+                {% endfor %}
+                {% if order.coupon %}
+                    <tr class="table-danger">
+                        <td colspan="4">Total cost before applying coupon</td>
+                        <td class="num">Rs. {{ order.get_total_cost_before_discount }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">Used <strong>{{ order.coupon.code }}</strong> coupon ({{order.coupon.discount}}% off)</td>
+                        <td class="num">-Rs. {{ order.get_discount }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="4">Total</td>
+                    <td class="num">Rs. {{ order.get_total_cost }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Maps -->
+    <div class="map">
+        <div id="delivery-location" style="height:600px; width:100%"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra %}
+<script>
+    var latlng = [27.619916, 85.538903];
+    var customer_latlng = [{{ order.delivery_location.latitude }}, {{ order.delivery_location.longitude }}];
+    var map = L.map('delivery-location').setView(latlng, 17);
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoicmFtcmFqY2giLCJhIjoiY2twZGY4aGhxMWdqNTJ4cW00MnRsd2s0MiJ9.A6W2KCwKqfStvf2q4CGqLA'
+    }).addTo(map);
+
+    var marker = L.marker(latlng).addTo(map);
+    marker.bindPopup("Food Express Office. <br> DOCSE, KU").openPopup();
+
+    var customer_marker = L.marker(customer_latlng).addTo(map);
+    customer_marker.bindPopup("{{ order.customer.user.username }}'s Location.");
+
+    {% for loc in restaurants_location %}
+        r_latlng = [{{ loc.latitude }}, {{loc.longitude}}]
+        var r_marker = L.marker(r_latlng).addTo(map);
+        r_marker.bindPopup("{{ loc.restaurant.name }}'s Location.")
+
+        L.Routing.control({
+            waypoints: [
+              L.latLng(latlng[0], latlng[1]),
+              L.latLng(r_latlng[0], r_latlng[1])
+            ]
+        }).addTo(map);
+
+        L.Routing.control({
+            waypoints: [
+              L.latLng(r_latlng[0], r_latlng[1]),
+              L.latLng(customer_latlng[0], customer_latlng[1])
+            ]
+        }).addTo(map);
+    {% endfor %}
+</script>
+{% endblock %}
