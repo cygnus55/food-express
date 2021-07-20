@@ -77,8 +77,10 @@
     var totalPriceTag = document.getElementById('total-price');
     var quantityField = document.getElementById('id_quantity');
     quantityField.disabled = true;
-    var amount = {{ food.get_selling_price }} * quantityField.value;
-    totalPriceTag.innerHTML = "Total Price: "+ amount.toString();
+    var amount = {{ food.get_selling_price }} * quantityField.value
+    totalPriceTag.innerHTML = "Total Price: Rs."+ amount.toString();
+
+    var coupon_applied = '';
 
     function verifyPayment(payload){
         $.ajax({
@@ -88,12 +90,11 @@
             dataType: 'json',
             success: function(data){
                 quantity = quantityField.value;
-                coupon = couponField.value;
-                if (coupon == ''){
+                if (coupon_applied == ''){
                     createOrderForm.action = "{% url 'orders:order_create_buy_now_khalti_payment' food.id 1234 5678 %}".replace('1234', quantity.toString()).replace('5678', data.token.toString());
                 }
                 else{
-                    createOrderForm.action = "{% url 'orders:order_create_buy_now_khalti_payment_coupon' food.id 123 345 567%}".replace('123', quantity.toString()).replace('345', data.token.toString()).replace('567', coupon.toString());
+                    createOrderForm.action = "{% url 'orders:order_create_buy_now_khalti_payment_coupon' food.id 123 345 567%}".replace('123', quantity.toString()).replace('345', data.token.toString()).replace('567', coupon_applied);
                 }
                 createOrderForm.submit();
             },
@@ -110,10 +111,6 @@
         "productUrl": "http://wikipedia.org/",
         "paymentPreference": [
             "KHALTI",
-            "EBANKING",
-            "MOBILE_BANKING",
-            "CONNECT_IPS",
-            "SCT",
             ],
         "eventHandler": {
             onSuccess (payload) {
@@ -133,8 +130,12 @@
     var checkout = new KhaltiCheckout(config);
     khaltiBtn.onclick = function () {
         // minimum transaction amount must be 10, i.e 1000 in paisa.
-        checkout.show({amount: amount * 100.00});
+        checkout.show({amount:roundToTwo(amount)  * 100.00});
     };
+
+    function roundToTwo(num) {
+        return +(Math.round(num + "e+2")  + "e-2");
+    }
 
     function verifyCoupon(coupon){
         $.ajax({
@@ -162,6 +163,7 @@
                     totalPriceTag.innerHTML = "Total Price: Rs. <del>"+ actual_amount.toString() + "</del> "+ amount.toString() + "<br>(Using promo code, " + couponField.value +", " + discount_percent.toString() + "% off)";
                     applyBtn.hidden = true;
                     couponField.disabled = true;
+                    coupon_applied = couponField.value;
                 }
                 console.log(tag);
             },
@@ -181,15 +183,15 @@
     var cashPaymentBtn = document.getElementById('cash-payment')
     cashPaymentBtn.onclick = function(){
         quantity = quantityField.value;
-        coupon = couponField.value;
-        if (coupon == ''){
+        if (coupon_applied == ''){
             createOrderForm.action="{% url 'orders:order_create_buy_now' food.id 1234 %}".replace('1234', quantity.toString());
         }
         else{
-            createOrderForm.action="{% url 'orders:order_create_buy_now_coupon' food.id 1234 '5678' %}".replace('1234', quantity.toString()).replace('5678', coupon.toString());
+            createOrderForm.action="{% url 'orders:order_create_buy_now_coupon' food.id 1234 '5678' %}".replace('1234', quantity.toString()).replace('5678', coupon_applied.toString());
         }
         createOrderForm.submit();
     }
+
 
 </script>
 {% endblock %}

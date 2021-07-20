@@ -176,6 +176,8 @@
     var khaltiBtn = document.getElementById("khalti-button");
     var cashBtn = document.getElementById("cash-button");
 
+    var coupon_apply = '';
+
     function verifyCoupon(coupon){
         $.ajax({
             url: "{% url 'coupons:ajax_verify_coupon' %}",
@@ -200,6 +202,7 @@
                     var actual_amount = amount;
                     amount = actual_amount - discount;
                     totalPriceTag.innerHTML = "Total Price: Rs. <del>"+ actual_amount.toString() + "</del> "+ amount.toString() + "<br>(Using promo code, " + couponField.value +", " + discount_percent.toString() + "% off)";
+                    coupon_apply = couponField.value;
                     applyBtn.hidden = true;
                     couponField.hidden = true;
                 }
@@ -225,12 +228,11 @@
             data: payload,
             dataType: 'json',
             success: function(data){
-                coupon = couponField.value;
-                if (coupon == ''){
+                if (coupon_apply == ''){
                     createOrderForm.action = "{% url 'orders:create_order_reorder_khalti' order.id 5678 %}".replace('5678', data.token.toString());
                 }
                 else{
-                    createOrderForm.action = "{% url 'orders:create_order_reorder_khalti_coupon' order.id 345 567 %}".replace('345', data.token.toString()).replace('567', coupon.toString());
+                    createOrderForm.action = "{% url 'orders:create_order_reorder_khalti_coupon' order.id 345 567 %}".replace('345', data.token.toString()).replace('567', coupon_apply);
                 }
                 createOrderForm.submit();
             },
@@ -247,10 +249,6 @@
         "productUrl": "http://wikipedia.org/",
         "paymentPreference": [
             "KHALTI",
-            "EBANKING",
-            "MOBILE_BANKING",
-            "CONNECT_IPS",
-            "SCT",
             ],
         "eventHandler": {
             onSuccess (payload) {
@@ -275,12 +273,11 @@
 
     var cashPaymentBtn = document.getElementById('cash-button')
     cashPaymentBtn.onclick = function(){
-        coupon = couponField.value;
-        if (coupon == ''){
+        if (coupon_apply == ''){
             createOrderForm.action="{% url 'orders:create_order_reorder' order.id %}";
         }
         else{
-            createOrderForm.action="{% url 'orders:create_order_reorder_coupon' order.id '5678' %}".replace('5678', coupon.toString());
+            createOrderForm.action="{% url 'orders:create_order_reorder_coupon' order.id '5678' %}".replace('5678', coupon_apply);
         }
         createOrderForm.submit();
     }
