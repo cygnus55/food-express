@@ -9,7 +9,8 @@ urlpatterns = [
     path("create/pay-by-khalti/<str:token>/", views.order_create_khalti_payment, name="order_create_khalti_payment"),
     path("ajax/verify-payment/", views.verify_payment, name='verify_payment'),
     path("order_detail/<int:order_id>/", views.order_detail, name='order_detail'),
-    path("order_detail/<int:order_id>/verify/", views.verify_order, name="verify_order"),
+    path("order_detail/verify/<int:order_id>", views.verify_order, name="verify_order"),
+    path("order_detail/unverify/<int:order_id>/", views.unverify_order, name="unverify_order"),
 
     # buy now
     path("create/buynow/<int:food_id>/<int:quantity>/", views.order_create_buy_now, name="order_create_buy_now"),

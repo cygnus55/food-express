@@ -18,11 +18,12 @@ from cart.cart import Cart
 from customer.decorators import customer_required
 from .forms import CreateOrderForm
 from location.models import DeliveryLocation
+from delivery_person.models import OrdersDesignation
 from .tasks import order_created_successfully, send_invoice
 from coupons.models import Coupon, CouponUsed
 from foods.models import Food
 from foods.forms import BuyNowForm
-from orders.forms import CreateOrderForm
+from orders.forms import CreateOrderForm, OrderDesignateForm
 from coupons.forms import CouponApplyForm
 
 # Create your views here.
@@ -133,7 +134,18 @@ def order_create_khalti_payment(request, token):
 @staff_member_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    return render(request, 'orders/order_detail.html', {'order': order})
+    try:
+        delivery_person = OrdersDesignation.objects.get(order=order_id).delivery_person
+    except Exception:
+        delivery_person = None
+    form = OrderDesignateForm()
+    return render(request, 
+            'orders/order_detail.html', 
+            {
+                'order': order, 
+                'delivery_person': delivery_person,
+                'form': form,
+            })
 
 
 @login_required
@@ -141,6 +153,20 @@ def order_detail(request, order_id):
 def verify_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     order.verified = True
+    order.save()
+    return redirect('orders:order_detail', order_id=order_id)
+
+
+@login_required
+@staff_member_required
+def unverify_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    try:
+        od = OrdersDesignation.objects.get(order=order_id)
+        od.delete()
+    except Exception:
+        pass
+    order.verified = False
     order.save()
     return redirect('orders:order_detail', order_id=order_id)
 

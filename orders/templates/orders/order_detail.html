@@ -29,6 +29,20 @@
 {% block content %}
     <h1> Order {{ order.id }} </h1>
     <ul class="object-tools">
+        {% if delivery_person %}
+            <li>
+                Order designated to: {{ delivery_person.user.username }}
+            </li>
+        {% elif order.verified %}
+            <li>
+                <form method="POST" action="{% url 'delivery_person:designate_delivery_person' order.id %}">
+                    {{ form }}
+                    {% csrf_token %}
+                    <button type="submit">Designate delivery person</button>
+                </form>
+            </li>
+        {% endif %}
+        <li></li>
         <li>
             <a href="#" onclick="window.print();">Print order</a>
         </li>
@@ -82,11 +96,14 @@
         <tr>
             <th>Verification Status</th>
             <td>
-                {% if not order.verified %}
+                {% if order.complete %}
+                    <i class="fas fa-check-circle" style='color: green;'></i> Verified
+                {% elif not order.verified %}
                         <i class="fas fa-times-circle" style='color: red;'></i> Not Verified
                         <small class="verification"><a href="{% url 'orders:verify_order' order.id %}" style='color:gray;'>Click <b>here</b> to verify.</a></small>
                 {% else %}
                     <i class="fas fa-check-circle" style='color: green;'></i> Verified
+                    <small class="verification"><a href="{% url 'orders:unverify_order' order.id %}" style='color:gray;'>Click <b>here</b> to unverify.</a></small>
                 {% endif %}
             </td>
         </tr>

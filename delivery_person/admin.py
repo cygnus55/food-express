@@ -25,6 +25,9 @@ class RegisterDeliveryUserAdmin(admin.ModelAdmin):
 class OrdersDesignationAdmin(admin.ModelAdmin):
     list_display = ['delivery_person', 'order']
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
 
 admin.site.register(DeliveryPerson)
 admin.site.register(RegisterDeliveryUser, RegisterDeliveryUserAdmin)
