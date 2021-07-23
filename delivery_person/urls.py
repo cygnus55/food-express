@@ -1,6 +1,6 @@
 from django.urls import path
 
-from delivery_person.views import home_view, mark_order_as_complete, mark_order_as_incomplete, delivery_person_profile_update, delivery_person_order_detail
+from delivery_person.views import home_view, mark_order_as_complete, mark_order_as_incomplete, delivery_person_profile_update, delivery_person_order_detail, designate_order_to_delivery_person
 
 app_name = 'delivery_person'
 
@@ -22,4 +22,9 @@ urlpatterns = [
         delivery_person_order_detail,
         name='order_detail',
     ),
+    path(
+        'designate/<int:order_id>/',
+        designate_order_to_delivery_person,
+        name='designate_delivery_person',
+    )
 ]
