@@ -59,6 +59,7 @@ def get_coords_place(request):
 @login_required
 @customer_required
 def add_delivery_location(request):
+    redirect_url = request.GET.get('next')
     if request.method == 'POST':
         form = AddDeliveryLocationForm(request.POST)
         if form.is_valid():
@@ -66,6 +67,8 @@ def add_delivery_location(request):
             form_.customer = request.user.customer
             form_.save()
             messages.success(request, 'Location sucessfully updated!')
+            if redirect_url:
+                return redirect(redirect_url)
             return redirect('customer:update_delivery_location', location_id=form_.id)
     else:
         form = AddDeliveryLocationForm()
