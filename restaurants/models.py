@@ -1,4 +1,5 @@
 from PIL import Image
+import datetime, pytz
 
 from django.db import models
 from django.utils.text import slugify
@@ -57,7 +58,7 @@ class Restaurant(models.Model):
     ratings = GenericRelation(Rating, related_query_name='restaurants')
 
     class Meta:
-        ordering = ('-ratings__average','name')
+        ordering = ('-available','-ratings__average','name')
         index_together = (('id', 'slug'),)
     
     def __str__(self):
@@ -81,3 +82,14 @@ class Restaurant(models.Model):
             'restaurants:restaurant_detail',
             args=[self.id,self.slug]
         )
+    
+    @property
+    def get_open_status(self):
+        open_hour = self.open_hour
+        close_hour = self.close_hour
+        IST = pytz.timezone("Asia/Kathmandu")
+        current_time = datetime.datetime.now(IST).time()
+        if open_hour < close_hour:
+            return current_time >= open_hour and current_time <= close_hour
+        else:
+            return current_time >= open_hour or current_time <= close_hour

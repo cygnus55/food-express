@@ -88,8 +88,20 @@
             <tbody>
                 {% for item in order.items.all %}
                     <tr class="row{% cycle '1' '2' %}">
-                        <td> {{ item.food.name }} </td>
-                        <td>{{ item.food.restaurant.name }}</td>
+                        <td> 
+                            {{ item.food.name }} 
+                            {% if not item.food.available %}
+                                <span class="badge rounded-pill text-danger" style="background-color: bisque">Not Available</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ item.food.restaurant.name }}
+                            {% if not item.food.restaurant.available %}
+                                <span class="badge rounded-pill text-danger" style="background-color: bisque">Not Available</span>
+                            {% elif not item.food.restaurant.get_open_status %}
+                                <span class="badge rounded-pill text-danger" style="background-color: bisque">Close Hours</span>
+                            {% endif %}
+                        </td>
                         <td> Rs. {{ item.price }} </td>
                         <td> {{ item.quantity }} </td>
                         <td> Rs. {{ item.get_cost }} </td>
@@ -109,26 +121,42 @@
                     <td colspan="4">Total</td>
                     <td class="num">Rs. {{ order.get_total_cost }}</td>
                 </tr>
+                <tr></tr>
+                <tr class="table-success">
+                    <td colspan="4">Updated price you have to pay for reorder</td>
+                    <td class="num">Rs. {{ order.reorder_get_total_cost_before_discount }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
 
     <div class="row">
-        <div class="col">
-            <input type="text" name="code" placeholder="Apply Coupon" class="textinput textInput form-control" required id="id_code">
-            {% csrf_token %}
-        </div>
-        <div class="col">
-            <button class="btn btn-primary" id="apply-button"><i class="fas fa-check-square"></i> Apply</button>
-        </div>
-        <div class="col">
-            <p class="text-muted" id="total-price">Total Cost: {{ order.get_total_cost_before_discount }}</p>
-        </div>
-        <div class="col">
-            <button class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#reorderModal">
-                <i class="fas fa-money-check-alt"></i> Reorder
-            </button>
-        </div>
+        {% if available and open_status %}
+            <div class="col">
+                <input type="text" name="code" placeholder="Apply Coupon" class="textinput textInput form-control" required id="id_code">
+                {% csrf_token %}
+            </div>
+            <div class="col">
+                <button class="btn btn-primary" id="apply-button"><i class="fas fa-check-square"></i> Apply</button>
+            </div>
+            <div class="col">
+                <p class="text-muted" id="total-price">Total Cost: {{ order.reorder_get_total_cost_before_discount }}</p>
+            </div>
+            <div class="col">
+                <button class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#reorderModal">
+                    <i class="fas fa-money-check-alt"></i> Reorder
+                </button>
+            </div>
+        {% else %}
+            <p class="text-danger">
+                {% if not available %}
+                    One or many foods or restaurants are not available at the moment.
+                {% elif not open_status %}
+                    One or many restaurants are closed at the moment.
+                {% endif %}
+                You cannot reorder.
+            </p>
+        {% endif %}
     </div>
 </div>
 
@@ -168,7 +196,7 @@
 
 {% block extra %}
 <script>
-    var amount = {{ order.get_total_cost_before_discount }};
+    var amount = {{ order.reorder_get_total_cost_before_discount }};
     var totalPriceTag = document.getElementById('total-price');
 
     var createOrderForm = document.getElementById('order-form');

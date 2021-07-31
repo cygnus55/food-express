@@ -49,6 +49,13 @@ class Cart(object):
     
     def get_all_items(self):
         return CartItem.objects.filter(cart=self.cart)
+    
+    def get_foods_list(self):
+        cart_items = CartItem.objects.filter(cart=self.cart)
+        foods = []
+        for item in cart_items:
+            foods.append(item.food)
+        return foods
 
     def clear(self):
         self.cart.delete()

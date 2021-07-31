@@ -28,6 +28,24 @@ from coupons.forms import CouponApplyForm
 
 # Create your views here.
 
+
+def ordered_food_and_restaurant_available(order_items):
+    for food in order_items:
+        if food.restaurant.available and food.available:
+            pass
+        else:
+            return False
+    return True
+
+
+def ordered_restaurant_open(order_items):
+    for food in order_items:
+        if food.restaurant.get_open_status:
+            pass
+        else:
+            return False
+    return True
+
 @require_POST
 @login_required
 @customer_required
@@ -42,6 +60,17 @@ def order_create_cash_payment(request):
         if form.is_valid():
             cd = form.cleaned_data
             delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+
+            if not ordered_food_and_restaurant_available(cart.get_foods_list()):
+                return render(request,
+                    'orders/created.html',
+                    {'response': 'not_available'})
+            
+            if not ordered_restaurant_open(cart.get_foods_list()):
+                return render(request,
+                    'orders/created.html',
+                    {'response': 'restaurant_close'})
+
             order = Order.objects.create(customer=request.user.customer, payment_by_cash=True, delivery_location=delivery_location)
             if cart.coupon:
                 coupon = cart.coupon
@@ -108,6 +137,17 @@ def order_create_khalti_payment(request, token):
         if form.is_valid():
             cd = form.cleaned_data
             delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+
+            if not ordered_food_and_restaurant_available(cart.get_foods_list()):
+                return render(request,
+                    'orders/created.html',
+                    {'response': 'not_available'})
+            
+            if not ordered_restaurant_open(cart.get_foods_list()):
+                return render(request,
+                    'orders/created.html',
+                    {'response': 'restaurant_close'})
+
             order = Order.objects.create(customer=request.user.customer, verified=True, delivery_location=delivery_location, transaction=token)
             if cart.coupon:
                 coupon = cart.coupon
@@ -189,6 +229,18 @@ def order_create_buy_now(request, food_id, quantity, coupon=''):
     if form.is_valid():
         cd = form.cleaned_data
         delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+
+        items = [food,]
+        if not ordered_food_and_restaurant_available(items):
+            return render(request,
+                'orders/created.html',
+                {'response': 'not_available'})
+            
+        if not ordered_restaurant_open(items):
+            return render(request,
+                'orders/created.html',
+                {'response': 'restaurant_close'})
+
         order = Order.objects.create(customer=request.user.customer, payment_by_cash=True, delivery_location=delivery_location)
         if coupon:
             order.coupon = Coupon.objects.get(code__iexact = coupon)
@@ -229,6 +281,18 @@ def order_create_buy_now_khalti_payment(request, food_id, quantity, token, coupo
     if form.is_valid():
         cd = form.cleaned_data
         delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+        
+        items = [food,]
+        if not ordered_food_and_restaurant_available(items):
+            return render(request,
+                'orders/created.html',
+                {'response': 'not_available'})
+            
+        if not ordered_restaurant_open(items):
+            return render(request,
+                'orders/created.html',
+                {'response': 'restaurant_close'})
+        
         order = Order.objects.create(customer=request.user.customer, verified=True, delivery_location=delivery_location, transaction=token)
         if coupon:
             order.coupon = Coupon.objects.get(code__iexact = coupon)
@@ -269,6 +333,11 @@ def reorder(request, order_id):
     order = get_object_or_404(Order, id=order_id, customer=request.user.customer)
     create_order_form = CreateOrderForm(request)
     coupon_apply_form = CouponApplyForm()
+
+    foods = [item.food for item in order.items.all()]
+    available = any([food.restaurant.available and food.available for food in foods])
+    open_status = any([food.restaurant.get_open_status for food in foods])
+
     return render(
             request,
             'orders/reorder.html', 
@@ -276,6 +345,8 @@ def reorder(request, order_id):
                 'order': order,
                 'create_order_form': create_order_form,
                 'coupon_apply_form': coupon_apply_form,
+                'available' : available,
+                'open_status': open_status,
             })
 
 
@@ -297,13 +368,28 @@ def create_order_reorder(request, order_id, coupon=''):
     if form.is_valid():
         cd = form.cleaned_data
         delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+
+        foods = [item.food for item in old_order.items.all()]
+        available = any([food.restaurant.available and food.available for food in foods])
+        if not available:
+            return render(request,
+                'orders/created.html',
+                {'response': 'not_available'})
+        
+        open_status = any([food.restaurant.get_open_status for food in foods])
+        if not open_status:
+            return render(request,
+                'orders/created.html',
+                {'response': 'restaurant_close'})
+
         order = Order.objects.create(customer=request.user.customer, payment_by_cash=True, delivery_location=delivery_location)
         if coupon:
             order.coupon = Coupon.objects.get(code__iexact = coupon)
             order.save()
             CouponUsed.objects.create(coupon=order.coupon, customer=request.user.customer)
         for item in old_order.items.all():
-            OrderItem.objects.create(order=order,
+            if item.food.available:
+                OrderItem.objects.create(order=order,
                                     food=item.food,
                                     quantity=item.quantity,
                                     price=item.food.get_selling_price)
@@ -338,6 +424,20 @@ def create_order_reorder_khalti(request, order_id, token, coupon=''):
     if form.is_valid():
         cd = form.cleaned_data
         delivery_location = DeliveryLocation.objects.get(id=cd['delivery_location'])
+
+        foods = []
+        for item in old_order.items.all():
+            foods.append(item.food)
+        if not ordered_food_and_restaurant_available(foods):
+            return render(request,
+                'orders/created.html',
+                {'response': 'not_available'})
+            
+        if not ordered_restaurant_open(foods):
+            return render(request,
+                'orders/created.html',
+                {'response': 'restaurant_close'})
+
         order = Order.objects.create(customer=request.user.customer, verified=True, delivery_location=delivery_location, transaction=token)
         if coupon:
             order.coupon = Coupon.objects.get(code__iexact = coupon)
