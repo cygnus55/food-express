@@ -29,10 +29,5 @@ class RestaurantProfileForm(forms.ModelForm):
         
         if logo:
             w, h = get_image_dimensions(logo)
-            print(w, h)
-            if w < 300:
-                raise forms.ValidationError(f'The image is {w} pixel wide! It\'s supposed to be at least 300px wide.')
-            if h < 300:
-                raise forms.ValidationError(f'The image is {h} pixel high! It\'s supposed to be at least 300px high.')
         
         return logo

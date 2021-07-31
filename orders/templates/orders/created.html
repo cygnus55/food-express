@@ -68,6 +68,28 @@
                     <a class="btn btn-outline-dark" href="{% url 'foods:food_list' %}">&#x2190; Back to Shopping</a>
                 </div>
             </div>
+        {% elif response == 'not_available' %}
+            <div class="card text-center">
+                <div class="card-header">
+                    <h5>Sorry!</h5>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">Food or Restaurant not available!</h4>
+                    <p class="card-text">The restaurant you ordered from or the food you ordered is not available. </p>
+                    <a class="btn btn-outline-dark" href="{% url 'foods:food_list' %}">&#x2190; Back to Shopping</a>
+                </div>
+            </div>
+        {% elif response == 'restaurant_close' %}
+        <div class="card text-center">
+            <div class="card-header">
+                <h5>Sorry!</h5>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Restaurant Closed!</h4>
+                <p class="card-text">Your order cannot be processed. The restaurant is closed.</p>
+                <a class="btn btn-outline-dark" href="{% url 'foods:food_list' %}">&#x2190; Back to Shopping</a>
+            </div>
+        </div>
         {% endif %}
     </div>
 {% endblock %}

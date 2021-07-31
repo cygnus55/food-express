@@ -52,6 +52,8 @@ def register(request,role):
             profile_form = RestaurantProfileForm(data=request.POST, files=request.FILES)
         else:
             profile_form = CustomerProfileForm(data=request.POST, files=request.FILES)
+        print(form.errors.as_data())
+        print(profile_form.errors.as_data())
         if form.is_valid() and profile_form.is_valid():
             new_user = form.save(commit=False)
             setattr(new_user, f'is_{role}', True)
@@ -62,6 +64,8 @@ def register(request,role):
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account was created for {username}!')
             return redirect('accounts:login')
+        else:
+            messages.error(request, 'Error in registrating!')
     else:
         form = RegistrationForm()
         if role == 'restaurant':
