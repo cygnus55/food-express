@@ -112,14 +112,21 @@
                                     class="text-dark text-decoration-none">{{ restaurant.name }}</a>
                             </div>
                             <small>{{ restaurant.category.name }}</small><br />
-                            <small><i class="fa fa-clock text-muted"></i> {{ restaurant.open_hour }} -
-                                {{ restaurant.close_hour }}</small>
-                            <br />
                             {% if user.is_customer %}
                                 {% ratings restaurant %}
                             {% else %}
                                 {% ratings restaurant read_only=True %}
                             {% endif %}
+                            <br/>
+                            <small>
+                                {% if not restaurant.available %}
+                                    <span class="badge rounded-pill text-danger" style="background-color: bisque">Not Available</span>
+                                {% elif restaurant.get_open_status %}
+                                    <span class="badge rounded-pill text-success" style="background-color: lightgreen">Open </span> <small class="text-muted"><i class="fa fa-clock"></i> {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
+                                {% else %}
+                                    <span class="badge rounded-pill text-danger" style="background-color: bisque">Closed</span>
+                                {% endif %}
+                            </small>
                         </div>
                     </div>
                 </div>

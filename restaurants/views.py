@@ -111,9 +111,13 @@ def update_restaurant_profile(request):
             files=request.FILES,
             instance=request.user.restaurant
         )
+        print(form.errors.as_data())
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile sucessfully updated!')
+            return redirect('restaurants:update_profile')
+        else:
+            messages.error(request, 'Profile Update failed!')
             return redirect('restaurants:update_profile')
 
     context = {

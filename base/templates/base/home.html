@@ -95,15 +95,22 @@
                             <a href="{{ restaurant.get_absolute_url }}"
                                 class="text-dark text-decoration-none">{{ restaurant.name }}</a>
                         </div>
-                        <small>{{ restaurant.category.name }}</small><br />
-                        <small><i class="fa fa-clock text-muted"></i> {{ restaurant.open_hour }} -
-                            {{ restaurant.close_hour }}</small>
-                        <br />
+                        <small>{{ restaurant.category.name }}</small><br/>
                         {% if user.is_customer %}
                             {% ratings restaurant %}
                         {% else %}
                             {% ratings restaurant read_only=True %}
                         {% endif %}
+                        <br/>
+                        <small>
+                            {% if not restaurant.available %}
+                                <span class="badge rounded-pill text-danger" style="background-color: bisque">Not Available</span>
+                            {% elif restaurant.get_open_status %}
+                                <span class="badge rounded-pill text-success" style="background-color: lightgreen">Open</span>
+                            {% else %}
+                                <span class="badge rounded-pill text-danger" style="background-color: bisque">Close</span>
+                            {% endif %}
+                        </small>
                     </div>
                 </div>
             </div>
