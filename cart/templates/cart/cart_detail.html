@@ -122,10 +122,10 @@
                     {% if cart.coupon %}
                         <tr>
                             <td colspan="4">
-                                Used <strong>{{ cart.coupon.code }}</strong> coupon ({{cart.coupon.discount}}% off)
+                                Used <strong>{{ cart.coupon.code }}</strong> coupon ({{ cart.coupon.discount }}% off)
                             </td>
                             <td>
-                                -Rs. {{cart.get_discount}}
+                                -Rs. {{ cart.get_discount }}
                             </td>
                             <td>
                                 <a class="btn btn-sm btn-danger" href="{% url 'coupons:unapply' %}">
@@ -154,7 +154,7 @@
                         {{ create_order_form.delivery_location.label }}:
                         {{ create_order_form.delivery_location }}
                         {% csrf_token %}
-                        <a class="text-muted text-decoration-none " href="{% url 'customer:add_delivery_location' %}">
+                        <a class="text-muted text-decoration-none " href="{% url 'customer:add_delivery_location' %}?next={{request.path}}">
                             <i class="fas fa-plus"></i> Add New
                         </a>
                     </div>
