@@ -36,6 +36,9 @@ class Order(models.Model):
 
     def get_total_cost(self):
         return round(self.get_total_cost_before_discount() - self.get_discount(), 2)
+    
+    def reorder_get_total_cost_before_discount(self):
+        return sum(item.reorder_get_cost() for item in self.items.all() if (item.food.available and item.food.restaurant.available))
 
 
 class OrderItem(models.Model):
@@ -49,3 +52,6 @@ class OrderItem(models.Model):
     
     def get_cost(self):
         return self.price * self.quantity
+    
+    def reorder_get_cost(self):
+        return self.food.get_selling_price * self.quantity

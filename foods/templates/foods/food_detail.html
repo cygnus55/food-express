@@ -67,26 +67,43 @@
 
             <div class="col-lg-8 col-md-6">
                 <div class="row">
-                    <div class="col-md-5">
-                        <form id="quantity_form" method="post">
-                            {{ cart_food_form.quantity|as_crispy_field }}
-                            {{ cart_food_form.override }}
-                        
-                            <div style="margin-top:2%; margin-bottom:2%">
-                                {% csrf_token %}
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a class="btn btn-sm btn-success" id="buy-now-anchor">
-                                            <i class="fas fa-money-check-alt"></i> Buy Now
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <button type="submit" class="btn btn-sm btn-primary" style="float:right" formaction="{% url 'cart:cart_add' food.id %}"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                                    </div>
-                                </div>  
-                            </div>
-                        </form>
-                    </div>
+                    {% if not food.restaurant.available %}
+                        <p class="text-danger">
+                            The restaurant is not available right now.
+                        </p>
+                    {% elif food.restaurant.get_open_status and food.available %}
+                        <div class="col-md-5">
+                            <form id="quantity_form" method="post">
+                                {{ cart_food_form.quantity|as_crispy_field }}
+                                {{ cart_food_form.override }}
+                            
+                                <div style="margin-top:2%; margin-bottom:2%">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a class="btn btn-sm btn-success" id="buy-now-anchor">
+                                                <i class="fas fa-money-check-alt"></i> Buy Now
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="submit" class="btn btn-sm btn-primary" style="float:right" formaction="{% url 'cart:cart_add' food.id %}"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </form>
+                        </div>
+                    {% else %}
+                        {% if not food.restaurant.get_open_status %}
+                            <p class="text-danger">
+                                The restaurant for this food is closed recently. The opening hour is {{ food.restaurant.open_hour }} - {{ food.restaurant.close_hour }}. 
+                            </p>
+                        {% endif %}
+                        {% if not food.available %}
+                            <p class="text-danger">
+                                The food is not available. 
+                            </p>
+                        {% endif %}
+                    {% endif %}
                 </div>
 
                 <div class="row" style="margin-top: 25px;">

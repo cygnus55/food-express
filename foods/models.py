@@ -100,7 +100,7 @@ class Food(models.Model):
     ratings = GenericRelation(Rating, related_query_name='foods')
 
     class Meta:
-        ordering = ('-ratings__average', '-discount_percent', '-created')
+        ordering = ('-available','-ratings__average', '-discount_percent', '-created')
 
     def __str__(self):
         return f"Food: {self.name}"

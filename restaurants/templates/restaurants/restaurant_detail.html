@@ -199,16 +199,24 @@
                                             </small>
                                         </div>
 
-                                        <form action="{% url 'cart:cart_add' food.id %}" method="post" class="col-md-3 d-flex flex-column justify-content-start align-items-start">
-                                            <div class="align-self-stretch">
-                                                {{ cart_add_form.quantity|as_crispy_field }}
-                                                {{ cart_add_form.override }}
-                                                {% csrf_token %}
-                                            </div>
-                                            <button type="submit" class="btn btn-sm btn-success align-self-stretch">
-                                                <i class="fas fa-cart-plus"></i> Add to Cart
-                                            </button>
-                                        </form>
+                                        {% if restaurant.available and food.available and restaurant.get_open_status %}
+                                            <form action="{% url 'cart:cart_add' food.id %}" method="post" class="col-md-3 d-flex flex-column justify-content-start align-items-start">
+                                                <div class="align-self-stretch">
+                                                    {{ cart_add_form.quantity|as_crispy_field }}
+                                                    {{ cart_add_form.override }}
+                                                    {% csrf_token %}
+                                                </div>
+                                                <button type="submit" class="btn btn-sm btn-success align-self-stretch">
+                                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            {% if not restaurant.get_open_status %}
+                                                <span class="badge rounded-pill text-danger" style="background-color: bisque">Close Hours</span>
+                                            {% else %}
+                                                <span class="badge rounded-pill text-danger" style="background-color: bisque">Not Available</span>
+                                            {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}
