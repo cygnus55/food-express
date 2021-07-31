@@ -47,7 +47,7 @@ def register(request):
 @login_required
 @delivery_person_required
 def home_view(request):
-    order_designations = OrdersDesignation.objects.filter(delivery_person=request.user.delivery_person)
+    order_designations = OrdersDesignation.objects.filter(delivery_person=request.user.delivery_person).order_by('order__complete')
     context = {}
     for order_designation in order_designations:
         context[order_designation.order] = OrderItem.objects.filter(order=order_designation.order)

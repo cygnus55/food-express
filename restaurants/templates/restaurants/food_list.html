@@ -41,30 +41,33 @@
                 {% for food in foods %}
                 <div class="col-md-3" style="margin-bottom:20px;">
                     <div class="card" style=" height: 100%;">
-                        <span style="display: inline-block;">
-                            <a href="{% url 'restaurants:update_food' food.id %}" style="text-decoration: none;">
-                                <i class="far fa-edit text-info"></i>
-                            </a>&nbsp;
-                            <a href="{% url 'restaurants:delete_food' food.id %}" style="text-decoration: none;">
-                                <i class="far fa-trash-alt text-danger"></i>
-                            </a>
-                        </span>
-
-                        <img class="thumbnail "
+                        <img class="thumbnail"
                             src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
                             style=" height:200px" />
+
+                        {% if food.discount_percent > 0 %}
+                        <div class="ribbon-wrapper">
+                                <div class="ribbon green">
+                                    {{ food.discount_percent }}% OFF
+                                </div>
+                        </div>
+                        {% endif %}
 
                         <div class="card-body">
                             <div class="card-title">
                                 <a href="{{ food.get_absolute_url }}" class="text-dark text-decoration-none">
                                     {{ food.name }}
                                 </a>
-                                {% if food.discount_percent > 0 %}
-                                <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}"
-                                        style="width: 20px; height: 20px;" />
-                                    {{ food.discount_percent }}% off)</small>
-                                {% endif %}
                             </div>
+                            <span style="display: inline-block;">
+                                <a href="{% url 'restaurants:update_food' food.id %}" style="text-decoration: none;">
+                                    <i class="far fa-edit text-info"></i>
+                                </a>&nbsp;
+                                <a href="{% url 'restaurants:delete_food' food.id %}" style="text-decoration: none;">
+                                    <i class="far fa-trash-alt text-danger"></i>
+                                </a>
+                            </span>
+                            <br />
                             <small class="text-muted">{{ food.category.name }}</small>
                             <br />
                             <small class="text-muted">

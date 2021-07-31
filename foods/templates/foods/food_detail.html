@@ -76,7 +76,7 @@
                     {% else %}
                         {% if not food.restaurant.get_open_status %}
                             <p class="text-danger">
-                                The restaurant for this food is closed recently. The opening hour is {{ food.restaurant.open_hour }} - {{ food.restaurant.close_hour }}. 
+                                The restaurant for this food is closed right now. The opening hours are between {{ food.restaurant.open_hour }} and {{ food.restaurant.close_hour }}. 
                             </p>
                         {% endif %}
                         {% if not food.available %}
