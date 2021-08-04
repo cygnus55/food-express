@@ -1,0 +1,73 @@
+{% extends 'restaurants/dashboard.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <h3 class="border-bottom">New Orders</h3>
+        <!-- Messages -->
+        <div class="row">
+            <div class="col-md-8">
+                  {% if messages %}
+                    {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+              </div>
+        </div>
+        <!-- Nav Tabs -->
+        <div class="row">
+            <div class="container d-flex justify-content-between">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link {% if order_parameter == 'all' %}active{% endif %}" aria-current="page"
+                            href="?order_by=all">All</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if order_parameter == 'unread' %}active{% endif %}" 
+                            href="?order_by=unread">Unread</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if order_parameter == 'read' %}active{% endif %}"
+                            href="?order_by=read">Read</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <!-- Notifications -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="auto"></th>
+                    <th colspan="3">Order</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for notification in notifications %}
+                    <tr>
+                        <td colspan="0">
+                            {% if notification.unread %}
+                                <a href="{% url 'restaurants:order_mark_as_read' notification.id %}" class="text-success" title="Check order as read"> <i class="far fa-square"></i> </a>
+                            {% else %}
+                                <a href="{% url 'restaurants:order_mark_as_unread' notification.id %}" class="text-danger" title="Check order as unread"> <i class="far fa-check-square"></i></a>
+                            {% endif %}
+                        </td>
+                        <td colspan="3">
+                            <a href="{% url 'restaurants:order_detail' notification.id %}">
+                                {{notification.action_object}}
+                            </a>
+                        </td>
+                        <td>{{ notification.timestamp}}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <th colspan="6" class="text-center">No order</th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

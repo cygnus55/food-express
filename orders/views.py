@@ -13,6 +13,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.template.loader import render_to_string
 
+from notifications.signals import notify
+
 from .models import Order, OrderItem
 from cart.cart import Cart
 from customer.decorators import customer_required
@@ -164,6 +166,7 @@ def order_create_khalti_payment(request, token):
             order_created_successfully.delay(order.id)
             message = f"Invoice for your order is attached in the pdf file. Your order is verified. You would soon get our delivery person at your door."
             send_invoice.delay(order.id, message)
+            send_notification(request, order)
             order_items = OrderItem.objects.filter(order=order)
         return render(request,
                     'orders/created.html',
@@ -194,6 +197,7 @@ def verify_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     order.verified = True
     order.save()
+    send_notification(request, order)
     return redirect('orders:order_detail', order_id=order_id)
 
 
@@ -306,6 +310,7 @@ def order_create_buy_now_khalti_payment(request, food_id, quantity, token, coupo
         order_created_successfully.delay(order.id)
         message = f"Invoice for your order is attached in the pdf file. Your order is verified. You would soon get our delivery person at your door."
         send_invoice.delay(order.id, message)
+        send_notification(request, order)
         order_items = OrderItem.objects.filter(order=order)
         return render(request,
                         'orders/created.html',
@@ -452,6 +457,7 @@ def create_order_reorder_khalti(request, order_id, token, coupon=''):
         order_created_successfully.delay(order.id)
         message = f"Invoice for your order is attached in the pdf file. Your order is verified. You would soon get our delivery person at your door."
         send_invoice.delay(order.id, message)
+        send_notification(request, order)
         order_items = OrderItem.objects.filter(order=order)
         return render(request,
                         'orders/created.html',
@@ -459,3 +465,12 @@ def create_order_reorder_khalti(request, order_id, token, coupon=''):
     return render(request,
                 'orders/created.html',
                 {'response': 'error'},)
+
+
+def send_notification(request, order):
+    if order.verified:
+        sender = request.user
+        recepients = list(set([item.food.restaurant.user for item in order.items.all()]))
+        for recepient in recepients:
+            notify.send(sender=sender, recipient=recepient, verb=f'Order Received. Order {order.id}', action_object=order)
+    return

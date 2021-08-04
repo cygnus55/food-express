@@ -1,0 +1,68 @@
+{% extends 'restaurants/dashboard.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <!-- Messages -->
+        <div class="row">
+            <div class="col-md-8">
+                  {% if messages %}
+                    {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+              </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Order {{ order.id }}, {{ order.created }}</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Order placed by: {{ order.customer.full_name }}<br/>
+                    {% if order.designation %}
+                        Order designated to:
+                        {% if order.designation.delivery_person.full_name %}
+                            {{ order.designation.delivery_person.full_name }}
+                        {% else %}
+                            {{ order.designation.delivery_person.user.username }}
+                        {% endif %}
+                    {% endif %}
+                    <table class="table table-striped caption-top">
+                        <caption>Ordered Foods</caption>
+                        <thead>
+                            <tr>
+                                <th>Food</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order_items %}
+                                <tr class="row{% cycle '1' '2' %}">
+                                    <td> {{ item.food.name }} </td>
+                                    <td> Rs. {{ item.price }} </td>
+                                    <td> {{ item.quantity }} </td>
+                                    <td> Rs. {{ item.get_cost }} </td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="3">Total</td>
+                                <td class="num">Rs. {{ total_cost }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </p>
+                {% if notification.unread %}
+                    <a href="{% url 'restaurants:order_mark_as_read' notification.id %}" class="btn btn-success" title="Check order as read"> <i class="far fa-square"></i> Mark as read</a>
+                {% else %}
+                    <a href="{% url 'restaurants:order_mark_as_unread' notification.id %}" class="btn btn-danger" title="Check order as unread"> <i class="far fa-check-square"></i> Mark as unread</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
