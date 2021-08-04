@@ -26,6 +26,7 @@ django-crispy-forms==1.11.2
 django-fav==0.3
 django-fontawesome-5==1.0.18
 django-model-utils==4.1.1
+django-notifications-hq==1.6.0
 django-phonenumber-field==5.1.0
 django-star-ratings==0.9.1
 folium==0.12.1
@@ -36,6 +37,7 @@ html5lib==1.1
 idna==2.10
 importlib-metadata==2.1.1
 Jinja2==3.0.1
+jsonfield==3.1.0
 kombu==5.1.0
 MarkupSafe==2.0.1
 maxminddb==2.0.3
