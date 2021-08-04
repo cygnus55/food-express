@@ -106,7 +106,7 @@
                             {% if not restaurant.available %}
                                 <span class="badge rounded-pill text-danger" style="background-color: bisque">Not Available</span>
                             {% elif restaurant.get_open_status %}
-                                <span class="badge rounded-pill text-success" style="background-color: lightgreen">Open</span>
+                                <span class="badge rounded-pill text-success" style="background-color: lightgreen">Open </span> <small class="text-muted"><i class="fa fa-clock"></i> {{ restaurant.open_hour }} - {{ restaurant.close_hour }}</small>
                             {% else %}
                                 <span class="badge rounded-pill text-danger" style="background-color: bisque">Closed</span>
                             {% endif %}

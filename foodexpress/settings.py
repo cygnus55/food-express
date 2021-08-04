@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'location.apps.LocationConfig',
     'coupons.apps.CouponsConfig',
-    'delivery_person.apps.DeliveryPersonConfig'
+    'delivery_person.apps.DeliveryPersonConfig',
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -200,3 +201,5 @@ CELERY_BROKER_URL = 'amqps://woykfzgv:hdoV2AYJF1nd94H-KL_mUUrvL9nNgY-z@puffin.rm
 CELERY_ACCEPT_CONTENT = ['json']
 
 CELERY_TASK_SERIALIZER = 'json'
+
+DJANGO_NOTIFICATIONS_CONFIG = { 'USE_JSONFIELD': True}

@@ -1,3 +1,4 @@
+from orders.views import order_detail
 from django.urls import path
 
 from . import views
@@ -30,4 +31,10 @@ urlpatterns = [
     path('food/<int:pk>/', views.RestaurantFoodDetailView.as_view(), name='food_detail'),
     # Restaurant Location View
      path('location/', add_restaurant_location, name="add_location"),
+     # New Order
+     path('new-order/', views.view_new_order, name='view_new_order'),
+     path('new-order/read/<int:notification_id>/', views.order_mark_as_read, name='order_mark_as_read'),
+     path('new-order/unread/<int:notification_id>/', views.order_mark_as_unread, name='order_mark_as_unread'),
+     path('order-detail/<int:notification_id>/', views.order_detail, name='order_detail'),
+
 ]

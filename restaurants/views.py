@@ -1,4 +1,5 @@
 # from datetime import datetime
+from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -8,8 +9,11 @@ from django.urls import reverse, reverse_lazy
 from django.db.models.functions import TruncMonth, TruncDate
 from django.db.models import Count
 
+from notifications.models import Notification
+
 from .decorators import restaurant_required
 from .models import Category, Restaurant
+from accounts.models import User
 from .forms import RestaurantProfileForm
 from foods.models import Food, FoodTemplate, Category as FoodCategory
 from foods.views import FoodListView, FoodDetailView
@@ -226,4 +230,71 @@ class RestaurantFoodDetailView(LoginRequiredMixin, UserPassesTestMixin, FoodDeta
         return self.request.user.is_active and self.request.user.is_restaurant \
             and self.get_object().restaurant == self.request.user.restaurant
 
+
+def view_new_order(request):
+    user = User.objects.get(id=request.user.id)
+    order_category = request.GET.get('order_by', 'unread')
+
+    if order_category == 'all':
+        notifications = user.notifications.all().order_by('-unread')
+
+    if order_category == 'unread':
+        notifications = user.notifications.unread()
+    
+    if order_category == 'read':
+        notifications = user.notifications.read()
+
+    context = {
+        'notifications': notifications,
+        'section': 'new_order',
+        'order_parameter': order_category,
+    }
+
+    return render(
+        request,
+        'restaurants/new_order.html',
+        context,
+    )
+
+
+def order_mark_as_read(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id)
+    if not request.user == notification.recipient:
+        messages.error(request, 'You cannot mark this order as read.')
+    else:
+        notification.unread = False
+        notification.save()
+        messages.success(request, f'{notification.action_object} was successfully marked as complete.')
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+
+def order_mark_as_unread(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id)
+    if not request.user == notification.recipient:
+        messages.error(request, 'You cannot unmark this order as unread.')
+    else:
+        notification.unread = True
+        notification.save()
+        messages.success(request, f'{notification.action_object} was successfully marked as unread.')
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+
+def order_detail(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id)
+    if not request.user == notification.recipient:
+        messages.error(request, 'You cannot view detail of this order.')
+        return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+    else:
+        order = notification.action_object
+        order_items = [item for item in order.items.all() if item.food.restaurant==request.user.restaurant]
+        total_cost = sum(item.get_cost() for item in order_items)
+
+        context = {
+            'notification': notification,
+            'order': order,
+            'order_items': order_items,
+            'total_cost': total_cost,
+            }
+
+        return render(request, 'restaurants/order_detail.html', context)
 
