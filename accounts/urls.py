@@ -61,5 +61,10 @@ urlpatterns = [
                template_name='accounts/password_reset_complete.html'
           ),
           name='password_reset_complete'
-     ),              
+     ), 
+      path(
+    'activate/<slug:uidb64>/<slug:token>/',
+    views.activate, 
+    name='activate'
+),             
 ]
