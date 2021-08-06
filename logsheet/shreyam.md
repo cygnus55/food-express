@@ -37,3 +37,6 @@
     * View order history for customer
     * Developed delivery_person user and his/her activities
     * Complete order feature by delivery person
+
+### later stages of project
+    * fixed url redirections and basic UI elements
