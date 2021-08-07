@@ -53,8 +53,7 @@ INSTALLED_APPS = [
     'base.apps.BaseConfig',
     'customer.apps.CustomerConfig',
     'restaurants.apps.RestaurantsConfig',
-    'foods.apps.FoodsConfig',
-    'chef.apps.ChefConfig',  
+    'foods.apps.FoodsConfig', 
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'location.apps.LocationConfig',
@@ -176,7 +175,7 @@ AUTHENTICATION_BACKENDS = [
     'accounts.authentication.EmailAuthBackend',
 ]
 
-STAR_RATINGS_STAR_HEIGHT = 20
+STAR_RATINGS_STAR_HEIGHT = 15
 
 GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 

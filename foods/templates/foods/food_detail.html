@@ -5,105 +5,104 @@
 {% load base_tags %}
 
 {% block content %}
-    <div class="container">
-        <div class="d-flex justify-content-start">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{% url 'foods:food_list' %}">Foods</a></li>
-                  <li class="breadcrumb-item"><a href="{% url 'foods:foods_list_by_category' food.category.slug %}">{{ food.category.name }}</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">{{ food.name }}</li>
-                </ol>
-            </nav>
-        </div>
+<div class="container">
+    <div class="d-flex justify-content-start">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'foods:food_list' %}">Foods</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'foods:foods_list_by_category' food.category.slug %}">{{ food.category.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ food.name }}</li>
+            </ol>
+        </nav>
+    </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                  {% if messages %}
-                    {% for message in messages %}
-                      <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                      </div>
-                    {% endfor %}
-                  {% endif %}
-              </div>
-        </div>
-
-        <div class="row" style="margin-top: 30px;">
-            <div class="col-md-6 col-lg-4">
-                <div style="text-align: center;">
-                    <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" 
-                    alt="" width=250 height=250 style="border-radius: 8px; object-fit: cover;" />
-                </div>
-                <div style="margin-top: 20px; text-align: center;">
-                    <h4>{{ food.name }}</h4>
-                    <p>{{ food.category.name }}</p>
-                    <p>
-                        {% if food.discount_percent > 0 %}
-                            <small class="text-muted">(<img src="{% static 'base/img/tag.png' %}" style="width: 20px; height: 20px;" />
-                            {{ food.discount_percent }}% off)</small>
-                        {% endif %}
-                    </p>
-                </div>
+    <div class="row">
+        <div class="col-md-12">
+                {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                    </div>
+                {% endfor %}
+                {% endif %}
             </div>
+    </div>
 
-            <div class="col-lg-8 col-md-6">
-                <div class="row">
-                    {% if not food.restaurant.available %}
-                        <p class="text-danger">
-                            The restaurant is not available right now.
-                        </p>
-                    {% elif food.restaurant.get_open_status and food.available %}
-                        <div class="col-md-5">
-                            <form id="quantity_form" method="post">
-                                {{ cart_food_form.quantity|as_crispy_field }}
-                                {{ cart_food_form.override }}
-                            
-                                <div style="margin-top:2%; margin-bottom:2%">
-                                    {% csrf_token %}
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <a class="btn btn-sm btn-success" id="buy-now-anchor">
-                                                <i class="fas fa-money-check-alt"></i> Buy Now
-                                            </a>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <button type="submit" class="btn btn-sm btn-primary" style="float:right" formaction="{% url 'cart:cart_add' food.id %}"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                                        </div>
-                                    </div>  
-                                </div>
-                            </form>
-                        </div>
-                    {% else %}
-                        {% if not food.restaurant.get_open_status %}
-                            <p class="text-danger">
-                                The restaurant for this food is closed right now. The opening hours are between {{ food.restaurant.open_hour }} and {{ food.restaurant.close_hour }}. 
-                            </p>
-                        {% endif %}
-                        {% if not food.available %}
-                            <p class="text-danger">
-                                The food is not available. 
-                            </p>
-                        {% endif %}
-                    {% endif %}
-                </div>
+    <div class="card bg-light text-dark">
+        <div class="card-block">
+            <div class="row" >
+                <div class="col-lg-3 p-b-2">
+                    <div style="text-align: center;">
+                        <img src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}" 
+                        alt="" width=250 height=250 style="border-radius: 8px; object-fit: cover;" />
+                    </div>
 
-                <div class="row" style="margin-top: 25px;">
-                    {% if food.description %}
-                        <div class="row">
-                            <div class="col-md-5 col-5">
-                                <strong>Description:</strong>
+                    {% if food.discount_percent > 0 %}
+                    <div class="ribbon-wrapper">
+                            <div class="ribbon green">
+                                {{ food.discount_percent }}% OFF
                             </div>
-                            <div class="col-md-7 col-7">
+                    </div>
+                    {% endif %}
+
+                    <div style="text-align: center;">
+                        {% if user.is_authenticated and user.is_customer %}
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-md-12">
+                                {% is_favourite food user as fav %}
+                                {% if fav %}
+                                    <a href="{% url 'customer:unfav_food' food.id %}"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa fa-heart"></i> Remove from favourites
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'customer:fav_food' food.id %}"
+                                        class="btn btn-outline-danger">
+                                        <i class="far fa-heart"></i> Add to favourites
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            
+                <div class="col-lg-8 offset-lg-1">
+                    <div class="row">
+                        <div class="row">
+                            <h5>
+                                {{ food.name }} <small class="text-muted"><small>{{ food.category.name }}</small></small>
+                                {% if user.is_customer %}
+                                    {% ratings food %}
+                                {% else %}
+                                    {% ratings food read_only=True %}
+                                {% endif %}
+                            </h5>
+                            <p>
+                                <a href="{{ food.restaurant.get_absolute_url }}" class="text-decoration-none text-dark">
+                                    <i class="fas fa-hotel"></i> {{ food.restaurant.name }}
+                                </a>
+                                <small>
+                                    {% if not food.restaurant.available %}
+                                        <span class="badge rounded-pill text-danger" style="background-color: bisque">Not Available</span>
+                                    {% elif food.restaurant.get_open_status %}
+                                        <span class="badge rounded-pill text-success" style="background-color: lightgreen">Open </span> <small class="text-muted"><i class="fa fa-clock"></i> {{ food.restaurant.open_hour }} - {{ food.restaurant.close_hour }}</small>
+                                    {% else %}
+                                        <span class="badge rounded-pill text-danger" style="background-color: bisque">Closed</span>
+                                    {% endif %}
+                                </small>
+                            </p>
+                        </div>
+
+                        {% if food.description %}
+                            <div class="row">
                                 <p>{{ food.description }}</p>
                             </div>
-                        </div>
-                    {% endif %}
+                            <hr>
+                        {% endif %}
 
-                    <div class="row">
-                        <div class="col-md-5 col-5">
-                            <strong>Price:</strong>
-                        </div>
-                        <div class="col-md-7 col-7">
+                        <div class="row">
                             <p>
                                 Rs. 
                                 {% if food.discount_percent > 0 %}
@@ -113,72 +112,46 @@
                                 {% endif %}
                             </p>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-5 col-5">
-                            <strong>Restaurant:</strong>
-                        </div>
-                        <div class="col-md-7 col-7">
-                            <p>
-                                <a href="{{ food.restaurant.get_absolute_url }}" class="text-decoration-none">
-                                    <strong>{{ food.restaurant.name }}</strong>
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-5 col-5">
-                            <strong>Available:</strong>
-                        </div>
-                        <div class="col-md-7 col-7">
-                            <p>
-                                {% if food.available %}
-                                    <i class="fas fa-check text-success"></i>
-                                {% else  %}
-                                    <i class="fas fa-times text-danger"></i>
+                        <div class="row">
+                            {% if not food.restaurant.available %}
+                                <div class="text-danger" style="background-color: bisque">
+                                    The restaurant is not available right now.
+                                </div>
+                            {% elif food.restaurant.get_open_status and food.available %}
+                                <div class="col-sm-6">
+                                    <form id="quantity_form" method="post">
+                                        {{ cart_food_form.quantity|as_crispy_field }}
+                                        {{ cart_food_form.override }}
+                                        {% csrf_token %}
+                                        <a class="btn btn-sm btn-success" id="buy-now-anchor">
+                                            <i class="fas fa-money-check-alt"></i> Buy Now
+                                        </a>    
+                                        <button type="submit" class="btn btn-sm btn-primary" formaction="{% url 'cart:cart_add' food.id %}"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                                    </form>
+                                </div>
+                            {% else %}
+                                {% if not food.restaurant.get_open_status %}
+                                    <div class="text-danger" style="background-color: bisque">
+                                        The restaurant for this food is closed right now. The opening hours are between {{ food.restaurant.open_hour }} and {{ food.restaurant.close_hour }}. 
+                                    </div>
                                 {% endif %}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-5 col-5">
-                            <strong>Ratings:</strong>
-                        </div>
-                        <div class="col-md-7 col-7">
-                            {% if user.is_customer %}
-                                {% ratings food %}
-                            {% else %}
-                                {% ratings food read_only=True %}
+                                {% if not food.available %}
+                                    <div class="text-danger" style="background-color: bisque">
+                                        The food is not available in this restaurant for now. 
+                                    </div>
+                                {% endif %}
                             {% endif %}
                         </div>
-                    </div>
 
-                    {% if user.is_authenticated and user.is_customer %}
-                    <div class="row" style="margin-top: 10px;">
-                        <div class="col-md-12">
-                            {% is_favourite food user as fav %}
-                            {% if fav %}
-                                <a href="{% url 'customer:unfav_food' food.id %}"
-                                    class="btn btn-outline-danger">
-                                    <i class="fa fa-heart"></i> Remove from favourites
-                                </a>
-                            {% else %}
-                                <a href="{% url 'customer:fav_food' food.id %}"
-                                    class="btn btn-outline-danger">
-                                    <i class="far fa-heart"></i> Add to favourites
-                                </a>
-                            {% endif %}
-                        </div>
                     </div>
-                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock content %}
+
 {% block extra %}
 <script>
     var buyNow = document.getElementById('buy-now-anchor');
