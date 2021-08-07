@@ -41,7 +41,7 @@
                 <div class="col-md-11 row">
                     {% for food in foods %}
                     <div class="col-md-4">
-                        <div class="card h-100" style=" height:300px auto; margin-bottom:10px;">
+                        <div class="card" style=" height:300px auto; margin-bottom:10px;">
                             <div class="img-container">
                                 <img class="thumbnail display-img"
                                     src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
