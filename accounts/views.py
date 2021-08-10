@@ -1,21 +1,18 @@
-from django.shortcuts import render,redirect, reverse
+from django.shortcuts import render,redirect
 from django.contrib import messages
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
-from . models import User 
-from .forms import RegistrationForm, LoginForm 
-from restaurants.forms import RestaurantProfileForm
-from customer.forms import CustomerProfileForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
+
+from .models import User 
+from .forms import RegistrationForm, LoginForm 
+from restaurants.forms import RestaurantProfileForm
+from customer.forms import CustomerProfileForm
 from .tokens import account_activation_token
-from django.core.mail import EmailMessage
-
-
-
+from .tasks import activate_account_email_task
 
 
 def user_login(request):
@@ -24,6 +21,15 @@ def user_login(request):
         form = LoginForm(data=request.POST)
         if form.is_valid():
             cd = form.cleaned_data
+            try:
+                _user = User.objects.get(username__iexact=cd['username'])
+                if not _user.is_active:
+                    messages.error(request, 'Your account is not confirmed yet. Check your email.')
+                    return redirect('accounts:login')
+            except Exception:
+                messages.error(request,'Username or password incorrect!')
+                return redirect('accounts:login')
+
             user = authenticate(request, username=cd['username'], password=cd['password'])
             if user:
                 if user.is_active:
@@ -38,9 +44,8 @@ def user_login(request):
                         return redirect('restaurants:restaurant_dashboard')
                     elif user.is_delivery_person:
                         return redirect('delivery_person:home')
-                else:
-                    messages.error(request, 'Your account has been disabled, as you remain deactive for long time.')
-                    return redirect('accounts:login')
+                messages.error(request, 'Your account is not confirmed yet. Check your email.')
+                return redirect('accounts:login')
             else:
                 messages.error(request,'Username or password incorrect!')
                 return redirect('accounts:login')
@@ -72,22 +77,17 @@ def register(request,role):
             user_profile = profile_form.save(commit=False)
             user_profile.user = new_user
             user_profile.save()
-            username = form.cleaned_data.get('username')
-            #messages.success(request, f'Account was created for {username}!')
             current_site = get_current_site(request)
-            mail_subject = 'Activate your blog account.'
-            message = render_to_string('accounts/acc_active_emai.html', {
+            message = render_to_string('accounts/acc_active_email.html', {
                 'user': new_user,
                 'domain': current_site.domain,
                 'uid':urlsafe_base64_encode(force_bytes(new_user.pk)),
                 'token':account_activation_token.make_token(new_user),
             })
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                        mail_subject, message, to=[to_email]
-            )
-            email.send()
-            return HttpResponse('Please confirm your email address to complete the registration')
+            to_email = form.cleaned_data['email']
+            activate_account_email_task.delay(message, to_email)
+            messages.error(request, 'Please confirm your email address to complete the registration.')
+            return redirect('accounts:login')
         else:
             messages.error(request, 'Error in registrating!')
     else:
@@ -116,8 +116,10 @@ def activate(request, uidb64, token, backend='django.contrib.auth.backends.Model
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        login(request, user,backend='django.contrib.auth.backends.ModelBackend')
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         # return redirect('home')
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
+        return redirect('accounts:login')
     else:
-        return HttpResponse('Activation link is invalid!')
+        messages.error(request, 'Activation link is invalid!')
+        return redirect('accounts:login')
