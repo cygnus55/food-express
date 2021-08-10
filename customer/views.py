@@ -68,7 +68,7 @@ def customer_profile_update(request):
 @customer_required
 def fav_restaurant(request, pk):
     ''' Add restaurant to user's favourite '''
-    
+
     user = request.user
     restaurant = get_object_or_404(Restaurant, pk=pk)
     if Favorite.objects.get_favorite(user, restaurant):
@@ -83,7 +83,8 @@ def fav_restaurant(request, pk):
 @customer_required
 def fav_food(request, pk):
     ''' Add food to user's favourite '''
-    
+
+    _next = request.GET.get('next')
     user = request.user
     food = get_object_or_404(Food, pk=pk)
     if Favorite.objects.get_favorite(user, food):
@@ -91,6 +92,8 @@ def fav_food(request, pk):
         return redirect('customer:homepage')
     Favorite.objects.create(user, food)
     messages.success(request, 'Food successfully added to favourites!')
+    if _next:
+        return redirect(_next)
     return redirect('foods:food_detail', pk=food.id)
 
 
@@ -115,6 +118,7 @@ def unfav_restaurant(request, pk):
 def unfav_food(request, pk):
     ''' Remove food from user's favourite '''
     
+    _next = request.GET.get('next')
     user = request.user
     food = get_object_or_404(Food, pk=pk)
     fav = Favorite.objects.get_favorite(user, food)
@@ -123,4 +127,6 @@ def unfav_food(request, pk):
         return redirect('customer:homepage')
     fav.delete()
     messages.success(request, 'Food successfully removed from favourites!')
+    if _next:
+        return redirect(_next)
     return redirect('foods:food_detail', pk=food.id)
