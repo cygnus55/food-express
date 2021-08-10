@@ -46,12 +46,12 @@
                             <div class="col-md-12">
                                 {% is_favourite food user as fav %}
                                 {% if fav %}
-                                    <a href="{% url 'customer:unfav_food' food.id %}"
+                                    <a href="{% url 'customer:unfav_food' food.id %}?next={{request.path}}"
                                         class="btn btn-outline-danger">
                                         <i class="fa fa-heart"></i> Remove from favourites
                                     </a>
                                 {% else %}
-                                    <a href="{% url 'customer:fav_food' food.id %}"
+                                    <a href="{% url 'customer:fav_food' food.id %}?next={{request.path}}"
                                         class="btn btn-outline-danger">
                                         <i class="far fa-heart"></i> Add to favourites
                                     </a>
