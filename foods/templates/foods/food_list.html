@@ -43,9 +43,11 @@
                     <div class="col-md-4">
                         <div class="card" style=" height:300px auto; margin-bottom:10px;">
                             <div class="img-container">
-                                <img class="thumbnail display-img"
+                                <a href="{{ food.get_absolute_url_for_customer }}">
+                                    <img class="thumbnail display-img"
                                     src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
                                     style=" height:200px" />
+                                </a>
                             </div>
 
                             {% if food.discount_percent > 0 %}
