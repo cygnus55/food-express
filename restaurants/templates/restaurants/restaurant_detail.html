@@ -93,6 +93,42 @@
                         {% endif %}
 
                         <div class="row">
+                            <p>
+                                <a href="mailto:{{ restaurant.user.email }}" target="_blank" class="text-decoration-none text-dark">
+                                    <i class="fas fa-at"></i> {{ restaurant.user.email }}
+                                </a>
+                                &emsp;&emsp;
+                                <i class="fas fa-phone"></i> {{ restaurant.phone_no }}
+                            </p>
+                        </div>
+
+                        {% if restaurant.website_link or restaurant.facebook_link %}
+                            <div class="row">
+                                <p>
+                                    {% if restaurant.website_link %}
+                                        <a href="{{ restaurant.website_link }}" target="_blank" class="text-decoration-none text-dark">
+                                            <i class="fas fa-globe"></i> {{ restaurant.website_link }}
+                                        </a>
+                                        &emsp;&emsp;
+                                    {% endif %}
+                                    {% if restaurant.facebook_link %}
+                                        <a href="{{ restaurant.facebook_link }}" target="_blank" class="text-decoration-none text-dark">
+                                            <i class="fab fa-facebook-f"></i> Join us on facebook
+                                        </a>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        {% if restaurant.facebook_link %}
+                            <div class="row">
+                                <p>
+                                    
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
                             {% if not restaurant.available %}
                                 <div class="text-danger" style="background-color: bisque">
                                     This restaurant is not available for business right now. 
