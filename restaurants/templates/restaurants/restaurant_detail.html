@@ -95,7 +95,7 @@
                         <div class="row">
                             <p>
                                 <a href="mailto:{{ restaurant.user.email }}" target="_blank" class="text-decoration-none text-dark">
-                                    <i class="fas fa-at"></i> {{ restaurant.user.email }}
+                                    <i class="fas fa-envelope"></i> {{ restaurant.user.email }}
                                 </a>
                                 &emsp;&emsp;
                                 <i class="fas fa-phone"></i> {{ restaurant.phone_no }}
@@ -130,9 +130,9 @@
 
                         <div class="row">
                             {% if not restaurant.available %}
-                                <div class="text-danger" style="background-color: bisque">
+                                <span class="badge rounded-pill text-danger">
                                     This restaurant is not available for business right now. 
-                                </div>
+                                </span>
                             {% elif restaurant.get_open_status and food.available %}
                                 <div class="col-sm-6">
                                     <form id="quantity_form" method="post">
@@ -146,9 +146,9 @@
                                     </form>
                                 </div>
                             {% elif not restaurant.get_open_status %}
-                                <div class="text-danger" style="background-color: bisque">
-                                    This restaurant is closed right now. The opening hours are between {{ restaurant.open_hour }} and {{ restaurant.close_hour }}. 
-                                </div>
+                                <span class="badge rounded-pill text-danger">
+                                    This restaurant is closed right now. The opening hours are between {{ restaurant.open_hour }} and {{ restaurant.close_hour }}
+                                </span>
                             {% endif %}
                         </div>
                     </div>
