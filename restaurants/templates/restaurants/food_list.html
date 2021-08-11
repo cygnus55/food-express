@@ -41,9 +41,11 @@
                 {% for food in foods %}
                 <div class="col-md-3" style="margin-bottom:20px;">
                     <div class="card" style=" height: 100%;">
-                        <img class="thumbnail"
+                        <a href="{{ food.get_absolute_url }}">
+                            <img class="thumbnail"
                             src="{% if food.image %}{{ food.image.url }}{% else %}{% static 'base/img/no_image.png' %}{% endif %}"
                             style=" height:200px" />
+                        </a>
 
                         {% if food.discount_percent > 0 %}
                         <div class="ribbon-wrapper">

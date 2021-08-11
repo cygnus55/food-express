@@ -111,4 +111,5 @@ def update_delivery_location(request, location_id):
 def delete_delivery_location(request, location_id):
     location = get_object_or_404(DeliveryLocation, id=location_id, customer=request.user.customer)
     location.delete()
+    messages.success(request, 'Delivery location successfully deleted.')
     return redirect('customer:homepage')
