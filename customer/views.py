@@ -16,7 +16,7 @@ from fav.models import Favorite
 @customer_required
 def customer_homepage(request):
     fav_foods = Favorite.objects.for_user(request.user, model=Food)
-    foods = list(map(lambda x: x.target, fav_foods))
+    foods = list(filter(lambda x: x, map(lambda x: x.target, fav_foods)))
     fav_restaurants = Favorite.objects.for_user(request.user, model=Restaurant)
     restaurants = list(map(lambda x: x.target, fav_restaurants))
     return render(
