@@ -1,3 +1,4 @@
+from django.contrib.auth import login
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.urls.base import reverse
@@ -100,4 +101,14 @@ def update_delivery_location(request, location_id):
             'location/delivery_location.html',
             {
                 'form': form,
+                'update': True,
+                'location': location,
             })
+
+
+@login_required
+@customer_required
+def delete_delivery_location(request, location_id):
+    location = get_object_or_404(DeliveryLocation, id=location_id, customer=request.user.customer)
+    location.delete()
+    return redirect('customer:homepage')

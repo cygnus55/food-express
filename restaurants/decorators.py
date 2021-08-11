@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 def restaurant_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME):
     actual_decorator = user_passes_test(
         lambda u: u.is_active and u.is_restaurant,
-        login_url='login',
+        login_url='accounts:login',
         redirect_field_name=redirect_field_name
     )
     if function:

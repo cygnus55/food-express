@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from location.views import add_delivery_location, update_delivery_location
+from location.views import add_delivery_location, update_delivery_location, delete_delivery_location
 from customer.views import fav_restaurant, fav_food, unfav_food, unfav_restaurant
 
 app_name = 'customer'
@@ -27,6 +27,11 @@ urlpatterns = [
         'delivery-location/<int:location_id>/',
         update_delivery_location,
         name='update_delivery_location'
+    ),
+    path(
+        'delivery_location/delete/<int:location_id>',
+        delete_delivery_location,
+        name='delete_delivery_location'
     ),
     path(
         'fav/restaurant/<int:pk>',
