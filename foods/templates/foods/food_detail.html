@@ -115,9 +115,9 @@
 
                         <div class="row">
                             {% if not food.restaurant.available %}
-                                <div class="text-danger" style="background-color: bisque">
+                                <span class="badge rounded-pill text-danger">
                                     The restaurant is not available right now.
-                                </div>
+                                </span>
                             {% elif food.restaurant.get_open_status and food.available %}
                                 <div class="col-sm-6">
                                     <form id="quantity_form" method="post">
@@ -132,14 +132,14 @@
                                 </div>
                             {% else %}
                                 {% if not food.restaurant.get_open_status %}
-                                    <div class="text-danger" style="background-color: bisque">
-                                        The restaurant for this food is closed right now. The opening hours are between {{ food.restaurant.open_hour }} and {{ food.restaurant.close_hour }}. 
-                                    </div>
+                                    <span class="badge rounded-pill text-danger">
+                                        The restaurant for this food is closed right now. The opening hours are between {{ food.restaurant.open_hour }} and {{ food.restaurant.close_hour }}
+                                    </span>
                                 {% endif %}
                                 {% if not food.available %}
-                                    <div class="text-danger" style="background-color: bisque">
+                                    <span class="badge rounded-pill text-danger">
                                         The food is not available in this restaurant for now. 
-                                    </div>
+                                    </span>
                                 {% endif %}
                             {% endif %}
                         </div>

@@ -6,9 +6,9 @@
 <div class="container" style="margin-top: 20px; margin-bottom: 20px">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'foods:food_list' %}">Foods</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'restaurants:food_list' %}">Foods</a></li>
             <li class="breadcrumb-item"><a
-                    href="{% url 'foods:foods_list_by_category' food.category.slug %}">{{ food.category.name }}</a></li>
+                    href="{% url 'restaurants:foods_list_by_category' food.category.slug %}">{{ food.category.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ food.name }}</li>
         </ol>
     </nav>
