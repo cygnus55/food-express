@@ -71,9 +71,12 @@ def fav_restaurant(request, pk):
 
     user = request.user
     restaurant = get_object_or_404(Restaurant, pk=pk)
-    if Favorite.objects.get_favorite(user, restaurant):
+    try:
+        Favorite.objects.get_favorite(user, restaurant)
         messages.warning(request, 'Restaurant already added to favourites!')
         return redirect('customer:homepage')
+    except Exception:
+        pass
     Favorite.objects.create(user, restaurant)
     messages.success(request, 'Restaurant successfully added to favourites!')
     return redirect('restaurants:restaurant_detail', id=restaurant.id, slug=restaurant.slug)
@@ -87,9 +90,12 @@ def fav_food(request, pk):
     _next = request.GET.get('next')
     user = request.user
     food = get_object_or_404(Food, pk=pk)
-    if Favorite.objects.get_favorite(user, food):
+    try:
+        Favorite.objects.get_favorite(user, food)
         messages.warning(request, 'Food already added to favourites!')
         return redirect('customer:homepage')
+    except Exception:
+        pass
     Favorite.objects.create(user, food)
     messages.success(request, 'Food successfully added to favourites!')
     if _next:

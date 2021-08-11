@@ -40,7 +40,7 @@ def send_invoice(order_id,message):
 
     # create invoice e-mail
     subject = f'Food Express - EE Invoice no. {order.id}'
-    email = EmailMessage(subject, message, 'foodexpressnepal@gmail.com', ['ch.ramraj35@gmail.com',])
+    email = EmailMessage(subject, message, 'foodexpressnepal@gmail.com', [order.customer.user.email,])
 
     #generate PDF
     html = render_to_string('orders/pdf.html', {'order': order, 'payment_received': paid})
