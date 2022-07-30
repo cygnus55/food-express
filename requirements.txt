@@ -42,7 +42,6 @@ kombu==5.1.0
 MarkupSafe==2.0.1
 maxminddb==2.0.3
 multidict==5.1.0
-numpy==1.20.3
 phonenumbers==8.12.21
 Pillow==8.2.0
 prompt-toolkit==3.0.18
