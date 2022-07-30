@@ -29,3 +29,10 @@ python manage.py createsuperuser
 ```
 
 Navigate to `localhost:8000` in your browser.
+
+## Developers
+- [Shrawak Bhattarai](https://github.com/Shrawak)
+- [Ramraj Chimouriya](https://github.com/RamrajCh)
+- [Deependra Kumar Gupta](https://github.com/Deependra12)
+- [Bishal Joshi](https://github.com/bishaljoshi08)
+- [Shreyam Pokharel](https://github.com/pshreyam)
