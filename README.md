@@ -7,6 +7,8 @@
 
 ***Food Express*** is an online food delivery application providing restaurants and customers a platform to sell and buy cuisines respectively.
 
+It is developed using Django web-framework and uses SQL-based database. It uses Python programming language for the rest of backend work.
+
 ## Getting Started
 
 Set up virtual environment and install the dependencies using the commands:
